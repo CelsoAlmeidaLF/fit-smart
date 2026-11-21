@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo Oficial de Ícones & Anatomia — Systekna FIT v2.0</title>
+  <title>Catálogo Oficial de Ícones & Anatomia — Systekna FIT v2.5</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -178,17 +178,14 @@
       stroke-linejoin: round;
       transition: stroke 0.2s, fill 0.2s;
     }
-    /* Duotone */
     .suite-duotone svg.fi .fi-fill {
       fill: currentColor;
       fill-opacity: 0.18;
     }
-    /* Solid */
     .suite-solid svg.fi .fi-fill {
       fill: currentColor;
       fill-opacity: 0.95;
     }
-    /* Line */
     .suite-line svg.fi .fi-fill {
       fill: none;
     }
@@ -248,7 +245,45 @@
     .side-tag.old { color: var(--down); }
     .side-tag.new { color: var(--accent); }
 
-    /* MÚSCULOS */
+    /* MÚSCULOS PRO PADRONIZADOS */
+    .grid-muscles-pro {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+      max-width: 1200px;
+      margin: 20px auto 0;
+    }
+    .card-muscle-pro {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card-muscle-pro:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    .card-muscle-pro img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: #000;
+      border-bottom: 1px solid var(--line);
+    }
+    .muscle-pro-info {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .muscle-pro-name { font-weight: 700; font-size: 15px; color: #fff; }
+    .muscle-pro-tag { font-size: 11px; color: var(--accent); font-family: var(--font-mono); }
+    .muscle-pro-sub { font-size: 11px; color: var(--soft); }
+
+    /* MÚSCULOS ATLAS */
     .grid-muscles {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -284,14 +319,14 @@
 </head>
 <body class="suite-duotone">
   <header>
-    <span class="badge-pill">VALIDAÇÃO VISUAL DE ATIVOS PROFISSIONAIS v2.0</span>
+    <span class="badge-pill">VALIDAÇÃO VISUAL DE ATIVOS PROFISSIONAIS v2.5</span>
     <h1>Catálogo Oficial de Ícones & Anatomia — Systekna FIT</h1>
-    <p class="sub">100% Vetoriais SVG Oficiais específicos de Musculação/Fitness (sem ligaduras de fonte) + 3 Suítes Comutáveis + Ilustrações Anatômicas do data.zip.</p>
+    <p class="sub">Ícones de Músculos 100% Padronizados (IA Dark Tech 1:1) + 3 Suítes Vetoriais SVG Comutáveis + Ilustrações Anatômicas do data.zip.</p>
     
     <!-- CONTROLE INTERATIVO DE SUÍTES VISUAIS -->
     <div class="suite-selector-box">
       <div class="suite-info">
-        <h3>Seletor de Suíte Visual de Ícones</h3>
+        <h3>Seletor de Suíte Visual de Ícones de UI</h3>
         <p>Alterne entre os 3 estilos de design para validar a renderização imediata:</p>
       </div>
       <div class="suite-buttons">
@@ -308,15 +343,25 @@
     </div>
 
     <div class="tabs-nav">
-      <button class="tab-btn active" onclick="switchTab('fitness-pro')">Treino & Força (Substitutos de Alta Performance)</button>
+      <button class="tab-btn active" onclick="switchTab('muscles-ia-pro')">💎 11 Ícones Musculares Padronizados (IA Dark Tech)</button>
+      <button class="tab-btn" onclick="switchTab('fitness-pro')">Comparativo & Força (Substitutos de Alta Performance)</button>
       <button class="tab-btn" onclick="switchTab('all-icons')">Todos os Ícones de UI (38 Ícones SVG)</button>
       <button class="tab-btn" onclick="switchTab('muscles-41')">41 Ilustrações Anatômicas (data.zip)</button>
-      <button class="tab-btn" onclick="switchTab('muscles-18')">18 Ícones Regionais (data.zip)</button>
+      <button class="tab-btn" onclick="switchTab('muscles-18')">18 Ícones Regionais Anteriores (data.zip)</button>
     </div>
   </header>
 
+  <!-- ABA 0: 11 ÍCONES MUSCULARES PADRONIZADOS POR IA (DESTAQUE MÁXIMO) -->
+  <section id="tab-muscles-ia-pro" class="tab-pane active">
+    <div class="section-headline">Nova Suíte Muscular Padronizada em Dark Tech <span>(Manequim Grafite #171D1A + Glow Esmeralda #6FCF97)</span></div>
+    <p style="color:var(--soft);font-size:13px;max-width:1200px;margin:0 auto 16px;">
+      Todos os 11 grupos musculares foram gerados com o mesmo manequim atlético, mesma iluminação de estúdio escura, mesma pose consistente e realce translúcido em verde neon, criando harmonia visual perfeita na tela de Treino e Prontidão:
+    </p>
+    <div class="grid-muscles-pro" id="musclesIaProGrid"></div>
+  </section>
+
   <!-- ABA 1: DESTAQUE ESPECÍFICO FITNESS PRO & ANTES VS DEPOIS -->
-  <section id="tab-fitness-pro" class="tab-pane active">
+  <section id="tab-fitness-pro" class="tab-pane">
     <div class="section-headline">Comparativo: Ícones Genéricos Anteriores vs Novos Ícones de Musculação <span>(Visual Fitness Real)</span></div>
     <div class="grid-compare" id="compareGrid"></div>
 
@@ -334,7 +379,7 @@
     <div class="grid-muscles" id="muscles41Grid"></div>
   </section>
 
-  <!-- ABA 4: 18 ÍCONES REGIONAIS -->
+  <!-- ABA 4: 18 ÍCONES REGIONAIS ANTERIORES -->
   <section id="tab-muscles-18" class="tab-pane">
     <div class="grid-muscles" id="muscles18Grid"></div>
   </section>
@@ -356,6 +401,39 @@
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-' + id).classList.add('active');
       event.target.classList.add('active');
+    }
+
+    const MUSCLES_IA_PRO = [
+      { name: 'Peitoral Maior', reg: 'Peito / Tórax', file: 'assets/icones_musculos_pro/peitoral.jpg', sub: 'Fibras claviculares e esternocostais iluminadas' },
+      { name: 'Dorsal / Latíssimo do Dorso', reg: 'Costas / V-Taper', file: 'assets/icones_musculos_pro/costas.jpg', sub: 'Extensão completa de asa e espessura dorsal' },
+      { name: 'Deltóides / Ombros', reg: 'Ombros (3 Cabeças)', file: 'assets/icones_musculos_pro/ombros.jpg', sub: 'Porção anterior, lateral e posterior definida' },
+      { name: 'Bíceps Braquial', reg: 'Braços Anteriores', file: 'assets/icones_musculos_pro/biceps.jpg', sub: 'Cabeça longa e curta com pico anabólico' },
+      { name: 'Tríceps Braquial', reg: 'Braços Posteriores', file: 'assets/icones_musculos_pro/triceps.jpg', sub: 'Ferradura de tríceps com 3 cabeças delineadas' },
+      { name: 'Abdômen & Core', reg: 'Six-Pack & Oblíquos', file: 'assets/icones_musculos_pro/abdomen.jpg', sub: 'Lente aero sobre reto abdominal e transverso' },
+      { name: 'Quadríceps', reg: 'Coxas Anteriores', file: 'assets/icones_musculos_pro/quadriceps.jpg', sub: 'Vasto medial em gota e reto femoral' },
+      { name: 'Glúteos & Isquiotibiais', reg: 'Posterior & Quadril', file: 'assets/icones_musculos_pro/gluteos_isquiotibiais.jpg', sub: 'Glúteo máximo e bíceps femoral destacados' },
+      { name: 'Panturrilhas', reg: 'Gastrocnêmio & Sóleo', file: 'assets/icones_musculos_pro/panturrilha.jpg', sub: 'Formato diamante com tendão de Aquiles' },
+      { name: 'Trapézio & Pescoço', reg: 'Costas Superiores', file: 'assets/icones_musculos_pro/trapezio.jpg', sub: 'Diamante muscular de pescoço a coluna média' },
+      { name: 'Manequim Geral Dual View', reg: 'Corpo Inteiro / Dual', file: 'assets/icones_musculos_pro/corpo_inteiro.jpg', sub: 'Visão anterior e posterior 3D simultânea' }
+    ];
+
+    function renderMusclesIaPro() {
+      const c = document.getElementById('musclesIaProGrid');
+      c.innerHTML = '';
+      MUSCLES_IA_PRO.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'card-muscle-pro';
+        card.innerHTML = `
+          <img src="${m.file}" alt="${m.name}" loading="lazy">
+          <div class="muscle-pro-info">
+            <div class="muscle-pro-name">${m.name}</div>
+            <div class="muscle-pro-tag">${m.reg}</div>
+            <div class="muscle-pro-sub">${m.sub}</div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--soft);margin-top:4px;">${m.file}</div>
+          </div>
+        `;
+        c.appendChild(card);
+      });
     }
 
     const FITNESS_COMPARE = [
@@ -619,6 +697,7 @@
     }
 
     function renderAll() {
+      renderMusclesIaPro();
       renderCompare();
       renderFitnessPro();
       renderAllIcons();
