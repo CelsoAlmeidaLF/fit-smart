@@ -84,23 +84,6 @@ export class AppController {
 
     // 3. Delegação Global de Cliques
     document.addEventListener('click', e => {
-      // Sub-abas do Menu de Configurações
-      const cfgBtn = e.target.closest('button[data-cfg-smart]');
-      if (cfgBtn) {
-        const targetId = cfgBtn.dataset.cfgSmart;
-        this._activeCfgTab = targetId;
-        document.querySelectorAll('#cfgTabsSmart button[data-cfg-smart]').forEach(b => {
-          const isMatch = b === cfgBtn;
-          b.classList.toggle('on', isMatch);
-          b.setAttribute('aria-pressed', isMatch);
-        });
-        ['perfil', 'aparencia', 'seguranca', 'dados', 'sobre'].forEach(s => {
-          const el = document.querySelector('#cfgSec-' + s);
-          if (el) el.hidden = (s !== targetId);
-        });
-        return;
-      }
-
       // Alternância de Sub-abas e Segmented Controls
       const sb = e.target.closest('.segc button[data-v], .tabs button[data-v]');
       if (sb && !sb.dataset.cfgSmart) {
@@ -309,6 +292,41 @@ export class AppController {
 
     const privBtn = document.querySelector('#bPriv');
     if (privBtn) privBtn.onclick = () => this.showPrivacySheet();
+
+    // 6. Botão de Instalação PWA
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      window.deferredPwaPrompt = e;
+    });
+
+    const bInstalarApp = document.querySelector('#bInstalarApp');
+    if (bInstalarApp) {
+      bInstalarApp.onclick = () => {
+        if (window.deferredPwaPrompt) {
+          window.deferredPwaPrompt.prompt();
+          window.deferredPwaPrompt.userChoice.then(choiceResult => {
+            if (choiceResult.outcome === 'accepted') {
+              this._toast.show('Instalação iniciada com sucesso!');
+            }
+            window.deferredPwaPrompt = null;
+          });
+        } else {
+          this._sheet.open(`
+            <h3 style="margin-top:0">Instalação do Aplicativo</h3>
+            <p style="font-size:14px;color:var(--soft);line-height:1.5">
+              Este aplicativo funciona como um PWA offline de alta performance. Para adicioná-lo:
+            </p>
+            <div class="glass pad" style="margin:12px 0;font-size:13px;line-height:1.6">
+              <b>No Chrome / Android:</b> Toque no menu do navegador (três pontos) e selecione <b>"Instalar aplicativo"</b> ou <b>"Adicionar à tela inicial"</b>.<br><br>
+              <b>No Safari / iOS:</b> Toque no botão de <b>Compartilhar</b> e selecione <b>"Adicionar à Tela de Início"</b>.
+            </div>
+            <button class="btn pri block" id="bOkInst">Entendido</button>
+          `);
+          const bOkInst = document.querySelector('#bOkInst');
+          if (bOkInst) bOkInst.onclick = () => this._sheet.close();
+        }
+      };
+    }
 
     const bApoiarSmart = document.querySelector('#bApoiarSmart');
     if (bApoiarSmart) {
