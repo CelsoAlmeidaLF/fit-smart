@@ -1,11 +1,12 @@
 /* Fit Systekna — service worker. Troque VERSAO a cada atualização do app. */
-const VERSAO = 'fit-v1.2-hexagonal-20261121';
+const VERSAO = 'fit-v1.2.1-20261121';
 const ARQUIVOS = [
   './',
   './index.html',
   './privacidade.html',
   './manifest.webmanifest',
   './src/Program.js',
+  './src/ui/styles/styles.css',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
