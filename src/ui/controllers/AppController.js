@@ -7,6 +7,7 @@ import { BiometricsAdapter } from '../../infrastructure/security/BiometricsAdapt
 import { WebAudioAdapter } from '../../infrastructure/audio/WebAudioAdapter.js';
 import { PinPad } from '../components/PinPad.js';
 import { APPIC } from '../assets/AppIcon.js';
+import { SecurityRecoveryService } from '../../infrastructure/security/SecurityRecoveryService.js';
 
 /**
  * Controller Central da Interface de Fit Smart (MVC / Presentation Layer)
@@ -105,6 +106,55 @@ export class AppController {
     const pinBtn = document.querySelector('#bPin');
     if (pinBtn) {
       pinBtn.onclick = () => this.showChangePinSheet();
+    }
+
+    // Certificado PDF button
+    const certBtn = document.querySelector('#bCert');
+    if (certBtn) {
+      certBtn.onclick = async () => {
+        await this.ensureSeed();
+        try {
+          await SecurityRecoveryService.downloadSecurityCertificate({
+            appName: 'Fit Systekna',
+            words: this._state.seedWords,
+            hash: this._state.seedHash
+          });
+          this._toast.show('Certificado de Segurança baixado.');
+        } catch (e) {
+          this._toast.show('Erro ao emitir PDF: ' + e.message);
+        }
+      };
+    }
+
+    // View Words button
+    const wordsBtn = document.querySelector('#bWords');
+    if (wordsBtn) {
+      wordsBtn.onclick = async () => {
+        await this.ensureSeed();
+        if (this._state.pin) {
+          this._sheet.open(`
+            <h3 style="margin-top:0">Confirmação de Segurança</h3>
+            <p style="color:var(--soft);font-size:13px">Digite seu PIN para visualizar suas 12 palavras de recuperação:</p>
+            <div id="pinBoxAuthSmart"></div>
+          `);
+          const box = document.querySelector('#pinBoxAuthSmart');
+          if (box) {
+            PinPad.render(box, {
+              mode: 'verify',
+              title: 'Confirmar PIN',
+              sub: 'Apenas você deve visualizar este segredo.',
+              len: this._state.pinLen,
+              check: async v => {
+                const h = await BiometricsAdapter.hashPin(v);
+                return h === this._state.pin;
+              },
+              onOk: () => this.displayWordsModal(false)
+            });
+          }
+        } else {
+          this.displayWordsModal(false);
+        }
+      };
     }
 
     // Biometrics switch
@@ -653,18 +703,80 @@ export class AppController {
     }
   }
 
-  showPrivacySheet() {
+  async showPrivacySheet() {
+    const policy = await SecurityRecoveryService.getPrivacyPolicy('Fit Systekna');
     this._sheet.open(`
-      <h3 id="shT">Política de Privacidade Local-First</h3>
-      <div class="priv" style="max-height:60vh;overflow-y:auto;padding-right:4px">
-        <p><b>Fit Systekna · Arquitetura Zero-Knowledge</b></p>
-        <p>Todos os dados de perfil, saúde, peso, diário e biometria permanecem estritamente armazenados no seu dispositivo.</p>
-        <p>Nenhuma informação é transmitida para servidores externos ou serviços de telemetria.</p>
+      <h3 id="shT">${policy.title}</h3>
+      <p style="font-size:13px;color:var(--accent);margin-bottom:14px">${policy.summary}</p>
+      <div style="max-height:60vh;overflow-y:auto;padding-right:6px">
+        ${policy.sections.map(s => `
+          <div style="margin-bottom:12px;background:var(--surface-2, rgba(255,255,255,0.04));padding:10px 12px;border-radius:10px">
+            <b style="font-size:13px;display:block;margin-bottom:4px">${s.heading}</b>
+            <p style="font-size:12px;color:var(--soft);margin:0;line-height:1.4">${s.text}</p>
+          </div>
+        `).join('')}
       </div>
-      <button class="btn sec" style="margin-top:12px;width:100%" id="bClosePriv">Fechar</button>
+      <button class="btn pri block" id="bClosePriv" style="margin-top:14px;width:100%">Entendido</button>
     `);
     const bClose = document.querySelector('#bClosePriv');
     if (bClose) bClose.onclick = () => this._sheet.close();
+  }
+
+  async ensureSeed() {
+    if (!this._state.seedWords || this._state.seedWords.length !== 12 || !this._state.seedHash) {
+      const seed = await SecurityRecoveryService.generateSeed();
+      this._state.seedWords = seed.words;
+      this._state.seedHash = seed.hash;
+      this.save();
+    }
+  }
+
+  displayWordsModal(wasJustCreated = false) {
+    const wordsList = this._state.seedWords || [];
+    this._sheet.open(`
+      <h3 style="margin-top:0">Suas 12 Palavras de Recuperação</h3>
+      <p style="font-size:12px;color:var(--soft);margin-bottom:12px">Guarde estas palavras em local seguro. Elas são a única chave para recuperar o PIN se esquecido:</p>
+      
+      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-bottom:14px;background:var(--surface-2, rgba(255,255,255,0.05));padding:12px;border-radius:10px">
+        ${wordsList.map((w, idx) => `
+          <div style="font-family:monospace;font-size:12px;color:var(--ink)">
+            <span style="color:var(--soft)">${idx + 1}.</span> <b>${w}</b>
+          </div>
+        `).join('')}
+      </div>
+
+      <div style="background:var(--surface, rgba(0,0,0,0.2));padding:8px 12px;border-radius:8px;margin-bottom:14px;border:1px solid var(--line)">
+        <small style="display:block;color:var(--soft);font-size:11px">Código Hash de Validação:</small>
+        <code style="font-size:16px;font-weight:700;color:var(--accent);letter-spacing:1px">${this._state.seedHash || 'XXXX-XXXX-XXXX'}</code>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button type="button" class="btn pri block" id="btnDownloadCertModalSmart">Baixar Certificado em PDF (A4)</button>
+        <button type="button" class="btn sec block" id="btnDoneWordsSmart">${wasJustCreated ? 'Guardei as palavras e o PIN' : 'Fechar'}</button>
+      </div>
+    `);
+
+    const btnDl = document.querySelector('#btnDownloadCertModalSmart');
+    if (btnDl) {
+      btnDl.onclick = async () => {
+        await SecurityRecoveryService.downloadSecurityCertificate({
+          appName: 'Fit Systekna',
+          words: this._state.seedWords,
+          hash: this._state.seedHash
+        });
+        this._toast.show('Download do Certificado iniciado.');
+      };
+    }
+
+    const btnDone = document.querySelector('#btnDoneWordsSmart');
+    if (btnDone) {
+      btnDone.onclick = () => {
+        this._sheet.close();
+        if (wasJustCreated) {
+          this._toast.show('PIN e Certificado configurados com sucesso.');
+        }
+      };
+    }
   }
 
   showChangePinSheet() {
@@ -691,11 +803,11 @@ export class AppController {
             title: 'Novo PIN',
             sub: 'Digite o novo PIN.',
             onDone: async newPin => {
+              await this.ensureSeed();
               this._state.pin = await BiometricsAdapter.hashPin(newPin);
               this._state.pinLen = newPin.length;
               this.save();
-              this._sheet.close();
-              this._toast.show('PIN alterado com sucesso.');
+              this.displayWordsModal(true);
             }
           });
         }
@@ -750,9 +862,75 @@ export class AppController {
           onOk: () => {
             lockEl.hidden = true;
             PinPad.clearActive();
-          }
+          },
+          onForgot: () => this.promptRecoverPin(lockEl)
         });
       }
+    }
+  }
+
+  promptRecoverPin(lockEl) {
+    this._sheet.open(`
+      <h3 style="margin-top:0">Recuperação de Acesso</h3>
+      <p style="font-size:13px;color:var(--soft);margin-bottom:12px">
+        Cole as suas 12 palavras na ordem correta ou digite o código Hash de 12 caracteres do seu Certificado de Segurança:
+      </p>
+
+      <div style="margin-bottom:12px">
+        <textarea id="inpRecoverySecretSmart" class="f-in" rows="3" style="width:100%;resize:none;font-family:monospace;font-size:13px" placeholder="ex: borbulha lotado gradual ... ou XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off"></textarea>
+      </div>
+
+      <div id="recErrorSmart" style="color:var(--bad);font-size:12px;margin-bottom:12px;min-height:16px"></div>
+
+      <button type="button" class="btn pri block" id="btnValidateRecoverySmart" style="width:100%">Validar e Redefinir PIN</button>
+      <button type="button" class="btn sec block" id="btnCancelRecoverySmart" style="margin-top:8px;width:100%">Voltar</button>
+    `);
+
+    const btnCancel = document.querySelector('#btnCancelRecoverySmart');
+    if (btnCancel) {
+      btnCancel.onclick = () => {
+        this._sheet.close();
+        this.checkAppLock();
+      };
+    }
+
+    const btnValidate = document.querySelector('#btnValidateRecoverySmart');
+    if (btnValidate) {
+      btnValidate.onclick = async () => {
+        const inp = document.querySelector('#inpRecoverySecretSmart');
+        const errEl = document.querySelector('#recErrorSmart');
+        if (!inp) return;
+
+        const val = inp.value.trim();
+        const res = await SecurityRecoveryService.verifyRecoveryInput(val, this._state.seedHash, this._state.seedWords);
+
+        if (!res.ok) {
+          if (errEl) errEl.textContent = res.message || 'Segredo incorreto.';
+          return;
+        }
+
+        this._sheet.open(`
+          <h3 style="margin-top:0;color:var(--accent)">Segredo Validado!</h3>
+          <p style="font-size:13px;color:var(--soft)">Defina seu novo PIN de 4 a 6 dígitos:</p>
+          <div id="pinBoxNewSmart"></div>
+        `);
+
+        const boxNew = document.querySelector('#pinBoxNewSmart');
+        if (boxNew) {
+          PinPad.renderCreationFlow(boxNew, {
+            onDone: async newPin => {
+              this._state.pin = await BiometricsAdapter.hashPin(newPin);
+              this._state.pinLen = newPin.length;
+              this.save();
+
+              if (lockEl) lockEl.hidden = true;
+              PinPad.clearActive();
+              this._sheet.close();
+              this._toast.show('Novo PIN redefinido com sucesso! Acesso liberado.');
+            }
+          });
+        }
+      };
     }
   }
 
@@ -775,11 +953,11 @@ export class AppController {
       PinPad.renderCreationFlow(box, {
         title: 'Criar PIN',
         onDone: async p => {
+          await this.ensureSeed();
           this._state.pin = await BiometricsAdapter.hashPin(p);
           this._state.pinLen = p.length;
           this.save();
-          this._sheet.close();
-          this._toast.show('PIN criado com sucesso.');
+          this.displayWordsModal(true);
         }
       });
     }
@@ -895,6 +1073,7 @@ export class AppController {
               agua: 8
             };
             this._state.pesos = [{ id: 'p0', d: this._today, kg: Number(obData.peso) }];
+            await this.ensureSeed();
             this._state.pin = await BiometricsAdapter.hashPin(pin);
             this._state.pinLen = pin.length;
             this._state.onb = true;
@@ -902,7 +1081,7 @@ export class AppController {
             onbEl.hidden = true;
             this.renderAll();
             this.handleRoute();
-            this._toast.show('Tudo pronto! Bem-vindo ao Fit Systekna.');
+            this.displayWordsModal(true);
           }
         });
       }

@@ -47,6 +47,7 @@ export class PinPad {
         </div>
         ${options.mode === 'create' ? '<button type="button" class="btn pri pp-ok" disabled>Continuar</button>' : ''}
         ${options.foot || ''}
+        ${options.onForgot ? '<button type="button" class="link pp-forgot" style="margin-top:14px;background:none;border:none;color:var(--accent);font-size:12px;cursor:pointer;text-decoration:underline">Esqueci o PIN (Recuperar por 12 palavras)</button>' : ''}
       </div>
     `;
 
@@ -54,6 +55,11 @@ export class PinPad {
     const err = containerEl.querySelector('.pp-e');
     const ok = containerEl.querySelector('.pp-ok');
     const dotBox = containerEl.querySelector('.pp-d');
+    const btnForgot = containerEl.querySelector('.pp-forgot');
+
+    if (btnForgot && options.onForgot) {
+      btnForgot.onclick = () => options.onForgot();
+    }
 
     const draw = () => {
       dots.forEach((d, i) => {
