@@ -100,16 +100,8 @@ export class AppController {
           hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        // Sub-abas de Saúde
-        if (forId === 'hSeg') {
-          const sub = sb.dataset.v;
-          ['peso', 'med', 'pa', 'ex', 'sono'].forEach(k => {
-            const div = document.querySelector('#h' + k.charAt(0).toUpperCase() + k.slice(1));
-            if (div) div.hidden = (k !== sub);
-          });
-        }
         // Sub-abas de Diário
-        else if (forId === 'dSeg') {
+        if (forId === 'dSeg') {
           const sub = sb.dataset.v;
           const dDia = document.querySelector('#dDia');
           const dCard = document.querySelector('#dCard');
@@ -584,23 +576,99 @@ export class AppController {
   }
 
   renderPeso() {
-    const pList = document.querySelector('#pList');
-    if (!pList) return;
-    const pesos = (this._state.pesos || []).slice().sort((a, b) => b.d.localeCompare(a.d));
-    if (!pesos.length) {
-      pList.innerHTML = '<div class="glass empty" style="padding:14px;text-align:center;color:var(--soft)">Nenhum peso registrado ainda.</div>';
-      return;
+    // 1. Dados biométricos e cálculo do IMC
+    const p = this._state.perfil || {};
+    const height = Number(p.alt) || 170;
+    const weight = this._workout.getCurrentWeight();
+    const bmi = BmrTdeeCalculatorModel.calculateBMI(weight, height);
+    const category = BmrTdeeCalculatorModel.classifyBMI(bmi);
+
+    // 2. Faixa ideal OMS (IMC 18.5 a 24.9)
+    const hM = height / 100;
+    const minIdeal = Math.round(18.5 * hM * hM * 10) / 10;
+    const maxIdeal = Math.round(24.9 * hM * hM * 10) / 10;
+    let diffText = 'Dentro da faixa ideal';
+    let diffColor = 'var(--ok, #6FCF97)';
+
+    if (weight > maxIdeal) {
+      const excess = Math.round((weight - maxIdeal) * 10) / 10;
+      diffText = `+${FormatUtils.formatNumber(excess, 1)} kg para o peso normal`;
+      diffColor = 'var(--warn, #F0B24A)';
+    } else if (weight < minIdeal) {
+      const lack = Math.round((minIdeal - weight) * 10) / 10;
+      diffText = `−${FormatUtils.formatNumber(lack, 1)} kg para o peso normal`;
+      diffColor = 'var(--warn, #F0B24A)';
     }
 
-    pList.innerHTML = pesos.slice(0, 15).map(p => `
-      <div class="it" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)">
-        <div>
-          <b>${FormatUtils.formatNumber(p.kg, 1)} kg</b>
-          <div style="font-size:12px;color:var(--soft)">${FormatUtils.formatDateBr(p.d)}</div>
-        </div>
-        <button type="button" class="btn sm dng" data-del="pesos:${p.id}" style="padding:4px 8px">Excluir</button>
-      </div>
-    `).join('');
+    // 3. Atualiza Mostrador Principal de IMC
+    const imcBigVal = document.querySelector('#imcBigVal');
+    if (imcBigVal) imcBigVal.textContent = FormatUtils.formatNumber(bmi, 1);
+
+    const imcCatBadge = document.querySelector('#imcCategoryBadge');
+    if (imcCatBadge) {
+      let catLabel = 'Peso Normal';
+      let badgeCls = 'badge ok';
+      if (category === 'abaixo do peso') {
+        catLabel = 'Abaixo do Peso';
+        badgeCls = 'badge warn';
+      } else if (category === 'sobrepeso') {
+        catLabel = 'Sobrepeso';
+        badgeCls = 'badge warn';
+      } else if (category.includes('obesidade')) {
+        catLabel = category.charAt(0).toUpperCase() + category.slice(1);
+        badgeCls = 'badge dng';
+      }
+      imcCatBadge.className = badgeCls;
+      imcCatBadge.textContent = catLabel;
+    }
+
+    // 4. Marcador da Régua Visual (escala 15 a 40)
+    const indicator = document.querySelector('#imcIndicator');
+    if (indicator) {
+      const pct = Math.max(5, Math.min(95, ((bmi - 15) / (40 - 15)) * 100));
+      indicator.style.left = `${pct}%`;
+    }
+
+    // 5. Parâmetros Corporais
+    const imcHeightVal = document.querySelector('#imcHeightVal');
+    if (imcHeightVal) imcHeightVal.textContent = `${height} cm`;
+
+    const imcWeightVal = document.querySelector('#imcWeightVal');
+    if (imcWeightVal) imcWeightVal.textContent = `${FormatUtils.formatNumber(weight, 1)} kg`;
+
+    const imcIdealRange = document.querySelector('#imcIdealRange');
+    if (imcIdealRange) imcIdealRange.textContent = `${FormatUtils.formatNumber(minIdeal, 1)} a ${FormatUtils.formatNumber(maxIdeal, 1)} kg`;
+
+    const imcDistVal = document.querySelector('#imcDistanceVal');
+    if (imcDistVal) {
+      imcDistVal.textContent = diffText;
+      imcDistVal.style.color = diffColor;
+    }
+
+    // 6. Lista de Registros de Peso
+    const pList = document.querySelector('#pList');
+    if (pList) {
+      const pesos = (this._state.pesos || []).slice().sort((a, b) => b.d.localeCompare(a.d));
+      if (!pesos.length) {
+        pList.innerHTML = '<div class="glass empty" style="padding:14px;text-align:center;color:var(--soft)">Nenhum peso registrado ainda.</div>';
+      } else {
+        pList.innerHTML = pesos.slice(0, 15).map(p => {
+          const itemBmi = BmrTdeeCalculatorModel.calculateBMI(p.kg, height);
+          return `
+            <div class="it" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)">
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:baseline;gap:8px">
+                  <b>${FormatUtils.formatNumber(p.kg, 1)} kg</b>
+                  <small style="color:var(--accent);font-weight:600">IMC ${FormatUtils.formatNumber(itemBmi, 1)}</small>
+                </div>
+                <div style="font-size:12px;color:var(--soft)">${FormatUtils.formatDateBr(p.d)}</div>
+              </div>
+              <button type="button" class="btn sm dng" data-del="pesos:${p.id}" style="width:auto;flex:none;padding:4px 10px;height:32px">Excluir</button>
+            </div>
+          `;
+        }).join('');
+      }
+    }
   }
 
   drawWeightChart() {

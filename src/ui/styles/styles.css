@@ -179,6 +179,8 @@ nav a.on span{background:var(--accent-soft)}
 .chip[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
 .badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 .badge.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.badge.warn{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
+.badge.dng{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
 .it.hoje{background:var(--accent-soft)}
 .ex{display:grid;grid-template-columns:auto minmax(0,1fr) 84px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
 .ck{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--faint);background:none;cursor:pointer;display:grid;place-items:center;color:transparent}

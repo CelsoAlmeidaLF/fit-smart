@@ -48,7 +48,7 @@
     <div class="glass list" id="hojePlano"></div>
     <div class="sec-h"><b>Calorias da semana</b><a class="link" href="#diario">Ver diário</a></div>
     <div class="glass pad"><div class="bars" id="kBars"></div><div class="ends" style="margin-top:10px"><span><i class="lg c"></i>Consumido</span><span><i class="lg m"></i>Meta do dia</span><span class="num" id="kAvg"></span></div></div>
-    <div class="sec-h"><b>Sua jornada</b><a class="link" href="#peso">Ver peso</a></div>
+    <div class="sec-h"><b>Sua jornada</b><a class="link" href="#peso">Ver IMC</a></div>
     <div class="glass pad jour">
       <div class="row"><div class="big num" id="jNow">110<small>kg</small></div><div style="text-align:right"><small style="color:var(--soft)">Faltam</small><div class="num" style="font-weight:600;font-size:18px" id="jLeft">30 kg</div></div></div>
       <div class="track"><i id="jBar"></i></div>
@@ -65,18 +65,70 @@
     <div class="glass pad"><div class="cups" id="cups" role="group" aria-label="Copos de água de 250 ml"></div></div>
   </section>
 
-  <!-- PESO -->
+  <!-- IMC (ÍNDICE DE MASSA CORPORAL) -->
   <section class="view" id="v-peso">
-    <h2>Saúde</h2>
-    <div class="tabs" data-for="hSeg" role="group" aria-label="Mostrar"><button type="button" data-v="peso" aria-pressed="true">Peso</button><button type="button" data-v="med" aria-pressed="false">Medidas</button><button type="button" data-v="pa" aria-pressed="false">Pressão</button><button type="button" data-v="ex" aria-pressed="false">Exames</button><button type="button" data-v="sono" aria-pressed="false">Sono</button></div><input type="hidden" id="hSeg" value="peso">
-    <div id="hPeso">
-    <div class="f" style="margin-bottom:12px"><label>Período</label><div class="segc" data-for="range" role="group"><button type="button" data-v="30" aria-pressed="false">30 dias</button><button type="button" data-v="90" aria-pressed="false">90 dias</button><button type="button" data-v="0" aria-pressed="true">Tudo</button></div><input type="hidden" id="range" value="0"></div>
-    <div class="glass pad"><div class="fig" id="fig"><svg id="chart"></svg></div></div>
-    <div class="sec-h"><b>Registros</b><button class="link" data-add="peso">+ Registrar</button></div>
-    <div class="glass list" id="pList"></div>
+    <h2>Cálculo de IMC</h2>
+
+    <!-- CARD PRINCIPAL: IMC ATUAL & CLASSIFICAÇÃO OMS -->
+    <div class="glass pad" style="margin-bottom:14px;text-align:center">
+      <small style="display:block;font-size:13px;color:var(--soft);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Seu IMC Atual</small>
+      <div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin:8px 0">
+        <span class="num" id="imcBigVal" style="font-size:48px;font-weight:700;letter-spacing:-0.03em;color:var(--accent)">—</span>
+        <small style="font-size:16px;color:var(--soft)">kg/m²</small>
+      </div>
+      <div id="imcBadgeBox" style="margin-bottom:14px">
+        <span class="badge" id="imcCategoryBadge" style="font-size:13px;padding:6px 14px;border-radius:20px;font-weight:600">—</span>
+      </div>
+
+      <!-- Barra Régua Visual OMS -->
+      <div style="position:relative;margin:18px 4px 6px">
+        <div style="height:10px;border-radius:6px;background:linear-gradient(90deg, #5DB4F5 0%, #5CCB76 25%, #F0B24A 55%, #F07A68 85%, #D9383A 100%);opacity:0.85"></div>
+        <div id="imcIndicator" style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:4px;height:22px;background:#fff;border-radius:2px;box-shadow:0 0 6px rgba(0,0,0,0.6)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--soft);margin-top:8px">
+        <span>&lt; 18.5<br>Abaixo</span>
+        <span>18.5 - 24.9<br>Normal</span>
+        <span>25 - 29.9<br>Sobrepeso</span>
+        <span>30 - 34.9<br>Obesidade I</span>
+        <span>&ge; 35<br>Severa</span>
+      </div>
     </div>
-    <div id="hMed" hidden></div><div id="hPa" hidden></div><div id="hEx" hidden></div><div id="hSono" hidden></div>
-    <p class="note">Os registros servem para você acompanhar a evolução. Eles não substituem a avaliação médica: leve os números às suas consultas.</p>
+
+    <!-- PARÂMETROS E FAIXA IDEAL -->
+    <div class="sec-h" style="margin-top:16px"><b>Faixa Saudável &amp; Referência</b></div>
+    <div class="glass pad" style="margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center">
+        <div style="padding:10px;background:var(--track);border-radius:12px">
+          <small style="display:block;font-size:12px;color:var(--soft)">Altura Cadastrada</small>
+          <b class="num" id="imcHeightVal" style="font-size:18px;display:block;margin-top:2px">170 cm</b>
+        </div>
+        <div style="padding:10px;background:var(--track);border-radius:12px">
+          <small style="display:block;font-size:12px;color:var(--soft)">Peso Atual</small>
+          <b class="num" id="imcWeightVal" style="font-size:18px;display:block;margin-top:2px">80.0 kg</b>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:12px;background:var(--glass-strong);border-radius:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:13px;color:var(--soft)">Faixa de peso ideal (IMC 18.5 - 24.9):</span>
+          <b class="num" id="imcIdealRange" style="color:var(--ok);font-size:14px">53.5 - 72.0 kg</b>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px" id="imcDistanceRow">
+          <span style="font-size:13px;color:var(--soft)">Diferença para peso normal:</span>
+          <b class="num" id="imcDistanceVal" style="font-size:14px">+8.0 kg</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRAR NOVO PESO & RECALCULAR -->
+    <div class="sec-h"><b>Evolução do Peso &amp; IMC</b><button class="link" data-add="peso">+ Registrar peso</button></div>
+    <div class="f" style="margin-bottom:12px"><label>Período</label><div class="segc" data-for="range" role="group"><button type="button" data-v="30" aria-pressed="false">30 dias</button><button type="button" data-v="90" aria-pressed="false">90 dias</button><button type="button" data-v="0" aria-pressed="true">Tudo</button></div><input type="hidden" id="range" value="0"></div>
+    <div class="glass pad" style="margin-bottom:14px">
+      <div class="fig" id="fig"><svg id="chart"></svg></div>
+    </div>
+
+    <div class="sec-h"><b>Histórico de Pesagens</b></div>
+    <div class="glass list" id="pList"></div>
+    <p class="note" style="margin-top:14px">O IMC é uma referência internacional da Organização Mundial da Saúde ($peso / altura^2$). Ele serve como parâmetro geral de saúde e risco cardiovascular.</p>
   </section>
 
   <!-- DIÁRIO -->
@@ -148,7 +200,7 @@
       <div class="sec-h"><b>Aparência &amp; Preferências</b></div>
       <div class="glass pad form">
         <div class="f"><label>Tema</label><div class="segc" data-for="fTema" role="group"><button type="button" data-v="auto" aria-pressed="true">Automático</button><button type="button" data-v="light" aria-pressed="false">Claro</button><button type="button" data-v="dark" aria-pressed="false">Escuro</button></div><input type="hidden" id="fTema" value="auto"></div>
-        <div class="f"><label for="fHome">Abrir o app em</label><select id="fHome"><option value="inicio">Início</option><option value="diario">Diário</option><option value="treino">Treino</option><option value="peso">Saúde</option></select></div>
+        <div class="f"><label for="fHome">Abrir o app em</label><select id="fHome"><option value="inicio">Início</option><option value="diario">Diário</option><option value="treino">Treino</option><option value="peso">IMC</option></select></div>
       </div>
     </div>
 
@@ -236,7 +288,7 @@
 
 <nav><div class="bar glass">
   <a href="#inicio" data-v="inicio"><span><span class="ms" aria-hidden="true">home</span></span>Início</a>
-  <a href="#peso" data-v="peso"><span><span class="ms" aria-hidden="true">monitor_heart</span></span>Saúde</a>
+  <a href="#peso" data-v="peso"><span><span class="ms" aria-hidden="true">calculate</span></span>IMC</a>
   <a href="#diario" data-v="diario"><span><span class="ms" aria-hidden="true">restaurant</span></span>Diário</a>
   <a href="#treino" data-v="treino"><span><span class="ms" aria-hidden="true">fitness_center</span></span>Treino</a>
   <a href="#cadastros" data-v="cadastros"><span><span class="ms" aria-hidden="true">list_alt</span></span>Cadastros</a>
