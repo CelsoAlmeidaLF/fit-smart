@@ -824,27 +824,23 @@ export class AppController {
   }
 
   getIcoSvg(ic, size = 18) {
-    const MSI = {
-      walk: 'directions_walk',
-      hike: 'hiking',
-      run: 'directions_run',
-      bike: 'directions_bike',
-      dumb: 'fitness_center',
-      swim: 'pool',
-      ball: 'sports_soccer',
-      basket: 'sports_basketball',
-      tennis: 'sports_tennis',
-      music: 'music_note',
-      step: 'stairs',
-      yoga: 'self_improvement',
-      martial: 'sports_martial_arts',
-      bolt: 'bolt',
-      rest: 'bedtime',
-      check: 'check',
-      calendar: 'calendar_month'
+    if (typeof FinancIcons !== 'undefined' && FinancIcons.svg) {
+      const res = FinancIcons.svg(ic, { size });
+      if (res) return res;
+    }
+    // Fallback de SVG puro sem necessidade de fonte
+    const svgs = {
+      walk: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.5v2"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.5v2"/></svg>',
+      run: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+      bike: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>',
+      dumb: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>',
+      swim: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>',
+      bolt: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+      rest: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
+      check: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+      calendar: '<svg class="fi" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>'
     };
-    const glyph = MSI[ic] || ic || 'bolt';
-    return `<span class="ms" aria-hidden="true">${glyph}</span>`;
+    return svgs[ic] || svgs['bolt'];
   }
 
   renderPlano() {
@@ -1306,7 +1302,7 @@ export class AppController {
       
       <div class="rest glass" id="restBox" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:12px;margin-bottom:12px">
         <div style="display:flex;align-items:center;gap:10px">
-          <span class="ms" aria-hidden="true">timer</span>
+          <svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="14" r="8"/><line x1="12" x2="15" y1="14" y2="11"/><line x1="10" x2="14" y1="2" y2="2"/></svg>
           <div>
             <small style="color:var(--soft);display:block;font-size:11px">Descanso</small>
             <b class="num" id="rTVal" style="font-size:16px">01:30</b>

@@ -1,0 +1,132 @@
+{
+  "versao": "1.0",
+  "total_icones": 18,
+  "icones": [
+    {
+      "id": 1,
+      "codigo": "01",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Peitoral Maior",
+      "arquivo": "01_peitoral_ombros_pescoco/01_icone_peitoral_maior.jpg"
+    },
+    {
+      "id": 2,
+      "codigo": "02",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Deltóides (Ombros)",
+      "arquivo": "01_peitoral_ombros_pescoco/02_icone_deltoides.jpg"
+    },
+    {
+      "id": 3,
+      "codigo": "03",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Pescoço (Esternocleidomastóideo)",
+      "arquivo": "01_peitoral_ombros_pescoco/03_icone_pescoco.jpg"
+    },
+    {
+      "id": 4,
+      "codigo": "04",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Latíssimo do Dorso (Dorsal)",
+      "arquivo": "02_costas_manguito_rotador/04_icone_latissimo_do_dorso.jpg"
+    },
+    {
+      "id": 5,
+      "codigo": "05",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Trapézio",
+      "arquivo": "02_costas_manguito_rotador/05_icone_trapezio.jpg"
+    },
+    {
+      "id": 6,
+      "codigo": "06",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Lombar (Eretor da Espinha)",
+      "arquivo": "02_costas_manguito_rotador/06_icone_lombar_eretor_espinha.jpg"
+    },
+    {
+      "id": 7,
+      "codigo": "07",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Manguito Rotador",
+      "arquivo": "02_costas_manguito_rotador/07_icone_manguito_rotador.jpg"
+    },
+    {
+      "id": 8,
+      "codigo": "08",
+      "categoria": "Abdômen e Core",
+      "nome": "Reto Abdominal",
+      "arquivo": "03_abdomen_core/08_icone_reto_abdominal.jpg"
+    },
+    {
+      "id": 9,
+      "codigo": "09",
+      "categoria": "Abdômen e Core",
+      "nome": "Oblíquos",
+      "arquivo": "03_abdomen_core/09_icone_obliquos.jpg"
+    },
+    {
+      "id": 10,
+      "codigo": "10",
+      "categoria": "Braços e Antebraços",
+      "nome": "Bíceps",
+      "arquivo": "04_bracos_antebracos/10_icone_biceps.jpg"
+    },
+    {
+      "id": 11,
+      "codigo": "11",
+      "categoria": "Braços e Antebraços",
+      "nome": "Tríceps",
+      "arquivo": "04_bracos_antebracos/11_icone_triceps.jpg"
+    },
+    {
+      "id": 12,
+      "codigo": "12",
+      "categoria": "Braços e Antebraços",
+      "nome": "Antebraço",
+      "arquivo": "04_bracos_antebracos/12_icone_antebraco.jpg"
+    },
+    {
+      "id": 13,
+      "codigo": "13",
+      "categoria": "Glúteos, Coxas e Pernas",
+      "nome": "Glúteo Máximo",
+      "arquivo": "05_gluteos_coxas_pernas/13_icone_gluteo_maximo.jpg"
+    },
+    {
+      "id": 14,
+      "codigo": "14",
+      "categoria": "Glúteos, Coxas e Pernas",
+      "nome": "Quadríceps",
+      "arquivo": "05_gluteos_coxas_pernas/14_icone_quadriceps.jpg"
+    },
+    {
+      "id": 15,
+      "codigo": "15",
+      "categoria": "Glúteos, Coxas e Pernas",
+      "nome": "Isquiotibiais",
+      "arquivo": "05_gluteos_coxas_pernas/15_icone_isquiotibiais.jpg"
+    },
+    {
+      "id": 16,
+      "codigo": "16",
+      "categoria": "Glúteos, Coxas e Pernas",
+      "nome": "Adutores da Coxa",
+      "arquivo": "05_gluteos_coxas_pernas/16_icone_adutores_da_coxa.jpg"
+    },
+    {
+      "id": 17,
+      "codigo": "17",
+      "categoria": "Glúteos, Coxas e Pernas",
+      "nome": "Gastrocnêmio (Panturrilha)",
+      "arquivo": "05_gluteos_coxas_pernas/17_icone_gastrocnemio.jpg"
+    },
+    {
+      "id": 18,
+      "codigo": "18",
+      "categoria": "Glúteos, Coxas e Pernas",
+      "nome": "Tibial Anterior (Canela)",
+      "arquivo": "05_gluteos_coxas_pernas/18_icone_tibial_anterior.jpg"
+    }
+  ]
+}

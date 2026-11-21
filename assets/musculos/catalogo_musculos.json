@@ -1,0 +1,546 @@
+{
+  "versao": "1.0",
+  "total_itens": 54,
+  "itens": [
+    {
+      "id": 1,
+      "codigo": "01",
+      "categoria_pasta": "01_visao_geral_infograficos",
+      "categoria": "Visão Geral e Infográficos",
+      "nome": "Sistema Muscular Completo (4 Vistas com Rótulos)",
+      "regiao": "Corpo Inteiro",
+      "arquivo": "01_visao_geral_infograficos/01_sistema_muscular_completo_4_vistas.jpg",
+      "descricao": "Diagrama anatômico completo com vistas anterior, lateral esquerda, lateral direita e posterior."
+    },
+    {
+      "id": 2,
+      "codigo": "02",
+      "categoria_pasta": "01_visao_geral_infograficos",
+      "categoria": "Visão Geral e Infográficos",
+      "nome": "Infográfico com Close Regional (Modelo 1)",
+      "regiao": "Corpo Inteiro / Detalhes",
+      "arquivo": "01_visao_geral_infograficos/02_infografico_close_regional_v1.jpg",
+      "descricao": "Prancha anatômica com destaques regionais para rosto, tronco, braço e perna."
+    },
+    {
+      "id": 3,
+      "codigo": "03",
+      "categoria_pasta": "01_visao_geral_infograficos",
+      "categoria": "Visão Geral e Infográficos",
+      "nome": "Infográfico com Close Regional (Modelo 2)",
+      "regiao": "Corpo Inteiro / Detalhes",
+      "arquivo": "01_visao_geral_infograficos/03_infografico_close_regional_v2.jpg",
+      "descricao": "Variação de layout anatômico com detalhes ampliados de membros superiores e inferiores."
+    },
+    {
+      "id": 4,
+      "codigo": "04",
+      "categoria_pasta": "01_visao_geral_infograficos",
+      "categoria": "Visão Geral e Infográficos",
+      "nome": "Infográfico UI Modelo para App",
+      "regiao": "Corpo Inteiro / Detalhes",
+      "arquivo": "01_visao_geral_infograficos/04_infografico_modelo_ui_app.jpg",
+      "descricao": "Layout estruturado de referência para interface de aplicativo fitness."
+    },
+    {
+      "id": 5,
+      "codigo": "05",
+      "categoria_pasta": "02_vistas_corporais_isoladas",
+      "categoria": "Vistas Corporais Isoladas (Base Interativa)",
+      "nome": "Vista Anterior (Frente)",
+      "regiao": "Corpo Inteiro - Frente",
+      "arquivo": "02_vistas_corporais_isoladas/05_vista_anterior_frente.jpg",
+      "descricao": "Modelo 3D limpo sem textos da vista frontal para sobreposição de máscaras/SVG."
+    },
+    {
+      "id": 6,
+      "codigo": "06",
+      "categoria_pasta": "02_vistas_corporais_isoladas",
+      "categoria": "Vistas Corporais Isoladas (Base Interativa)",
+      "nome": "Vista Lateral Esquerda",
+      "regiao": "Corpo Inteiro - Lateral Esquerda",
+      "arquivo": "02_vistas_corporais_isoladas/06_vista_lateral_esquerda.jpg",
+      "descricao": "Modelo 3D limpo sem textos do perfil esquerdo."
+    },
+    {
+      "id": 7,
+      "codigo": "07",
+      "categoria_pasta": "02_vistas_corporais_isoladas",
+      "categoria": "Vistas Corporais Isoladas (Base Interativa)",
+      "nome": "Vista Lateral Direita",
+      "regiao": "Corpo Inteiro - Lateral Direita",
+      "arquivo": "02_vistas_corporais_isoladas/07_vista_lateral_direita.jpg",
+      "descricao": "Modelo 3D limpo sem textos do perfil direito."
+    },
+    {
+      "id": 8,
+      "codigo": "08",
+      "categoria_pasta": "02_vistas_corporais_isoladas",
+      "categoria": "Vistas Corporais Isoladas (Base Interativa)",
+      "nome": "Vista Posterior (Costas)",
+      "regiao": "Corpo Inteiro - Costas",
+      "arquivo": "02_vistas_corporais_isoladas/08_vista_posterior_costas.jpg",
+      "descricao": "Modelo 3D limpo sem textos da vista posterior."
+    },
+    {
+      "id": 9,
+      "codigo": "09",
+      "categoria_pasta": "03_bases_regionais_neutras",
+      "categoria": "Bases Regionais (Estado Neutro)",
+      "nome": "Base Tronco Anterior (Peitoral, Ombros e Abdômen)",
+      "regiao": "Tronco Anterior",
+      "arquivo": "03_bases_regionais_neutras/09_base_tronco_anterior.jpg",
+      "descricao": "Recorte anatômico neutro da parte superior frontal."
+    },
+    {
+      "id": 10,
+      "codigo": "10",
+      "categoria_pasta": "03_bases_regionais_neutras",
+      "categoria": "Bases Regionais (Estado Neutro)",
+      "nome": "Base Tronco Posterior (Costas)",
+      "regiao": "Costas",
+      "arquivo": "03_bases_regionais_neutras/10_base_tronco_posterior.jpg",
+      "descricao": "Recorte anatômico neutro da musculatura posterior do tronco."
+    },
+    {
+      "id": 11,
+      "codigo": "11",
+      "categoria_pasta": "03_bases_regionais_neutras",
+      "categoria": "Bases Regionais (Estado Neutro)",
+      "nome": "Base Membro Superior (Braço e Antebraço)",
+      "regiao": "Braços",
+      "arquivo": "03_bases_regionais_neutras/11_base_braco_antebraco.jpg",
+      "descricao": "Recorte anatômico neutro de braço, antebraço e mão."
+    },
+    {
+      "id": 12,
+      "codigo": "12",
+      "categoria_pasta": "03_bases_regionais_neutras",
+      "categoria": "Bases Regionais (Estado Neutro)",
+      "nome": "Base Quadril, Glúteos e Coxas",
+      "regiao": "Quadril e Coxas",
+      "arquivo": "03_bases_regionais_neutras/12_base_gluteos_coxas.jpg",
+      "descricao": "Recorte anatômico neutro da região pélvica, glútea e femoral."
+    },
+    {
+      "id": 13,
+      "codigo": "13",
+      "categoria_pasta": "03_bases_regionais_neutras",
+      "categoria": "Bases Regionais (Estado Neutro)",
+      "nome": "Base Perna Inferior e Panturrilha",
+      "regiao": "Pernas Inferiores",
+      "arquivo": "03_bases_regionais_neutras/13_base_perna_panturrilha.jpg",
+      "descricao": "Recorte anatômico neutro de joelho, canela, panturrilha e pé."
+    },
+    {
+      "id": 14,
+      "codigo": "14",
+      "categoria_pasta": "04_peitoral_ombros_pescoco",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Peitoral Maior",
+      "regiao": "Peitoral",
+      "arquivo": "04_peitoral_ombros_pescoco/14_peitoral_maior.jpg",
+      "descricao": "Músculo principal do tórax anterior; responsável por adução e flexão horizontal do ombro."
+    },
+    {
+      "id": 15,
+      "codigo": "15",
+      "categoria_pasta": "04_peitoral_ombros_pescoco",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Deltóides (Geral)",
+      "regiao": "Ombros",
+      "arquivo": "04_peitoral_ombros_pescoco/15_deltoides_geral.jpg",
+      "descricao": "Conjunto completo do músculo deltoide que recobre a articulação do ombro."
+    },
+    {
+      "id": 16,
+      "codigo": "16",
+      "categoria_pasta": "04_peitoral_ombros_pescoco",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Deltóide Anterior",
+      "regiao": "Ombros",
+      "arquivo": "04_peitoral_ombros_pescoco/16_deltoide_anterior.jpg",
+      "descricao": "Porção frontal do deltoide; atua na flexão do ombro e movimentos de empurrar."
+    },
+    {
+      "id": 17,
+      "codigo": "17",
+      "categoria_pasta": "04_peitoral_ombros_pescoco",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Deltóide Lateral (Médio)",
+      "regiao": "Ombros",
+      "arquivo": "04_peitoral_ombros_pescoco/17_deltoide_lateral.jpg",
+      "descricao": "Porção lateral do deltoide; principal motor da abdução do braço."
+    },
+    {
+      "id": 18,
+      "codigo": "18",
+      "categoria_pasta": "04_peitoral_ombros_pescoco",
+      "categoria": "Peitoral, Ombros e Pescoço",
+      "nome": "Esternocleidomastóideo (Pescoço)",
+      "regiao": "Pescoço",
+      "arquivo": "04_peitoral_ombros_pescoco/18_esternocleidomastoideo_pescoco.jpg",
+      "descricao": "Musculatura cervical anterior e lateral responsável pela flexão e rotação da cabeça."
+    },
+    {
+      "id": 19,
+      "codigo": "19",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Latíssimo do Dorso (Dorsal)",
+      "regiao": "Costas",
+      "arquivo": "05_costas_manguito_rotador/19_latissimo_do_dorso.jpg",
+      "descricao": "Músculo largo das costas; atua na extensão, adução e rotação medial do ombro."
+    },
+    {
+      "id": 20,
+      "codigo": "20",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Trapézio",
+      "regiao": "Costas Superiores",
+      "arquivo": "05_costas_manguito_rotador/20_trapezio.jpg",
+      "descricao": "Músculo cervico-torácico responsável pela elevação, retração e depressão escapular."
+    },
+    {
+      "id": 21,
+      "codigo": "21",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Rombóides (Maior e Menor)",
+      "regiao": "Costas Superiores",
+      "arquivo": "05_costas_manguito_rotador/21_romboides.jpg",
+      "descricao": "Músculos interescapulares que realizam a retração e estabilização das escápulas."
+    },
+    {
+      "id": 22,
+      "codigo": "22",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Eretor da Espinha (Lombar)",
+      "regiao": "Lombar",
+      "arquivo": "05_costas_manguito_rotador/22_eretor_da_espinha.jpg",
+      "descricao": "Coluna muscular paravertebral responsável pela extensão e sustentação do tronco."
+    },
+    {
+      "id": 23,
+      "codigo": "23",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Quadrado Lombar",
+      "regiao": "Lombar",
+      "arquivo": "05_costas_manguito_rotador/23_quadrado_lombar.jpg",
+      "descricao": "Estabilizador profundo da região lombar e da pelve; auxilia na inclinação lateral."
+    },
+    {
+      "id": 24,
+      "codigo": "24",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Redondo Maior e Deltóide Posterior",
+      "regiao": "Costas / Ombro Posterior",
+      "arquivo": "05_costas_manguito_rotador/24_redondo_maior_deltoide_posterior.jpg",
+      "descricao": "Complexo posterior do ombro e axila; atua na extensão e abdução horizontal."
+    },
+    {
+      "id": 25,
+      "codigo": "25",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Supraespinal (Manguito Rotador)",
+      "regiao": "Manguito Rotador",
+      "arquivo": "05_costas_manguito_rotador/25_supraespinal.jpg",
+      "descricao": "Músculo superior da escápula que inicia a abdução do ombro e estabiliza a cabeça umeral."
+    },
+    {
+      "id": 26,
+      "codigo": "26",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Infraespinal (Manguito Rotador)",
+      "regiao": "Manguito Rotador",
+      "arquivo": "05_costas_manguito_rotador/26_infraespinal.jpg",
+      "descricao": "Principal rotador externo do ombro na fossa infraespinal da escápula."
+    },
+    {
+      "id": 27,
+      "codigo": "27",
+      "categoria_pasta": "05_costas_manguito_rotador",
+      "categoria": "Costas e Manguito Rotador",
+      "nome": "Redondo Menor (Manguito Rotador)",
+      "regiao": "Manguito Rotador",
+      "arquivo": "05_costas_manguito_rotador/27_redondo_menor.jpg",
+      "descricao": "Músculo auxiliar da rotação externa e estabilização posterior do ombro."
+    },
+    {
+      "id": 28,
+      "codigo": "28",
+      "categoria_pasta": "06_abdomen_core",
+      "categoria": "Abdômen e Core",
+      "nome": "Reto Abdominal",
+      "regiao": "Abdômen",
+      "arquivo": "06_abdomen_core/28_reto_abdominal.jpg",
+      "descricao": "Músculo anterior do abdômen responsável pela flexão da coluna toracolombar."
+    },
+    {
+      "id": 29,
+      "codigo": "29",
+      "categoria_pasta": "06_abdomen_core",
+      "categoria": "Abdômen e Core",
+      "nome": "Oblíquos Externos",
+      "regiao": "Abdômen Lateral",
+      "arquivo": "06_abdomen_core/29_obliquos_externos.jpg",
+      "descricao": "Musculatura lateral do tronco; atua na rotação e flexão lateral do tronco."
+    },
+    {
+      "id": 30,
+      "codigo": "30",
+      "categoria_pasta": "06_abdomen_core",
+      "categoria": "Abdômen e Core",
+      "nome": "Transverso do Abdômen",
+      "regiao": "Core Profundo",
+      "arquivo": "06_abdomen_core/30_transverso_do_abdomen.jpg",
+      "descricao": "Cinta abdominal profunda responsável pela estabilização intra-abdominal e lombar."
+    },
+    {
+      "id": 31,
+      "codigo": "31",
+      "categoria_pasta": "06_abdomen_core",
+      "categoria": "Abdômen e Core",
+      "nome": "Serrátil Anterior",
+      "regiao": "Tórax Lateral",
+      "arquivo": "06_abdomen_core/31_serratil_anterior.jpg",
+      "descricao": "Músculo lateral das costelas que realiza a protração e rotação superior da escápula."
+    },
+    {
+      "id": 32,
+      "codigo": "32",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Bíceps Braquial",
+      "regiao": "Braço Anterior",
+      "arquivo": "07_bracos_antebracos/32_biceps_braquial.jpg",
+      "descricao": "Músculo flexor do cotovelo e supinador do antebraço."
+    },
+    {
+      "id": 33,
+      "codigo": "33",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Coracobraquial e Cabeça Curta do Bíceps",
+      "regiao": "Braço Medial/Anterior",
+      "arquivo": "07_bracos_antebracos/33_coracobraquial_cabeca_curta_biceps.jpg",
+      "descricao": "Porção medial anterior do braço; auxilia na flexão e adução do ombro e flexão do cotovelo."
+    },
+    {
+      "id": 34,
+      "codigo": "34",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Braquial",
+      "regiao": "Braço Profundo",
+      "arquivo": "07_bracos_antebracos/34_braquial.jpg",
+      "descricao": "Flexor puro do cotovelo situado sob o bíceps braquial."
+    },
+    {
+      "id": 35,
+      "codigo": "35",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Tríceps Braquial (Geral)",
+      "regiao": "Braço Posterior",
+      "arquivo": "07_bracos_antebracos/35_triceps_braquial_geral.jpg",
+      "descricao": "Principal extensor do cotovelo cobrindo a região posterior do braço."
+    },
+    {
+      "id": 36,
+      "codigo": "36",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Cabeça Longa do Tríceps",
+      "regiao": "Braço Posterior Medial",
+      "arquivo": "07_bracos_antebracos/36_cabeca_longa_triceps.jpg",
+      "descricao": "Porção biarticular do tríceps; atua na extensão do cotovelo e extensão do ombro."
+    },
+    {
+      "id": 37,
+      "codigo": "37",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Antebraço (Geral)",
+      "regiao": "Antebraço",
+      "arquivo": "07_bracos_antebracos/37_antebraco_geral.jpg",
+      "descricao": "Conjunto muscular responsável pela preensão manual e movimentos do punho."
+    },
+    {
+      "id": 38,
+      "codigo": "38",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Braquiorradial",
+      "regiao": "Antebraço Lateral",
+      "arquivo": "07_bracos_antebracos/38_braquiorradial.jpg",
+      "descricao": "Músculo lateral do antebraço; flexiona o cotovelo especialmente em pegada neutra."
+    },
+    {
+      "id": 39,
+      "codigo": "39",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Flexores do Antebraço",
+      "regiao": "Antebraço Anterior",
+      "arquivo": "07_bracos_antebracos/39_flexores_do_antebraco.jpg",
+      "descricao": "Grupo flexor do punho e dos dedos; essencial para força de pegada."
+    },
+    {
+      "id": 40,
+      "codigo": "40",
+      "categoria_pasta": "07_bracos_antebracos",
+      "categoria": "Braços e Antebraços",
+      "nome": "Extensores do Antebraço",
+      "regiao": "Antebraço Posterior",
+      "arquivo": "07_bracos_antebracos/40_extensores_do_antebraco.jpg",
+      "descricao": "Grupo extensor do punho e dos dedos na face posterior do antebraço."
+    },
+    {
+      "id": 41,
+      "codigo": "41",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Glúteo Máximo",
+      "regiao": "Glúteos",
+      "arquivo": "08_gluteos_quadril_coxas/41_gluteo_maximo.jpg",
+      "descricao": "Maior músculo glúteo; principal extensor e rotador externo do quadril."
+    },
+    {
+      "id": 42,
+      "codigo": "42",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Glúteo Médio",
+      "regiao": "Quadril Lateral",
+      "arquivo": "08_gluteos_quadril_coxas/42_gluteo_medio.jpg",
+      "descricao": "Principal abdutor do quadril e estabilizador pélvico durante o apoio unipodal."
+    },
+    {
+      "id": 43,
+      "codigo": "43",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Tensor da Fáscia Lata",
+      "regiao": "Quadril Anterolateral",
+      "arquivo": "08_gluteos_quadril_coxas/43_tensor_da_fascia_lata.jpg",
+      "descricao": "Atua na abdução, flexão e rotação medial do quadril junto ao trato iliotibial."
+    },
+    {
+      "id": 44,
+      "codigo": "44",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Quadríceps (Geral)",
+      "regiao": "Coxa Anterior",
+      "arquivo": "08_gluteos_quadril_coxas/44_quadriceps_geral.jpg",
+      "descricao": "Grupo extensor do joelho composto por reto femoral e vastos."
+    },
+    {
+      "id": 45,
+      "codigo": "45",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Vasto Medial",
+      "regiao": "Coxa Anteromedial",
+      "arquivo": "08_gluteos_quadril_coxas/45_vasto_medial.jpg",
+      "descricao": "Porção medial distal do quadríceps; importante na extensão final e estabilidade patelar."
+    },
+    {
+      "id": 46,
+      "codigo": "46",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Isquiotibiais (Geral)",
+      "regiao": "Coxa Posterior",
+      "arquivo": "08_gluteos_quadril_coxas/46_isquiotibiais_geral.jpg",
+      "descricao": "Grupo posterior da coxa responsável pela flexão do joelho e extensão do quadril."
+    },
+    {
+      "id": 47,
+      "codigo": "47",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Bíceps Femoral",
+      "regiao": "Coxa Posterolateral",
+      "arquivo": "08_gluteos_quadril_coxas/47_biceps_femoral.jpg",
+      "descricao": "Porção lateral dos isquiotibiais; flexiona o joelho e estende o quadril."
+    },
+    {
+      "id": 48,
+      "codigo": "48",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Adutores da Coxa",
+      "regiao": "Coxa Medial",
+      "arquivo": "08_gluteos_quadril_coxas/48_adutores_da_coxa.jpg",
+      "descricao": "Grupo medial responsável pela adução do quadril."
+    },
+    {
+      "id": 49,
+      "codigo": "49",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Grácil",
+      "regiao": "Coxa Medial",
+      "arquivo": "08_gluteos_quadril_coxas/49_gracil.jpg",
+      "descricao": "Músculo longo e superficial da face medial da coxa; aduz o quadril e flexiona o joelho."
+    },
+    {
+      "id": 50,
+      "codigo": "50",
+      "categoria_pasta": "08_gluteos_quadril_coxas",
+      "categoria": "Glúteos, Quadril e Coxas",
+      "nome": "Sartório",
+      "regiao": "Coxa Anterior Oblíqua",
+      "arquivo": "08_gluteos_quadril_coxas/50_sartorio.jpg",
+      "descricao": "Músculo mais longo do corpo humano; cruza obliquamente a coxa auxiliando flexão e rotação externa."
+    },
+    {
+      "id": 51,
+      "codigo": "51",
+      "categoria_pasta": "09_pernas_panturrilhas",
+      "categoria": "Pernas Inferiores e Panturrilhas",
+      "nome": "Gastrocnêmio (Panturrilha Superficial)",
+      "regiao": "Panturrilha",
+      "arquivo": "09_pernas_panturrilhas/51_gastrocnemio.jpg",
+      "descricao": "Porção superficial biarticular da panturrilha; realiza flexão plantar do tornozelo."
+    },
+    {
+      "id": 52,
+      "codigo": "52",
+      "categoria_pasta": "09_pernas_panturrilhas",
+      "categoria": "Pernas Inferiores e Panturrilhas",
+      "nome": "Sóleo (Panturrilha Profunda)",
+      "regiao": "Panturrilha Profunda",
+      "arquivo": "09_pernas_panturrilhas/52_soleo.jpg",
+      "descricao": "Músculo profundo da panturrilha ativo na flexão plantar, especialmente com joelho flexionado."
+    },
+    {
+      "id": 53,
+      "codigo": "53",
+      "categoria_pasta": "09_pernas_panturrilhas",
+      "categoria": "Pernas Inferiores e Panturrilhas",
+      "nome": "Tibial Anterior",
+      "regiao": "Perna Anterior (Canela)",
+      "arquivo": "09_pernas_panturrilhas/53_tibial_anterior.jpg",
+      "descricao": "Principal dorsiflexor do tornozelo e inversor do pé."
+    },
+    {
+      "id": 54,
+      "codigo": "54",
+      "categoria_pasta": "09_pernas_panturrilhas",
+      "categoria": "Pernas Inferiores e Panturrilhas",
+      "nome": "Fibulares Longo e Curto",
+      "regiao": "Perna Lateral",
+      "arquivo": "09_pernas_panturrilhas/54_fibulares_longo_e_curto.jpg",
+      "descricao": "Músculos laterais da perna responsáveis pela eversão do pé e estabilidade lateral do tornozelo."
+    }
+  ]
+}

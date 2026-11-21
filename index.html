@@ -12,10 +12,9 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Fit Systekna</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 <link rel="stylesheet" href="src/ui/styles/styles.css">
 <link rel="stylesheet" href="src/apoio/apoio.css" id="dz-style">
+<script src="src/apoio/stk-pkt-financ-icons.js"></script>
 </head>
 <body>
 <div class="sky"></div>
@@ -25,7 +24,7 @@
 <div class="app">
   <header class="top">
     <div class="who"><small id="hello">Olá</small><b id="hTitle">Fit Systekna</b></div>
-    <a class="ib" href="#config" id="gear" aria-label="Configurações"><span class="ms" aria-hidden="true">settings</span></a>
+    <a class="ib" href="#config" id="gear" aria-label="Configurações"><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></a>
   </header>
 
   <!-- INÍCIO -->
@@ -36,16 +35,16 @@
         <div class="c"><b class="num" id="rLeft">0</b><small id="rLbl">kcal restantes</small></div>
       </div>
       <div class="stats">
-        <div class="stat"><span class="ic t-acc"><span class="ms" aria-hidden="true">flag</span></span><div><small>Meta do dia</small><b class="num" id="sMeta">0</b></div></div>
-        <div class="stat"><span class="ic t-ok"><span class="ms" aria-hidden="true">restaurant</span></span><div><small>Consumido</small><b class="num" id="sCons">0</b></div></div>
-        <div class="stat"><span class="ic t-fire"><span class="ms" aria-hidden="true">local_fire_department</span></span><div><small>Exercício</small><b class="num" id="sEx">0</b></div></div>
+        <div class="stat"><span class="ic t-acc"><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg></span><div><small>Meta do dia</small><b class="num" id="sMeta">0</b></div></div>
+        <div class="stat"><span class="ic t-ok"><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v10a2 2 0 0 1-2 2v6"/><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div><small>Consumido</small><b class="num" id="sCons">0</b></div></div>
+        <div class="stat"><span class="ic t-fire"><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span><div><small>Exercício</small><b class="num" id="sEx">0</b></div></div>
       </div>
     </div>
     <div class="quick">
-      <button class="qa pri" data-add="comida"><span><span class="ms" aria-hidden="true">restaurant</span></span>Refeição</button>
-      <button class="qa" data-add="peso"><span><span class="ms" aria-hidden="true">monitor_weight</span></span>Peso</button>
-      <button class="qa" data-add="treino"><span><span class="ms" aria-hidden="true">fitness_center</span></span>Treino</button>
-      <button class="qa" id="qWater"><span><span class="ms" aria-hidden="true">water_drop</span></span>Água</button>
+      <button class="qa pri" data-add="comida"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v10a2 2 0 0 1-2 2v6"/><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Refeição</button>
+      <button class="qa" data-add="peso"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg></span>Peso</button>
+      <button class="qa" data-add="treino"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg></span>Treino</button>
+      <button class="qa" id="qWater"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></span>Água</button>
     </div>
     <div class="sec-h"><b>Hoje no plano</b><a class="link" href="#treino">Ver semana</a></div>
     <div class="glass list" id="hojePlano"></div>
@@ -137,14 +136,14 @@
   <!-- DIÁRIO -->
   <section class="view" id="v-diario">
     <h2>Diário alimentar</h2>
-    <div class="glass daynav"><button class="ib" id="dPrev" aria-label="Dia anterior"><span class="ms" aria-hidden="true">chevron_left</span></button><b id="dLbl">Hoje</b><button class="ib" id="dNext" aria-label="Próximo dia"><span class="ms" aria-hidden="true">chevron_right</span></button></div>
+    <div class="glass daynav"><button class="ib" id="dPrev" aria-label="Dia anterior"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><b id="dLbl">Hoje</b><button class="ib" id="dNext" aria-label="Próximo dia"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
     <div class="glass sumbar"><div><small>Meta</small><b class="num" id="dMeta">0</b></div><div><small>Consumido</small><b class="num" id="dCons">0</b></div><div><small>Restante</small><b class="num" id="dLeft">0</b></div></div>
     <div class="tabs" data-for="dSeg" role="group" aria-label="Mostrar"><button type="button" data-v="dia" aria-pressed="true">Refeições do dia</button><button type="button" data-v="card" aria-pressed="false">Cardápio e regras</button></div><input type="hidden" id="dSeg" value="dia">
     <div id="dDia"><div class="glass list" id="dMeals" style="margin-top:12px"></div><div style="margin-top:12px"><button class="btn pri" data-add="comida">Adicionar ao diário</button></div><div class="sec-h"><b>Atalhos</b></div><div class="glass pad form" id="dAtal"></div></div>
     <div id="dCard" hidden>
       <div class="sec-h"><b>Cardápio base</b><span class="num" style="color:var(--soft);font-size:13px" id="cTot"></span></div>
       <div id="cardapio"></div>
-      <details class="glass acc"><summary><span class="stat"><span class="ic t-ok"><span class="ms" aria-hidden="true">checklist</span></span></span><div class="t"><b>Regras da dieta</b><small>5 regras simples</small></div><span class="ms chev" aria-hidden="true">expand_more</span></summary>
+      <details class="glass acc"><summary><span class="stat"><span class="ic t-ok"><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span></span><div class="t"><b>Regras da dieta</b><small>5 regras simples</small></div><svg class="fi chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
         <ol class="rules"><li>Proteína em toda refeição: ovo, frango, carne, peixe, iogurte ou feijão.</li><li>Metade do prato com salada e legumes no almoço e no jantar.</li><li>Sem refrigerante, suco e álcool durante a semana.</li><li>Sobrou espaço no dia? Use numa fruta, não para compensar depois.</li><li>Uma refeição livre por semana, sem exagero.</li></ol>
       </details>
     </div>
@@ -211,7 +210,7 @@
     <div class="cfg-section" id="cfgSec-seguranca">
       <div class="sec-h"><b>Segurança &amp; Privacidade</b></div>
       <div class="glass pad form">
-        <div class="it" style="padding:0"><span class="stat"><span class="ic t-ok"><span class="ms" aria-hidden="true">lock</span></span></span><div class="t"><b>Bloqueio por PIN ativado</b><small>Proteção contra acesso indevido e olhares curiosos</small></div></div>
+        <div class="it" style="padding:0"><span class="stat"><span class="ic t-ok"><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></span><div class="t"><b>Bloqueio por PIN ativado</b><small>Proteção contra acesso indevido e olhares curiosos</small></div></div>
         <button class="btn sec" id="bPin">Alterar PIN</button>
         <button class="btn sec" id="bCert">Emitir Certificado de Segurança (PDF)</button>
         <button class="btn sec" id="bWords">Ver 12 Palavras de Recuperação</button>
@@ -225,14 +224,14 @@
       <div class="sec-h"><b>Instalação do Aplicativo</b></div>
       <div class="glass pad" style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;align-items:center;gap:12px">
-          <span class="stat"><span class="ic t-acc"><span class="ms" aria-hidden="true">smartphone</span></span></span>
+          <span class="stat"><span class="ic t-acc"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg></span></span>
           <div style="flex:1">
             <b>Adicionar à Tela Inicial</b>
             <small style="display:block;color:var(--soft);font-size:12px">Funciona 100% offline com velocidade nativa</small>
           </div>
         </div>
         <button type="button" class="btn sec block" id="bInstalarApp" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <span class="ms" aria-hidden="true">smartphone</span>
+          <svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
           Instalar / Como Adicionar
         </button>
       </div>
@@ -254,8 +253,8 @@
       <div class="sec-h"><b>Sobre o Aplicativo</b></div>
       <div class="glass list" style="margin-bottom:14px">
         <div class="it"><div class="t"><b>Fit Systekna</b><small>Versão 1.2 · Nutrição &amp; Saúde Inteligente</small></div></div>
-        <button class="row" id="bPriv"><div class="t"><b>Política de privacidade (LGPD)</b><small>Seus dados ficam 100% locais neste aparelho</small></div><span class="ms go" aria-hidden="true">chevron_right</span></button>
-        <div class="it"><div class="t"><b style="white-space:normal">Créditos de Engenharia</b><small style="white-space:normal">Ícones Material Symbols &amp; Lucide (Apache 2.0 / ISC) · Anatomia js-rich-body-highlighter (MIT)</small></div></div>
+        <button class="row" id="bPriv"><div class="t"><b>Política de privacidade (LGPD)</b><small>Seus dados ficam 100% locais neste aparelho</small></div><svg class="fi go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        <div class="it"><div class="t"><b style="white-space:normal">Créditos de Engenharia</b><small style="white-space:normal">Ícones Oficiais Lucide (ISC) · Anatomia js-rich-body-highlighter (MIT)</small></div></div>
       </div>
 
       <div class="sec-h"><b>Apoio &amp; Comunidade</b></div>
@@ -263,17 +262,17 @@
         <p style="font-size:13px;color:var(--soft);margin:0 0 4px">Este app é gratuito e independente. Você pode apoiar o desenvolvimento ou avaliar a sua experiência:</p>
         
         <button type="button" class="btn pri block" id="bApoiarSmart" style="display:flex;align-items:center;justify-content:center;gap:8px">
-          <span class="ms" aria-hidden="true">favorite</span>
+          <svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           Apoiar com PIX ou Bitcoin
         </button>
 
         <div style="display:flex;gap:10px">
           <button type="button" class="btn sec flex1" id="bAvaliarSmart" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <span class="ms" aria-hidden="true">star</span>
+            <svg class="fi" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             Avaliar (1 a 5 ★)
           </button>
           <button type="button" class="btn sec flex1" id="bSugerirSmart" style="display:flex;align-items:center;justify-content:center;gap:6px">
-            <span class="ms" aria-hidden="true">chat</span>
+            <svg class="fi" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Sugerir / Feedback
           </button>
         </div>
@@ -290,11 +289,11 @@
 </div>
 
 <nav><div class="bar glass">
-  <a href="#inicio" data-v="inicio"><span><span class="ms" aria-hidden="true">home</span></span>Início</a>
-  <a href="#peso" data-v="peso"><span><span class="ms" aria-hidden="true">calculate</span></span>IMC</a>
-  <a href="#diario" data-v="diario"><span><span class="ms" aria-hidden="true">restaurant</span></span>Diário</a>
-  <a href="#treino" data-v="treino"><span><span class="ms" aria-hidden="true">fitness_center</span></span>Treino</a>
-  <a href="#cadastros" data-v="cadastros"><span><span class="ms" aria-hidden="true">list_alt</span></span>Cadastros</a>
+  <a href="#inicio" data-v="inicio"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Início</a>
+  <a href="#peso" data-v="peso"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg></span>IMC</a>
+  <a href="#diario" data-v="diario"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v10a2 2 0 0 1-2 2v6"/><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Diário</a>
+  <a href="#treino" data-v="treino"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg></span>Treino</a>
+  <a href="#cadastros" data-v="cadastros"><span><svg class="fi" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>Cadastros</a>
 </div></nav>
 
 <div class="ovl" id="onb" hidden><div class="ovl-in" id="onbIn"></div></div>

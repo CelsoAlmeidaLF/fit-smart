@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo Oficial de Ícones & Anatomia — Systekna FIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="src/apoio/stk-pkt-financ-icons.js"></script>
+  <style>
+    :root {
+      --bg: #0E1210;
+      --surface: #171D1A;
+      --surface-2: #202824;
+      --line: #2C3733;
+      --accent: #6FCF97;
+      --accent-soft: rgba(111, 207, 151, 0.12);
+      --ink: #EAEFEA;
+      --soft: #9BAEA4;
+      --font-heading: 'Space Grotesk', -apple-system, sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-heading);
+      padding: 24px;
+      line-height: 1.5;
+    }
+    header {
+      max-width: 1200px;
+      margin: 0 auto 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .badge-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    p.sub { color: var(--soft); font-size: 14px; }
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+    }
+    .tab-btn {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--soft);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #0E1210;
+      border-color: var(--accent);
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+    
+    .grid-icons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card-icon {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-icon:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .icon-preview {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      border: 1px solid var(--line);
+    }
+    .icon-name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      word-break: break-all;
+    }
+    .icon-category {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    .grid-muscles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card-muscle {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-muscle img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #000;
+      border-bottom: 1px solid var(--line);
+    }
+    .muscle-info {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .muscle-name { font-weight: 700; font-size: 15px; color: #fff; }
+    .muscle-reg { font-size: 12px; color: var(--accent); font-family: var(--font-mono); }
+    .muscle-path { font-size: 10px; color: var(--soft); font-family: var(--font-mono); word-break: break-all; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge-pill">VALIDAÇÃO VISUAL DE ATIVOS</span>
+    <h1>Catálogo de Ícones & Anatomia — Systekna FIT</h1>
+    <p class="sub">100% Vetoriais Oficiais Lucide / FinancIcons (sem ligaduras de fonte que viram texto) + Ilustrações Anatômicas do data.zip.</p>
+    
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('icons')">Ícones de UI (Lucide / SVG)</button>
+      <button class="tab-btn" onclick="switchTab('muscles-41')">41 Ilustrações Anatômicas (data.zip)</button>
+      <button class="tab-btn" onclick="switchTab('muscles-18')">18 Ícones Regionais (data.zip)</button>
+    </div>
+  </header>
+
+  <!-- ABA 1: ÍCONES DE UI -->
+  <section id="tab-icons" class="tab-pane active">
+    <div class="grid-icons" id="iconsGrid"></div>
+  </section>
+
+  <!-- ABA 2: 41 ILUSTRAÇÕES DE MÚSCULOS -->
+  <section id="tab-muscles-41" class="tab-pane">
+    <div class="grid-muscles" id="muscles41Grid"></div>
+  </section>
+
+  <!-- ABA 3: 18 ÍCONES REGIONAIS -->
+  <section id="tab-muscles-18" class="tab-pane">
+    <div class="grid-muscles" id="muscles18Grid"></div>
+  </section>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    const UI_ICONS = [
+      { name: 'dumbbell', cat: 'Treino / Fitness' },
+      { name: 'scale', cat: 'Saúde / Peso' },
+      { name: 'calculator', cat: 'IMC / Cálculos' },
+      { name: 'utensils', cat: 'Nutrição / Diário' },
+      { name: 'flame', cat: 'Metabolismo / Calorias' },
+      { name: 'droplet', cat: 'Hidratação / Água' },
+      { name: 'zap', cat: 'Energia / Prontidão' },
+      { name: 'calendar', cat: 'Semanas / Sprints' },
+      { name: 'home', cat: 'Navegação' },
+      { name: 'settings', cat: 'Configurações' },
+      { name: 'search', cat: 'Busca Global' },
+      { name: 'clipboard-list', cat: 'Cadastros / Fichas' },
+      { name: 'activity', cat: 'Cardio / Corrida' },
+      { name: 'footprints', cat: 'Caminhada' },
+      { name: 'bike', cat: 'Ciclismo' },
+      { name: 'waves', cat: 'Natação' },
+      { name: 'moon', cat: 'Descanso / Sono' },
+      { name: 'timer', cat: 'Cronômetro / Descanso' },
+      { name: 'flag', cat: 'Metas do Dia' },
+      { name: 'trophy', cat: 'Marcos / Conquistas' },
+      { name: 'lock', cat: 'Segurança / PIN' },
+      { name: 'fingerprint', cat: 'Biometria' },
+      { name: 'shield-check', cat: 'Proteção Criptográfica' },
+      { name: 'smartphone', cat: 'PWA / App' },
+      { name: 'heart', cat: 'Apoio / PIX' },
+      { name: 'star', cat: 'Avaliação' },
+      { name: 'message-square', cat: 'Feedback' },
+      { name: 'eye', cat: 'Visibilidade de Senha' },
+      { name: 'eye-off', cat: 'Ocultar Senha' },
+      { name: 'download', cat: 'Backup JSON' },
+      { name: 'upload', cat: 'Restaurar Backup' },
+      { name: 'trash', cat: 'Excluir / Limpar' },
+      { name: 'check', cat: 'Pronto / Concluído' },
+      { name: 'plus', cat: 'Adicionar' },
+      { name: 'minus', cat: 'Diminuir' },
+      { name: 'x', cat: 'Fechar / Cancelar' },
+      { name: 'chevron-left', cat: 'Navegação' },
+      { name: 'chevron-right', cat: 'Navegação' }
+    ];
+
+    const container = document.getElementById('iconsGrid');
+    UI_ICONS.forEach(ic => {
+      const card = document.createElement('div');
+      card.className = 'card-icon';
+      const svgHtml = typeof FinancIcons !== 'undefined' ? FinancIcons.svg(ic.name, { size: 28 }) : '';
+      card.innerHTML = `
+        <div class="icon-preview">${svgHtml}</div>
+        <div class="icon-name">${ic.name}</div>
+        <div class="icon-category">${ic.cat}</div>
+      `;
+      container.appendChild(card);
+    });
+
+    const MUSCLES_41 = [
+      { n: 'Peitoral Maior', r: 'Peitoral', file: 'assets/musculos/04_peitoral_ombros_pescoco/14_peitoral_maior.jpg' },
+      { n: 'Deltóides (Geral)', r: 'Ombros', file: 'assets/musculos/04_peitoral_ombros_pescoco/15_deltoides_geral.jpg' },
+      { n: 'Deltóide Anterior', r: 'Ombros', file: 'assets/musculos/04_peitoral_ombros_pescoco/16_deltoide_anterior.jpg' },
+      { n: 'Deltóide Lateral', r: 'Ombros', file: 'assets/musculos/04_peitoral_ombros_pescoco/17_deltoide_lateral.jpg' },
+      { n: 'Esternocleidomastóideo', r: 'Pescoço', file: 'assets/musculos/04_peitoral_ombros_pescoco/18_esternocleidomastoideo_pescoco.jpg' },
+      { n: 'Latíssimo do Dorso', r: 'Costas', file: 'assets/musculos/05_costas_manguito_rotador/19_latissimo_do_dorso.jpg' },
+      { n: 'Trapézio', r: 'Costas Superiores', file: 'assets/musculos/05_costas_manguito_rotador/20_trapezio.jpg' },
+      { n: 'Rombóides', r: 'Costas Superiores', file: 'assets/musculos/05_costas_manguito_rotador/21_romboides.jpg' },
+      { n: 'Eretor da Espinha', r: 'Lombar', file: 'assets/musculos/05_costas_manguito_rotador/22_eretor_da_espinha.jpg' },
+      { n: 'Quadrado Lombar', r: 'Lombar', file: 'assets/musculos/05_costas_manguito_rotador/23_quadrado_lombar.jpg' },
+      { n: 'Redondo Maior & Deltoide Post.', r: 'Ombros / Costas', file: 'assets/musculos/05_costas_manguito_rotador/24_redondo_maior_deltoide_posterior.jpg' },
+      { n: 'Supraespinal', r: 'Manguito Rotador', file: 'assets/musculos/05_costas_manguito_rotador/25_supraespinal.jpg' },
+      { n: 'Infraespinal', r: 'Manguito Rotador', file: 'assets/musculos/05_costas_manguito_rotador/26_infraespinal.jpg' },
+      { n: 'Redondo Menor', r: 'Manguito Rotador', file: 'assets/musculos/05_costas_manguito_rotador/27_redondo_menor.jpg' },
+      { n: 'Reto Abdominal', r: 'Abdômen', file: 'assets/musculos/06_abdomen_core/28_reto_abdominal.jpg' },
+      { n: 'Oblíquos Externos', r: 'Abdômen Lateral', file: 'assets/musculos/06_abdomen_core/29_obliquos_externos.jpg' },
+      { n: 'Transverso do Abdômen', r: 'Core Profundo', file: 'assets/musculos/06_abdomen_core/30_transverso_do_abdomen.jpg' },
+      { n: 'Serrátil Anterior', r: 'Tórax Lateral', file: 'assets/musculos/06_abdomen_core/31_serratil_anterior.jpg' },
+      { n: 'Bíceps Braquial', r: 'Braço Anterior', file: 'assets/musculos/07_bracos_antebracos/32_biceps_braquial.jpg' },
+      { n: 'Coracobraquial', r: 'Braço Medial', file: 'assets/musculos/07_bracos_antebracos/33_coracobraquial_cabeca_curta_biceps.jpg' },
+      { n: 'Braquial', r: 'Braço Profundo', file: 'assets/musculos/07_bracos_antebracos/34_braquial.jpg' },
+      { n: 'Tríceps Braquial', r: 'Braço Posterior', file: 'assets/musculos/07_bracos_antebracos/35_triceps_braquial_geral.jpg' },
+      { n: 'Cabeça Longa Tríceps', r: 'Braço Posterior', file: 'assets/musculos/07_bracos_antebracos/36_cabeca_longa_triceps.jpg' },
+      { n: 'Antebraço Geral', r: 'Antebraço', file: 'assets/musculos/07_bracos_antebracos/37_antebraco_geral.jpg' },
+      { n: 'Braquiorradial', r: 'Antebraço Lateral', file: 'assets/musculos/07_bracos_antebracos/38_braquiorradial.jpg' },
+      { n: 'Flexores do Antebraço', r: 'Antebraço Anterior', file: 'assets/musculos/07_bracos_antebracos/39_flexores_do_antebraco.jpg' },
+      { n: 'Extensores do Antebraço', r: 'Antebraço Posterior', file: 'assets/musculos/07_bracos_antebracos/40_extensores_do_antebraco.jpg' },
+      { n: 'Glúteo Máximo', r: 'Glúteos', file: 'assets/musculos/08_gluteos_quadril_coxas/41_gluteo_maximo.jpg' },
+      { n: 'Glúteo Médio', r: 'Quadril Lateral', file: 'assets/musculos/08_gluteos_quadril_coxas/42_gluteo_medio.jpg' },
+      { n: 'Tensor da Fáscia Lata', r: 'Quadril Lateral', file: 'assets/musculos/08_gluteos_quadril_coxas/43_tensor_da_fascia_lata.jpg' },
+      { n: 'Quadríceps Geral', r: 'Coxa Anterior', file: 'assets/musculos/08_gluteos_quadril_coxas/44_quadriceps_geral.jpg' },
+      { n: 'Vasto Medial', r: 'Coxa Medial', file: 'assets/musculos/08_gluteos_quadril_coxas/45_vasto_medial.jpg' },
+      { n: 'Isquiotibiais Geral', r: 'Coxa Posterior', file: 'assets/musculos/08_gluteos_quadril_coxas/46_isquiotibiais_geral.jpg' },
+      { n: 'Bíceps Femoral', r: 'Coxa Posterolateral', file: 'assets/musculos/08_gluteos_quadril_coxas/47_biceps_femoral.jpg' },
+      { n: 'Adutores da Coxa', r: 'Coxa Medial', file: 'assets/musculos/08_gluteos_quadril_coxas/48_adutores_da_coxa.jpg' },
+      { n: 'Grácil', r: 'Coxa Medial', file: 'assets/musculos/08_gluteos_quadril_coxas/49_gracil.jpg' },
+      { n: 'Sartório', r: 'Coxa Anterior', file: 'assets/musculos/08_gluteos_quadril_coxas/50_sartorio.jpg' },
+      { n: 'Gastrocnêmio', r: 'Panturrilha', file: 'assets/musculos/09_pernas_panturrilhas/51_gastrocnemio.jpg' },
+      { n: 'Sóleo', r: 'Panturrilha Profunda', file: 'assets/musculos/09_pernas_panturrilhas/52_soleo.jpg' },
+      { n: 'Tibial Anterior', r: 'Perna Anterior', file: 'assets/musculos/09_pernas_panturrilhas/53_tibial_anterior.jpg' },
+      { n: 'Fibulares Longo e Curto', r: 'Perna Lateral', file: 'assets/musculos/09_pernas_panturrilhas/54_fibulares_longo_e_curto.jpg' }
+    ];
+
+    const m41Container = document.getElementById('muscles41Grid');
+    MUSCLES_41.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'card-muscle';
+      card.innerHTML = `
+        <img src="${m.file}" alt="${m.n}" loading="lazy">
+        <div class="muscle-info">
+          <div class="muscle-name">${m.n}</div>
+          <div class="muscle-reg">${m.r}</div>
+          <div class="muscle-path">${m.file}</div>
+        </div>
+      `;
+      m41Container.appendChild(card);
+    });
+
+    const MUSCLES_18 = [
+      { n: 'Peitoral Maior', r: 'Peitoral', file: 'assets/icones_musculos/01_peitoral_ombros_pescoco/01_icone_peitoral_maior.jpg' },
+      { n: 'Deltóides', r: 'Ombros', file: 'assets/icones_musculos/01_peitoral_ombros_pescoco/02_icone_deltoides.jpg' },
+      { n: 'Pescoço', r: 'Pescoço', file: 'assets/icones_musculos/01_peitoral_ombros_pescoco/03_icone_pescoco.jpg' },
+      { n: 'Latíssimo do Dorso', r: 'Costas', file: 'assets/icones_musculos/02_costas_manguito_rotador/04_icone_latissimo_do_dorso.jpg' },
+      { n: 'Trapézio', r: 'Costas', file: 'assets/icones_musculos/02_costas_manguito_rotador/05_icone_trapezio.jpg' },
+      { n: 'Lombar', r: 'Costas', file: 'assets/icones_musculos/02_costas_manguito_rotador/06_icone_lombar_eretor_espinha.jpg' },
+      { n: 'Manguito Rotador', r: 'Ombros', file: 'assets/icones_musculos/02_costas_manguito_rotador/07_icone_manguito_rotador.jpg' },
+      { n: 'Reto Abdominal', r: 'Core', file: 'assets/icones_musculos/03_abdomen_core/08_icone_reto_abdominal.jpg' },
+      { n: 'Oblíquos', r: 'Core', file: 'assets/icones_musculos/03_abdomen_core/09_icone_obliquos.jpg' },
+      { n: 'Bíceps', r: 'Braços', file: 'assets/icones_musculos/04_bracos_antebracos/10_icone_biceps.jpg' },
+      { n: 'Tríceps', r: 'Braços', file: 'assets/icones_musculos/04_bracos_antebracos/11_icone_triceps.jpg' },
+      { n: 'Antebraço', r: 'Braços', file: 'assets/icones_musculos/04_bracos_antebracos/12_icone_antebraco.jpg' },
+      { n: 'Glúteo Máximo', r: 'Pernas', file: 'assets/icones_musculos/05_gluteos_coxas_pernas/13_icone_gluteo_maximo.jpg' },
+      { n: 'Quadríceps', r: 'Pernas', file: 'assets/icones_musculos/05_gluteos_coxas_pernas/14_icone_quadriceps.jpg' },
+      { n: 'Isquiotibiais', r: 'Pernas', file: 'assets/icones_musculos/05_gluteos_coxas_pernas/15_icone_isquiotibiais.jpg' },
+      { n: 'Adutores da Coxa', r: 'Pernas', file: 'assets/icones_musculos/05_gluteos_coxas_pernas/16_icone_adutores_da_coxa.jpg' },
+      { n: 'Gastrocnêmio', r: 'Panturrilha', file: 'assets/icones_musculos/05_gluteos_coxas_pernas/17_icone_gastrocnemio.jpg' },
+      { n: 'Tibial Anterior', r: 'Canela', file: 'assets/icones_musculos/05_gluteos_coxas_pernas/18_icone_tibial_anterior.jpg' }
+    ];
+
+    const m18Container = document.getElementById('muscles18Grid');
+    MUSCLES_18.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'card-muscle';
+      card.innerHTML = `
+        <img src="${m.file}" alt="${m.n}" loading="lazy">
+        <div class="muscle-info">
+          <div class="muscle-name">${m.n}</div>
+          <div class="muscle-reg">${m.r}</div>
+          <div class="muscle-path">${m.file}</div>
+        </div>
+      `;
+      m18Container.appendChild(card);
+    });
+  </script>
+</body>
+</html>

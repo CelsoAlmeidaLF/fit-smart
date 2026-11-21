@@ -49,8 +49,12 @@ button,input,select{font-family:inherit;color:inherit}
 @font-face{font-family:"Material Symbols Rounded";font-style:normal;font-weight:100 700;font-display:block;src:url("material-symbols-rounded.woff2") format("woff2")}
 .ms{font-family:"Material Symbols Rounded","MS Rounded";font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";font-feature-settings:"liga";-webkit-font-smoothing:antialiased;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;user-select:none;overflow:hidden;width:1em;height:1em}
 .ic .ms,.qa.pri .ms,nav a.on .ms,.ck .ms,.btn.pri .ms{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24}
-.ic .ms{font-size:20px}.qa .ms{font-size:26px}.ck .ms{font-size:18px}.del .ms{font-size:20px}
 svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+svg.fi, .fi{display:inline-block;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+nav a.on svg.fi{stroke:var(--accent);color:var(--accent)}
+.ic svg.fi{width:20px;height:20px}
+.qa svg.fi{width:24px;height:24px}
+.ib svg.fi{width:22px;height:22px}
 .sky{position:fixed;inset:0;z-index:-1;background:var(--sky)}
 .sky::after{content:"";position:absolute;inset:-30%;background:repeating-linear-gradient(118deg,transparent 0 110px,var(--beam) 110px 114px,transparent 114px 260px)}
 .app{max-width:480px;margin:0 auto;min-height:100vh;padding:calc(14px + env(safe-area-inset-top,0px)) 16px calc(110px + env(safe-area-inset-bottom,0px))}
