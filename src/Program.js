@@ -59,8 +59,13 @@ export const App = Program;
 
 // Inicialização segura no carregamento do DOM
 if (typeof window !== 'undefined') {
-  window.addEventListener('DOMContentLoaded', () => {
+  const boot = () => {
     window.program = new Program();
     window.program.start();
-  });
+  };
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 }

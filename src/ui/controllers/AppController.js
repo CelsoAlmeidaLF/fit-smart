@@ -280,6 +280,39 @@ export class AppController {
     const privBtn = document.querySelector('#bPriv');
     if (privBtn) privBtn.onclick = () => this.showPrivacySheet();
 
+    const bApoiarSmart = document.querySelector('#bApoiarSmart');
+    if (bApoiarSmart) {
+      bApoiarSmart.onclick = () => {
+        if (window.Doacao && typeof window.Doacao.abrir === 'function') {
+          window.Doacao.abrir();
+        } else {
+          this._toast.show('Módulo de doação indisponível');
+        }
+      };
+    }
+
+    const bAvaliarSmart = document.querySelector('#bAvaliarSmart');
+    if (bAvaliarSmart) {
+      bAvaliarSmart.onclick = () => {
+        if (window.Doacao && typeof window.Doacao.abrir === 'function') {
+          window.Doacao.abrir('avaliar');
+        } else {
+          this._toast.show('Módulo de avaliação indisponível');
+        }
+      };
+    }
+
+    const bSugerirSmart = document.querySelector('#bSugerirSmart');
+    if (bSugerirSmart) {
+      bSugerirSmart.onclick = () => {
+        if (window.Doacao && typeof window.Doacao.abrir === 'function') {
+          window.Doacao.abrir('sugerir');
+        } else {
+          this._toast.show('Módulo de sugestões indisponível');
+        }
+      };
+    }
+
     // 6. Botões de Backup
     const bExp = document.querySelector('#bExp');
     if (bExp) bExp.onclick = () => this.exportJsonBackup();
@@ -1009,9 +1042,9 @@ export class AppController {
 
   async ensureSeed() {
     if (!this._state.seedWords || !this._state.seedHash) {
-      const entropy = SecurityRecoveryService.generateEntropyWords();
-      this._state.seedWords = entropy.words;
-      this._state.seedHash = await SecurityRecoveryService.computeSeedHash(entropy.words);
+      const seed = await SecurityRecoveryService.generateSeed();
+      this._state.seedWords = seed.words;
+      this._state.seedHash = seed.hash;
       this.save();
     }
   }

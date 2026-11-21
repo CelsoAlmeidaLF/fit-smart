@@ -21,18 +21,28 @@ export class BottomSheet {
     if (this._inEl) {
       this._inEl.innerHTML = htmlContent;
     }
-    if (this._scrim) this._scrim.hidden = false;
+    if (this._scrim) {
+      this._scrim.hidden = false;
+      this._scrim.classList.add('on');
+    }
     this._sheet.hidden = false;
+    this._sheet.classList.add('on');
     document.body.classList.add('noscroll');
   }
 
   close() {
-    if (this._scrim) this._scrim.hidden = true;
-    if (this._sheet) this._sheet.hidden = true;
+    if (this._scrim) {
+      this._scrim.classList.remove('on');
+      setTimeout(() => { if (!this.isOpen()) this._scrim.hidden = true; }, 300);
+    }
+    if (this._sheet) {
+      this._sheet.classList.remove('on');
+      setTimeout(() => { if (!this.isOpen()) this._sheet.hidden = true; }, 400);
+    }
     document.body.classList.remove('noscroll');
   }
 
   isOpen() {
-    return this._sheet && !this._sheet.hidden;
+    return this._sheet && this._sheet.classList.contains('on');
   }
 }

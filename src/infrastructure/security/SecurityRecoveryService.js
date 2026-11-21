@@ -189,4 +189,20 @@ export class SecurityRecoveryService {
       sections: []
     };
   }
+
+  static generateEntropyWords() {
+    const entropy = new Uint8Array(16);
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      crypto.getRandomValues(entropy);
+    }
+    return { entropy, words: [] };
+  }
+
+  static async computeSeedHash(words) {
+    const str = Array.isArray(words) ? words.join(' ') : String(words || '');
+    const enc = new TextEncoder();
+    const digest = await this.sha256(enc.encode('financ-hash-v1:' + str));
+    const rawHash = this.bitsOf(digest).slice(0, 60).match(/.{5}/g).map(b => this.HASH_ALPHABET[parseInt(b, 2)]).join('');
+    return rawHash.match(/.{4}/g).join('-');
+  }
 }
