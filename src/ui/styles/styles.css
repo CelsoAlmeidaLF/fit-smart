@@ -50,7 +50,10 @@ button,input,select{font-family:inherit;color:inherit}
 .ms{font-family:"Material Symbols Rounded","MS Rounded";font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";font-feature-settings:"liga";-webkit-font-smoothing:antialiased;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;user-select:none;overflow:hidden;width:1em;height:1em}
 .ic .ms,.qa.pri .ms,nav a.on .ms,.ck .ms,.btn.pri .ms{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24}
 svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
-svg.fi, .fi{display:inline-block;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+svg.fi, .fi{display:inline-block;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;transition:stroke 0.2s,fill 0.2s,transform 0.2s}
+svg.fi.fi-duotone .fi-fill, [data-icon-suite="duotone"] svg.fi .fi-fill{fill:currentColor;fill-opacity:0.18}
+svg.fi.fi-solid .fi-fill, [data-icon-suite="solid"] svg.fi .fi-fill{fill:currentColor;fill-opacity:0.95}
+svg.fi.fi-line .fi-fill, [data-icon-suite="line"] svg.fi .fi-fill{fill:none}
 nav a.on svg.fi{stroke:var(--accent);color:var(--accent)}
 .ic svg.fi{width:20px;height:20px}
 .qa svg.fi{width:24px;height:24px}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo Oficial de Ícones & Anatomia — Systekna FIT</title>
+  <title>Catálogo Oficial de Ícones & Anatomia — Systekna FIT v2.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,6 +18,8 @@
       --accent-soft: rgba(111, 207, 151, 0.12);
       --ink: #EAEFEA;
       --soft: #9BAEA4;
+      --warn: #E0C185;
+      --down: #E08585;
       --font-heading: 'Space Grotesk', -apple-system, sans-serif;
       --font-mono: 'IBM Plex Mono', monospace;
     }
@@ -31,7 +33,7 @@
     }
     header {
       max-width: 1200px;
-      margin: 0 auto 32px;
+      margin: 0 auto 28px;
       padding-bottom: 24px;
       border-bottom: 1px solid var(--line);
     }
@@ -46,60 +48,108 @@
       margin-bottom: 8px;
     }
     h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    p.sub { color: var(--soft); font-size: 14px; }
+    p.sub { color: var(--soft); font-size: 14px; margin-bottom: 18px; }
+
+    /* SELETOR DE SUÍTE VISUAL */
+    .suite-selector-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .suite-info h3 { font-size: 15px; color: #fff; font-weight: 700; margin-bottom: 4px; }
+    .suite-info p { font-size: 13px; color: var(--soft); }
+    .suite-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-suite {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-suite:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .btn-suite.active {
+      background: var(--accent);
+      color: #0E1210;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ABAS PRINCIPAIS */
     .tabs-nav {
       display: flex;
       gap: 10px;
-      margin-top: 20px;
+      margin-top: 10px;
       border-bottom: 1px solid var(--line);
       padding-bottom: 12px;
+      flex-wrap: wrap;
     }
     .tab-btn {
       background: var(--surface);
       border: 1px solid var(--line);
       color: var(--soft);
-      padding: 8px 16px;
+      padding: 9px 18px;
       border-radius: 8px;
       cursor: pointer;
       font-family: var(--font-heading);
       font-weight: 600;
+      font-size: 14px;
       transition: all 0.2s;
     }
     .tab-btn.active {
-      background: var(--accent);
-      color: #0E1210;
+      background: var(--surface-2);
+      color: var(--accent);
       border-color: var(--accent);
     }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
     
+    /* GRIDS */
     .grid-icons {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 16px;
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 20px auto 0;
     }
     .card-icon {
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 18px;
       text-align: center;
       transition: transform 0.2s, border-color 0.2s;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
     .card-icon:hover {
       transform: translateY(-2px);
       border-color: var(--accent);
     }
     .icon-preview {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
       background: var(--surface-2);
       display: flex;
       align-items: center;
@@ -119,12 +169,92 @@
       color: var(--soft);
     }
 
+    /* ESTILOS DE SUÍTES SVG */
+    svg.fi {
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.2s, fill 0.2s;
+    }
+    /* Duotone */
+    .suite-duotone svg.fi .fi-fill {
+      fill: currentColor;
+      fill-opacity: 0.18;
+    }
+    /* Solid */
+    .suite-solid svg.fi .fi-fill {
+      fill: currentColor;
+      fill-opacity: 0.95;
+    }
+    /* Line */
+    .suite-line svg.fi .fi-fill {
+      fill: none;
+    }
+
+    /* SEÇÃO DESTAQUE / ANTES VS DEPOIS */
+    .section-headline {
+      max-width: 1200px;
+      margin: 16px auto 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-headline span {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: normal;
+    }
+    .grid-compare {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto 32px;
+    }
+    .card-compare {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .compare-boxes {
+      display: flex;
+      gap: 12px;
+    }
+    .box-side {
+      flex: 1;
+      background: var(--surface-2);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+    }
+    .box-side.old { opacity: 0.6; border-style: dashed; }
+    .box-side.new { border-color: var(--accent); background: var(--accent-soft); }
+    .side-tag { font-size: 10px; font-family: var(--font-mono); font-weight: 700; }
+    .side-tag.old { color: var(--down); }
+    .side-tag.new { color: var(--accent); }
+
+    /* MÚSCULOS */
     .grid-muscles {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 16px;
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 20px auto 0;
     }
     .card-muscle {
       background: var(--surface);
@@ -152,35 +282,75 @@
     .muscle-path { font-size: 10px; color: var(--soft); font-family: var(--font-mono); word-break: break-all; margin-top: 4px; }
   </style>
 </head>
-<body>
+<body class="suite-duotone">
   <header>
-    <span class="badge-pill">VALIDAÇÃO VISUAL DE ATIVOS</span>
-    <h1>Catálogo de Ícones & Anatomia — Systekna FIT</h1>
-    <p class="sub">100% Vetoriais Oficiais Lucide / FinancIcons (sem ligaduras de fonte que viram texto) + Ilustrações Anatômicas do data.zip.</p>
+    <span class="badge-pill">VALIDAÇÃO VISUAL DE ATIVOS PROFISSIONAIS v2.0</span>
+    <h1>Catálogo Oficial de Ícones & Anatomia — Systekna FIT</h1>
+    <p class="sub">100% Vetoriais SVG Oficiais específicos de Musculação/Fitness (sem ligaduras de fonte) + 3 Suítes Comutáveis + Ilustrações Anatômicas do data.zip.</p>
     
+    <!-- CONTROLE INTERATIVO DE SUÍTES VISUAIS -->
+    <div class="suite-selector-box">
+      <div class="suite-info">
+        <h3>Seletor de Suíte Visual de Ícones</h3>
+        <p>Alterne entre os 3 estilos de design para validar a renderização imediata:</p>
+      </div>
+      <div class="suite-buttons">
+        <button class="btn-suite active" onclick="changeSuite('duotone')">
+          <span>🌟</span> Suíte 1: Pro Athletic Duotone (18% Fill)
+        </button>
+        <button class="btn-suite" onclick="changeSuite('solid')">
+          <span>⚡</span> Suíte 2: High-Impact Solid Bold (95% Fill)
+        </button>
+        <button class="btn-suite" onclick="changeSuite('line')">
+          <span>🎯</span> Suíte 3: Precision Line Tech (Linhas Puras)
+        </button>
+      </div>
+    </div>
+
     <div class="tabs-nav">
-      <button class="tab-btn active" onclick="switchTab('icons')">Ícones de UI (Lucide / SVG)</button>
+      <button class="tab-btn active" onclick="switchTab('fitness-pro')">Treino & Força (Substitutos de Alta Performance)</button>
+      <button class="tab-btn" onclick="switchTab('all-icons')">Todos os Ícones de UI (38 Ícones SVG)</button>
       <button class="tab-btn" onclick="switchTab('muscles-41')">41 Ilustrações Anatômicas (data.zip)</button>
       <button class="tab-btn" onclick="switchTab('muscles-18')">18 Ícones Regionais (data.zip)</button>
     </div>
   </header>
 
-  <!-- ABA 1: ÍCONES DE UI -->
-  <section id="tab-icons" class="tab-pane active">
-    <div class="grid-icons" id="iconsGrid"></div>
+  <!-- ABA 1: DESTAQUE ESPECÍFICO FITNESS PRO & ANTES VS DEPOIS -->
+  <section id="tab-fitness-pro" class="tab-pane active">
+    <div class="section-headline">Comparativo: Ícones Genéricos Anteriores vs Novos Ícones de Musculação <span>(Visual Fitness Real)</span></div>
+    <div class="grid-compare" id="compareGrid"></div>
+
+    <div class="section-headline">Coleção Completa de Musculação, Força & Métricas Corporais</div>
+    <div class="grid-icons" id="fitnessProGrid"></div>
   </section>
 
-  <!-- ABA 2: 41 ILUSTRAÇÕES DE MÚSCULOS -->
+  <!-- ABA 2: TODOS OS ÍCONES DE UI -->
+  <section id="tab-all-icons" class="tab-pane">
+    <div class="grid-icons" id="allIconsGrid"></div>
+  </section>
+
+  <!-- ABA 3: 41 ILUSTRAÇÕES DE MÚSCULOS -->
   <section id="tab-muscles-41" class="tab-pane">
     <div class="grid-muscles" id="muscles41Grid"></div>
   </section>
 
-  <!-- ABA 3: 18 ÍCONES REGIONAIS -->
+  <!-- ABA 4: 18 ÍCONES REGIONAIS -->
   <section id="tab-muscles-18" class="tab-pane">
     <div class="grid-muscles" id="muscles18Grid"></div>
   </section>
 
   <script>
+    let currentSuite = 'duotone';
+
+    function changeSuite(suite) {
+      currentSuite = suite;
+      document.body.className = 'suite-' + suite;
+      document.querySelectorAll('.btn-suite').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      if (typeof FinancIcons !== 'undefined') FinancIcons.setSuite(suite);
+      renderAll();
+    }
+
     function switchTab(id) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -188,59 +358,164 @@
       event.target.classList.add('active');
     }
 
-    const UI_ICONS = [
-      { name: 'dumbbell', cat: 'Treino / Fitness' },
-      { name: 'scale', cat: 'Saúde / Peso' },
-      { name: 'calculator', cat: 'IMC / Cálculos' },
-      { name: 'utensils', cat: 'Nutrição / Diário' },
-      { name: 'flame', cat: 'Metabolismo / Calorias' },
-      { name: 'droplet', cat: 'Hidratação / Água' },
+    const FITNESS_COMPARE = [
+      {
+        title: 'Balança de Pesagem & Bioimpedância',
+        desc: 'Substituição da balança de pratos de tribunal por balança digital de solo com eletrodos de contato metálicos.',
+        oldSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>',
+        oldName: 'Tribunal / Balança Antiga',
+        newIcon: 'scale',
+        newName: 'Balança Digital Bioimpedância'
+      },
+      {
+        title: 'Haltere de Musculação',
+        desc: 'Substituição do traço diagonal fino por haltere hexagonal (Hex Dumbbell) de musculação pesada.',
+        oldSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>',
+        oldName: 'Traço Simples Antigo',
+        newIcon: 'dumbbell',
+        newName: 'Haltere Hexagonal (Hex Dumbbell)'
+      },
+      {
+        title: 'Hidratação & Suplementação',
+        desc: 'Coqueteleira esportiva com tampa de rosca, bocal e medidor de dosagem em ml.',
+        oldSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>',
+        oldName: 'Gota Comum',
+        newIcon: 'water-shaker',
+        newName: 'Shaker Bottle / Coqueteleira'
+      },
+      {
+        title: 'Cardio & Frequência Cardíaca',
+        desc: 'Eletrocardiograma (ECG) dinâmico com batimento cardíaco integrado.',
+        oldSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+        oldName: 'Linha Abstrata',
+        newIcon: 'heart-pulse',
+        newName: 'Cardio ECG Heartbeat'
+      }
+    ];
+
+    const FITNESS_PRO_LIST = [
+      { name: 'dumbbell', label: 'Haltere Sextavado (Hex)', cat: 'Musculação / Força' },
+      { name: 'barbell', label: 'Barra Olímpica Carregada', cat: 'Levantamento de Peso' },
+      { name: 'kettlebell', label: 'Kettlebell de Competição', cat: 'Funcional / Força' },
+      { name: 'scale', label: 'Balança de Bioimpedância', cat: 'Peso & Composição' },
+      { name: 'heart-pulse', label: 'Monitor Cardíaco ECG', cat: 'Cardio & Batimentos' },
+      { name: 'flame', label: 'Chama Queima Calórica', cat: 'Metabolismo / Gasto' },
+      { name: 'water-shaker', label: 'Coqueteleira de Treino', cat: 'Hidratação & Whey' },
+      { name: 'timer', label: 'Cronômetro Lap/Split', cat: 'Descanso entre Séries' },
+      { name: 'clipboard-list', label: 'Prancheta do Treinador', cat: 'Ficha & Prescrição' },
+      { name: 'biceps', label: 'Braço / Bíceps Flexionado', cat: 'Hipertrofia Muscular' },
+      { name: 'tape-measure', label: 'Fita Métrica Corporal', cat: 'Antropometria' },
+      { name: 'activity-rings', label: 'Anéis de Atividade', cat: 'Metas Esportivas' },
+      { name: 'calculator', label: 'Calculadora de Macros/1RM', cat: 'Cálculo de Cargas' },
+      { name: 'utensils', label: 'Dieta & Nutrição Limpa', cat: 'Macronutrientes' },
+      { name: 'zap', label: 'Prontidão / Energia SNC', cat: 'Recuperação Muscular' },
+      { name: 'trophy', label: 'Recorde Pessoal (PR)', cat: 'Conquistas de Carga' }
+    ];
+
+    const ALL_UI_ICONS = [
+      { name: 'dumbbell', cat: 'Musculação / Força' },
+      { name: 'barbell', cat: 'Levantamento de Peso' },
+      { name: 'kettlebell', cat: 'Cross / Funcional' },
+      { name: 'scale', cat: 'Balança Bioimpedância' },
+      { name: 'heart-pulse', cat: 'Cardio & ECG' },
+      { name: 'water-shaker', cat: 'Suplementação / Shaker' },
+      { name: 'biceps', cat: 'Músculo / Hipertrofia' },
+      { name: 'tape-measure', cat: 'Medidas Corporais' },
+      { name: 'activity-rings', cat: 'Anéis de Atividade' },
+      { name: 'calculator', cat: 'IMC / 1RM / Macros' },
+      { name: 'utensils', cat: 'Nutrição & Dieta' },
+      { name: 'flame', cat: 'Calorias Queimadas' },
+      { name: 'droplet', cat: 'Água / Hidratação' },
       { name: 'zap', cat: 'Energia / Prontidão' },
-      { name: 'calendar', cat: 'Semanas / Sprints' },
-      { name: 'home', cat: 'Navegação' },
-      { name: 'settings', cat: 'Configurações' },
-      { name: 'search', cat: 'Busca Global' },
-      { name: 'clipboard-list', cat: 'Cadastros / Fichas' },
-      { name: 'activity', cat: 'Cardio / Corrida' },
+      { name: 'calendar', cat: 'Calendário / Sprints' },
+      { name: 'clipboard-list', cat: 'Fichas de Treino' },
+      { name: 'timer', cat: 'Cronômetro / Lap' },
+      { name: 'trophy', cat: 'Marcos & PRs' },
+      { name: 'flag', cat: 'Metas do Dia' },
       { name: 'footprints', cat: 'Caminhada' },
       { name: 'bike', cat: 'Ciclismo' },
       { name: 'waves', cat: 'Natação' },
-      { name: 'moon', cat: 'Descanso / Sono' },
-      { name: 'timer', cat: 'Cronômetro / Descanso' },
-      { name: 'flag', cat: 'Metas do Dia' },
-      { name: 'trophy', cat: 'Marcos / Conquistas' },
+      { name: 'moon', cat: 'Sono & Descanso' },
+      { name: 'home', cat: 'Navegação' },
+      { name: 'settings', cat: 'Configurações' },
+      { name: 'search', cat: 'Busca Global' },
       { name: 'lock', cat: 'Segurança / PIN' },
-      { name: 'fingerprint', cat: 'Biometria' },
       { name: 'shield-check', cat: 'Proteção Criptográfica' },
-      { name: 'smartphone', cat: 'PWA / App' },
-      { name: 'heart', cat: 'Apoio / PIX' },
-      { name: 'star', cat: 'Avaliação' },
-      { name: 'message-square', cat: 'Feedback' },
+      { name: 'fingerprint', cat: 'Biometria' },
+      { name: 'user', cat: 'Perfil do Atleta' },
       { name: 'eye', cat: 'Visibilidade de Senha' },
       { name: 'eye-off', cat: 'Ocultar Senha' },
+      { name: 'smartphone', cat: 'Instalação PWA' },
+      { name: 'heart', cat: 'Apoio PIX' },
+      { name: 'star', cat: 'Avaliação' },
+      { name: 'message-square', cat: 'Feedback' },
       { name: 'download', cat: 'Backup JSON' },
       { name: 'upload', cat: 'Restaurar Backup' },
-      { name: 'trash', cat: 'Excluir / Limpar' },
-      { name: 'check', cat: 'Pronto / Concluído' },
+      { name: 'trash', cat: 'Limpar Dados' },
+      { name: 'check', cat: 'Concluído' },
       { name: 'plus', cat: 'Adicionar' },
-      { name: 'minus', cat: 'Diminuir' },
-      { name: 'x', cat: 'Fechar / Cancelar' },
-      { name: 'chevron-left', cat: 'Navegação' },
-      { name: 'chevron-right', cat: 'Navegação' }
+      { name: 'minus', cat: 'Remover' },
+      { name: 'x', cat: 'Fechar' }
     ];
 
-    const container = document.getElementById('iconsGrid');
-    UI_ICONS.forEach(ic => {
-      const card = document.createElement('div');
-      card.className = 'card-icon';
-      const svgHtml = typeof FinancIcons !== 'undefined' ? FinancIcons.svg(ic.name, { size: 28 }) : '';
-      card.innerHTML = `
-        <div class="icon-preview">${svgHtml}</div>
-        <div class="icon-name">${ic.name}</div>
-        <div class="icon-category">${ic.cat}</div>
-      `;
-      container.appendChild(card);
-    });
+    function renderCompare() {
+      const c = document.getElementById('compareGrid');
+      c.innerHTML = '';
+      FITNESS_COMPARE.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card-compare';
+        const newSvg = typeof FinancIcons !== 'undefined' ? FinancIcons.svg(item.newIcon, { size: 32, suite: currentSuite }) : '';
+        card.innerHTML = `
+          <div style="font-weight:700;font-size:14px;color:#fff;">${item.title}</div>
+          <div style="font-size:12px;color:var(--soft);">${item.desc}</div>
+          <div class="compare-boxes">
+            <div class="box-side old">
+              <span class="side-tag old">ANTERIOR</span>
+              <div style="color:var(--down);margin:4px 0;">${item.oldSvg}</div>
+              <span style="font-size:11px;color:var(--soft);">${item.oldName}</span>
+            </div>
+            <div class="box-side new">
+              <span class="side-tag new">PROFISSIONAL NOVO</span>
+              <div style="color:var(--accent);margin:4px 0;">${newSvg}</div>
+              <span style="font-size:11px;color:#fff;font-weight:600;">${item.newName}</span>
+            </div>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+    }
+
+    function renderFitnessPro() {
+      const c = document.getElementById('fitnessProGrid');
+      c.innerHTML = '';
+      FITNESS_PRO_LIST.forEach(ic => {
+        const card = document.createElement('div');
+        card.className = 'card-icon';
+        const svgHtml = typeof FinancIcons !== 'undefined' ? FinancIcons.svg(ic.name, { size: 30, suite: currentSuite }) : '';
+        card.innerHTML = `
+          <div class="icon-preview">${svgHtml}</div>
+          <div class="icon-name">${ic.label}</div>
+          <div class="icon-category">${ic.cat}</div>
+        `;
+        c.appendChild(card);
+      });
+    }
+
+    function renderAllIcons() {
+      const c = document.getElementById('allIconsGrid');
+      c.innerHTML = '';
+      ALL_UI_ICONS.forEach(ic => {
+        const card = document.createElement('div');
+        card.className = 'card-icon';
+        const svgHtml = typeof FinancIcons !== 'undefined' ? FinancIcons.svg(ic.name, { size: 28, suite: currentSuite }) : '';
+        card.innerHTML = `
+          <div class="icon-preview">${svgHtml}</div>
+          <div class="icon-name">${ic.name}</div>
+          <div class="icon-category">${ic.cat}</div>
+        `;
+        c.appendChild(card);
+      });
+    }
 
     const MUSCLES_41 = [
       { n: 'Peitoral Maior', r: 'Peitoral', file: 'assets/musculos/04_peitoral_ombros_pescoco/14_peitoral_maior.jpg' },
@@ -286,20 +561,23 @@
       { n: 'Fibulares Longo e Curto', r: 'Perna Lateral', file: 'assets/musculos/09_pernas_panturrilhas/54_fibulares_longo_e_curto.jpg' }
     ];
 
-    const m41Container = document.getElementById('muscles41Grid');
-    MUSCLES_41.forEach(m => {
-      const card = document.createElement('div');
-      card.className = 'card-muscle';
-      card.innerHTML = `
-        <img src="${m.file}" alt="${m.n}" loading="lazy">
-        <div class="muscle-info">
-          <div class="muscle-name">${m.n}</div>
-          <div class="muscle-reg">${m.r}</div>
-          <div class="muscle-path">${m.file}</div>
-        </div>
-      `;
-      m41Container.appendChild(card);
-    });
+    function renderMuscles41() {
+      const c = document.getElementById('muscles41Grid');
+      c.innerHTML = '';
+      MUSCLES_41.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'card-muscle';
+        card.innerHTML = `
+          <img src="${m.file}" alt="${m.n}" loading="lazy">
+          <div class="muscle-info">
+            <div class="muscle-name">${m.n}</div>
+            <div class="muscle-reg">${m.r}</div>
+            <div class="muscle-path">${m.file}</div>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+    }
 
     const MUSCLES_18 = [
       { n: 'Peitoral Maior', r: 'Peitoral', file: 'assets/icones_musculos/01_peitoral_ombros_pescoco/01_icone_peitoral_maior.jpg' },
@@ -322,20 +600,33 @@
       { n: 'Tibial Anterior', r: 'Canela', file: 'assets/icones_musculos/05_gluteos_coxas_pernas/18_icone_tibial_anterior.jpg' }
     ];
 
-    const m18Container = document.getElementById('muscles18Grid');
-    MUSCLES_18.forEach(m => {
-      const card = document.createElement('div');
-      card.className = 'card-muscle';
-      card.innerHTML = `
-        <img src="${m.file}" alt="${m.n}" loading="lazy">
-        <div class="muscle-info">
-          <div class="muscle-name">${m.n}</div>
-          <div class="muscle-reg">${m.r}</div>
-          <div class="muscle-path">${m.file}</div>
-        </div>
-      `;
-      m18Container.appendChild(card);
-    });
+    function renderMuscles18() {
+      const c = document.getElementById('muscles18Grid');
+      c.innerHTML = '';
+      MUSCLES_18.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'card-muscle';
+        card.innerHTML = `
+          <img src="${m.file}" alt="${m.n}" loading="lazy">
+          <div class="muscle-info">
+            <div class="muscle-name">${m.n}</div>
+            <div class="muscle-reg">${m.r}</div>
+            <div class="muscle-path">${m.file}</div>
+          </div>
+        `;
+        c.appendChild(card);
+      });
+    }
+
+    function renderAll() {
+      renderCompare();
+      renderFitnessPro();
+      renderAllIcons();
+      renderMuscles41();
+      renderMuscles18();
+    }
+
+    renderAll();
   </script>
 </body>
 </html>
