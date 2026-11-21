@@ -10,8 +10,8 @@ import { APPIC } from '../assets/AppIcon.js';
 import { SecurityRecoveryService } from '../../infrastructure/security/SecurityRecoveryService.js';
 
 /**
- * Controller Central da Interface de Fit Smart (MVC / Presentation Layer)
- * Coordena navegação, renderização reativa, onboarding, sheets e autenticação
+ * Controller Central da Interface de Fit Smart (MVC / Hexagonal Presentation Layer)
+ * Coordena navegação, renderização reativa, abas de configuração, onboarding e segurança
  */
 export class AppController {
   constructor({ storageAdapter, healthService, workoutDietService, bottomSheet, toast }) {
@@ -23,12 +23,14 @@ export class AppController {
 
     this._state = this._storage.loadState();
     this._today = FormatUtils.getTodayIso();
-    this._views = ['inicio', 'peso', 'diario', 'cad', 'card', 'treino', 'config'];
+    this._views = ['inicio', 'peso', 'diario', 'treino', 'config', 'cadastros'];
     this._mapV = 'front';
     this._mapSel = '';
     this._mapF = '';
     this._restInterval = null;
     this._restEnd = 0;
+    this._activeDia = this._today;
+    this._activeCfgTab = 'perfil';
   }
 
   init() {
@@ -53,27 +55,23 @@ export class AppController {
   }
 
   renderAll() {
-    setTimeout(() => this.syncSegmentedControls(), 0);
-    setTimeout(() => this.renderBiometricsSwitch(), 0);
-    this.renderSaude();
-    this.renderMarcosSafe();
-    this.renderMapa();
     this.renderInicio();
     this.renderBars();
-    this.renderEvo();
     this.renderPeso();
     this.renderDiario();
-    this.renderCad();
-    this.renderCard();
     this.renderTreino();
     this.renderPlano();
     this.renderPerfil();
+    this.renderCard();
+    this.renderCad();
+    this.renderMapa();
   }
 
   _bindGlobalEvents() {
+    // 1. Rota por Hash
     window.addEventListener('hashchange', () => this.handleRoute());
 
-    // Abas de navegação
+    // 2. Navegação Inferior
     document.querySelectorAll('nav a[data-v]').forEach(a => {
       a.addEventListener('click', e => {
         const v = a.dataset.v;
@@ -81,34 +79,157 @@ export class AppController {
       });
     });
 
-    // Theme toggle
-    const themeBtn = document.querySelector('#bTheme');
-    if (themeBtn) {
-      themeBtn.onclick = () => {
-        const next = this._state.mode === 'dark' ? 'light' : 'dark';
-        this.setThemeMode(next);
+    // 3. Delegação Global de Cliques
+    document.addEventListener('click', e => {
+      // Sub-abas do Menu de Configurações
+      const cfgBtn = e.target.closest('button[data-cfg-smart]');
+      if (cfgBtn) {
+        const targetId = cfgBtn.dataset.cfgSmart;
+        this._activeCfgTab = targetId;
+        document.querySelectorAll('#cfgTabsSmart button[data-cfg-smart]').forEach(b => {
+          const isMatch = b === cfgBtn;
+          b.classList.toggle('on', isMatch);
+          b.setAttribute('aria-pressed', isMatch);
+        });
+        ['perfil', 'aparencia', 'seguranca', 'dados', 'sobre'].forEach(s => {
+          const el = document.querySelector('#cfgSec-' + s);
+          if (el) el.hidden = (s !== targetId);
+        });
+        return;
+      }
+
+      // Alternância de Sub-abas e Segmented Controls
+      const sb = e.target.closest('.segc button[data-v], .tabs button[data-v]');
+      if (sb && !sb.dataset.cfgSmart) {
+        const group = sb.parentElement;
+        const forId = group.dataset.for;
+        const hiddenInput = forId ? document.getElementById(forId) : null;
+        if (hiddenInput && hiddenInput.value !== sb.dataset.v) {
+          hiddenInput.value = sb.dataset.v;
+          group.querySelectorAll('button[data-v]').forEach(b => {
+            const isMatch = b === sb;
+            b.setAttribute('aria-pressed', isMatch);
+            b.classList.toggle('on', isMatch);
+          });
+          hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        // Sub-abas de Saúde
+        if (forId === 'hSeg') {
+          const sub = sb.dataset.v;
+          ['peso', 'med', 'pa', 'ex', 'sono'].forEach(k => {
+            const div = document.querySelector('#h' + k.charAt(0).toUpperCase() + k.slice(1));
+            if (div) div.hidden = (k !== sub);
+          });
+        }
+        // Sub-abas de Diário
+        else if (forId === 'dSeg') {
+          const sub = sb.dataset.v;
+          const dDia = document.querySelector('#dDia');
+          const dCard = document.querySelector('#dCard');
+          if (dDia) dDia.hidden = (sub !== 'dia');
+          if (dCard) dCard.hidden = (sub !== 'card');
+        }
+        // Sub-abas de Treino
+        else if (forId === 'tSeg') {
+          const sub = sb.dataset.v;
+          ['plano', 'fichas', 'evo', 'mapa', 'hist'].forEach(k => {
+            const div = document.querySelector('#t' + k.charAt(0).toUpperCase() + k.slice(1));
+            if (div) div.hidden = (k !== sub);
+          });
+          if (sub === 'evo') setTimeout(() => this.drawEvoChart(), 60);
+          if (sub === 'mapa') this.renderMapa();
+        }
+        // Sub-abas de Cadastros
+        else if (forId === 'cSeg') {
+          this.renderCadastrosSubtab(sb.dataset.v);
+        }
+        // Período de Gráfico de Peso
+        else if (forId === 'range') {
+          this.drawWeightChart();
+        }
+        return;
+      }
+
+      // Botão Rápido de Água (+1 copo)
+      if (e.target.closest('#qWater')) {
+        this.addWaterCup();
+        return;
+      }
+
+      // Copos Interativos no Dashboard
+      const cupBtn = e.target.closest('#cups .cup');
+      if (cupBtn && cupBtn.dataset.c != null) {
+        const idx = Number(cupBtn.dataset.c);
+        const cur = (this._state.agua && this._state.agua[this._today]) || 0;
+        if (!this._state.agua) this._state.agua = {};
+        this._state.agua[this._today] = (cur === idx + 1) ? idx : (idx + 1);
+        this.save();
+        this.renderInicio();
+        return;
+      }
+
+      // Botões Rápidos de Inserção [data-add]
+      const addBtn = e.target.closest('[data-add]');
+      if (addBtn) {
+        const type = addBtn.dataset.add;
+        if (type === 'peso') this.showAddWeightSheet();
+        else if (type === 'treino') this.showAddWorkoutSheet();
+        else if (type === 'comida') this.showAddFoodSheet(addBtn.dataset.ref);
+        return;
+      }
+
+      // Exclusão de Registros [data-del]
+      const delBtn = e.target.closest('[data-del]');
+      if (delBtn) {
+        const [k, id] = delBtn.dataset.del.split(':');
+        if (this._state[k]) {
+          const idx = this._state[k].findIndex(x => x.id === id);
+          if (idx >= 0) {
+            this._state[k].splice(idx, 1);
+            this.save();
+            this.renderAll();
+            this._toast.show('Registro excluído.');
+          }
+        }
+        return;
+      }
+
+      // Seleção no Mapa Muscular [data-m]
+      const mBtn = e.target.closest('[data-m]');
+      if (mBtn) {
+        this._mapSel = this._mapSel === mBtn.dataset.m ? '' : mBtn.dataset.m;
+        this.renderMapa();
+        return;
+      }
+    });
+
+    // 4. Navegação do Diário Alimentar (Anterior / Próximo)
+    const dPrev = document.querySelector('#dPrev');
+    if (dPrev) {
+      dPrev.onclick = () => {
+        const d = new Date(this._activeDia + 'T12:00');
+        d.setDate(d.getDate() - 1);
+        this._activeDia = d.toISOString().slice(0, 10);
+        this.renderDiario();
+      };
+    }
+    const dNext = document.querySelector('#dNext');
+    if (dNext) {
+      dNext.onclick = () => {
+        if (this._activeDia < this._today) {
+          const d = new Date(this._activeDia + 'T12:00');
+          d.setDate(d.getDate() + 1);
+          this._activeDia = d.toISOString().slice(0, 10);
+          this.renderDiario();
+        }
       };
     }
 
-    // Lock button
-    const lockBtn = document.querySelector('#bLock');
-    if (lockBtn) {
-      lockBtn.onclick = () => this.lockApp();
-    }
-
-    // Privacy button
-    const privBtn = document.querySelector('#bPriv');
-    if (privBtn) {
-      privBtn.onclick = () => this.showPrivacySheet();
-    }
-
-    // Change PIN button
+    // 5. Botões de Segurança no Perfil
     const pinBtn = document.querySelector('#bPin');
-    if (pinBtn) {
-      pinBtn.onclick = () => this.showChangePinSheet();
-    }
+    if (pinBtn) pinBtn.onclick = () => this.showChangePinSheet();
 
-    // Certificado PDF button
     const certBtn = document.querySelector('#bCert');
     if (certBtn) {
       certBtn.onclick = async () => {
@@ -126,7 +247,6 @@ export class AppController {
       };
     }
 
-    // View Words button
     const wordsBtn = document.querySelector('#bWords');
     if (wordsBtn) {
       wordsBtn.onclick = async () => {
@@ -157,66 +277,55 @@ export class AppController {
       };
     }
 
-    // Biometrics switch
-    document.addEventListener('change', async e => {
-      if (e.target.id !== 'fBio') return;
-      const sw = e.target;
-      if (sw.checked) {
-        try {
-          const cred = await BiometricsAdapter.registerCredential();
-          this._state.bio = cred;
-          this.save();
-          this._toast.show('Biometria ativada');
-        } catch (err) {
-          sw.checked = false;
-          this._toast.show('Não foi possível ativar a biometria');
-        }
-      } else {
-        delete this._state.bio;
-        this.save();
-        this._toast.show('Biometria desativada');
-      }
-    });
+    const privBtn = document.querySelector('#bPriv');
+    if (privBtn) privBtn.onclick = () => this.showPrivacySheet();
 
-    // Resize Observers para Gráficos
-    const fig = document.querySelector('#fig');
-    if (fig && typeof ResizeObserver !== 'undefined') {
-      new ResizeObserver(() => this.drawWeightChart()).observe(fig);
-    }
-    const tEvo = document.querySelector('#tEvo');
-    if (tEvo && typeof ResizeObserver !== 'undefined') {
-      new ResizeObserver(() => this.drawEvoChart()).observe(tEvo);
-    }
-    const vPeso = document.querySelector('#v-peso');
-    if (vPeso && typeof ResizeObserver !== 'undefined') {
-      new ResizeObserver(() => this.drawSaudeRadar()).observe(vPeso);
-    }
-
-    // Configura botões de adicionar rápidos
-    const addPesoBtn = document.querySelector('#bAddP');
-    if (addPesoBtn) addPesoBtn.onclick = () => this.showAddWeightSheet();
-    const addRefBtn = document.querySelector('#bAddRef');
-    if (addRefBtn) addRefBtn.onclick = () => this.showAddFoodSheet();
-    const addTrBtn = document.querySelector('#bAddTr');
-    if (addTrBtn) addTrBtn.onclick = () => this.showAddWorkoutSheet();
-
-    // Exportar / Importar
+    // 6. Botões de Backup
     const bExp = document.querySelector('#bExp');
-    if (bExp) {
-      bExp.onclick = () => this.exportJsonBackup();
-    }
-    const fImp = document.querySelector('#fImp');
-    if (fImp) {
-      fImp.onchange = ev => this.importJsonBackup(ev);
-    }
-    const bWipe = document.querySelector('#bWipe');
-    if (bWipe) {
-      bWipe.onclick = () => this.confirmWipeAllData();
+    if (bExp) bExp.onclick = () => this.exportJsonBackup();
+
+    const bImp = document.querySelector('#bImp');
+    if (bImp) bImp.onclick = () => this.promptImportJson();
+
+    const bClr = document.querySelector('#bClr');
+    if (bClr) bClr.onclick = () => this.confirmWipeAllData();
+
+    // 7. Salvar Perfil e Metas
+    const formPf = document.querySelector('#pf');
+    if (formPf) {
+      formPf.onsubmit = e => {
+        e.preventDefault();
+        const p = this._state.perfil || {};
+        const nEl = document.querySelector('#fNome');
+        const altEl = document.querySelector('#fAlt');
+        const nascEl = document.querySelector('#fNasc');
+        const sexoEl = document.querySelector('#fSexo');
+        const iniEl = document.querySelector('#fIni');
+        const metaEl = document.querySelector('#fMeta');
+        const ritEl = document.querySelector('#fRit');
+        const atvEl = document.querySelector('#fAtv');
+        const aguaEl = document.querySelector('#fAgua');
+
+        if (nEl) p.nome = nEl.value.trim();
+        if (altEl) p.alt = Number(altEl.value) || 170;
+        if (nascEl) p.nasc = nascEl.value;
+        if (sexoEl) p.sexo = sexoEl.value || 'm';
+        if (iniEl) p.ini = Number(iniEl.value) || 80;
+        if (metaEl) p.meta = Number(metaEl.value) || 75;
+        if (ritEl) p.ritmo = Number(ritEl.value) || 0.5;
+        if (atvEl) p.atv = Number(atvEl.value) || 1.375;
+        if (aguaEl) p.agua = Number(aguaEl.value) || 8;
+
+        this._state.perfil = p;
+        this.save();
+        this.renderAll();
+        this._toast.show('Perfil e metas salvos com sucesso.');
+      };
     }
   }
 
   handleRoute() {
-    let h = location.hash.slice(1);
+    let h = (location.hash || '#inicio').replace('#', '').trim();
     if (h === 'perfil') h = 'config';
     const v = this._views.includes(h)
       ? h
@@ -224,337 +333,322 @@ export class AppController {
       ? this._state.home
       : 'inicio';
 
-    document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-    const viewEl = document.querySelector('#v-' + v);
-    if (viewEl) viewEl.classList.add('active');
+    document.querySelectorAll('.view').forEach(el => {
+      const isMatch = el.id === 'v-' + v;
+      el.classList.toggle('on', isMatch);
+      el.style.display = isMatch ? 'block' : 'none';
+    });
 
     document.querySelectorAll('nav a').forEach(a => {
-      a.classList.toggle('active', a.dataset.v === v);
+      a.classList.toggle('on', a.dataset.v === v);
     });
+
+    const gear = document.querySelector('#gear');
+    if (gear) gear.classList.toggle('on', v === 'config');
 
     window.scrollTo({ top: 0, behavior: 'instant' });
     if (v === 'peso') {
       setTimeout(() => this.drawWeightChart(), 60);
-      setTimeout(() => this.drawSaudeRadar(), 60);
     }
     if (v === 'inicio') {
       setTimeout(() => this.drawEvoChart(), 60);
     }
   }
 
-  setThemeMode(mode) {
-    this._state.mode = mode;
+  addWaterCup() {
+    if (!this._state.agua) this._state.agua = {};
+    const cur = this._state.agua[this._today] || 0;
+    const max = ((this._state.perfil && this._state.perfil.agua) || 8) + 8;
+    this._state.agua[this._today] = Math.min(max, cur + 1);
     this.save();
-    const root = document.documentElement;
-    if (mode === 'dark') {
-      root.classList.add('dark');
-    } else if (mode === 'light') {
-      root.classList.remove('dark');
-    } else {
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      root.classList.toggle('dark', prefersDark);
-    }
-    const bTheme = document.querySelector('#bTheme');
-    if (bTheme) {
-      bTheme.querySelector('.lbl').textContent = mode === 'dark' ? 'Modo claro' : 'Modo escuro';
-    }
-  }
-
-  syncSegmentedControls() {
-    document.querySelectorAll('.segc,.tabs').forEach(g => {
-      const h = document.getElementById(g.dataset.for);
-      if (!h) return;
-      g.querySelectorAll('button[data-v]').forEach(b => {
-        b.setAttribute('aria-pressed', b.dataset.v === h.value);
-      });
-    });
+    this.renderInicio();
+    this._toast.show('+1 copo de água (250 ml)');
   }
 
   // --- RENDERS DAS SEÇÕES ---
 
   renderInicio() {
+    const p = this._state.perfil || { nome: '', ini: 80, meta: 75, ritmo: 0.5, agua: 8 };
     const energy = this._workout.getDailyEnergyBalance(this._today);
-    const leftEl = document.querySelector('#cLeft');
-    if (leftEl) leftEl.textContent = FormatUtils.formatNumber(energy.remainingKcal);
-    const metaEl = document.querySelector('#cMeta');
-    if (metaEl) metaEl.textContent = FormatUtils.formatNumber(energy.targetKcal);
-    const inEl = document.querySelector('#cIn');
-    if (inEl) inEl.textContent = FormatUtils.formatNumber(energy.consumedKcal);
-    const outEl = document.querySelector('#cOut');
-    if (outEl) outEl.textContent = FormatUtils.formatNumber(energy.burnedKcal);
+    const m = energy.targetKcal || 2000;
+    const c = energy.consumedKcal || 0;
+    const e = energy.burnedKcal || 0;
+    const left = m + e - c;
 
-    // Água
-    const waterGlasses = this._workout.getHydrationGlasses(this._today);
-    const targetGlasses = (this._state.perfil && this._state.perfil.agua) || 8;
-    const waterVol = HydrationModel.calculateVolumeMl(waterGlasses);
-    const waterProg = HydrationModel.calculateProgressPercent(waterGlasses, targetGlasses);
-
-    const wMl = document.querySelector('#wMl');
-    if (wMl) wMl.textContent = `${FormatUtils.formatNumber(waterVol)} ml`;
-    const wProg = document.querySelector('#wProg');
-    if (wProg) wProg.style.width = `${waterProg}%`;
-    const wCops = document.querySelector('#wCops');
-    if (wCops) wCops.textContent = `${waterGlasses}/${targetGlasses}`;
-
-    const bWMinus = document.querySelector('#bWMinus');
-    if (bWMinus) {
-      bWMinus.onclick = () => {
-        this._workout.setHydrationGlasses(Math.max(0, waterGlasses - 1), this._today);
-        this.renderInicio();
-      };
+    const helloEl = document.querySelector('#hello');
+    if (helloEl) {
+      const hr = new Date().getHours();
+      const saudacao = hr < 12 ? 'Bom dia' : hr < 18 ? 'Boa tarde' : 'Boa noite';
+      helloEl.textContent = saudacao + (p.nome ? ', ' + p.nome : '');
     }
-    const bWPlus = document.querySelector('#bWPlus');
-    if (bWPlus) {
-      bWPlus.onclick = () => {
-        this._workout.setHydrationGlasses(waterGlasses + 1, this._today);
-        this.renderInicio();
-      };
+
+    const rLeftEl = document.querySelector('#rLeft');
+    if (rLeftEl) rLeftEl.textContent = FormatUtils.formatNumber(Math.abs(left));
+
+    const rLblEl = document.querySelector('#rLbl');
+    if (rLblEl) rLblEl.textContent = left >= 0 ? 'kcal restantes' : 'kcal acima';
+
+    const fg = document.querySelector('#ringFg');
+    if (fg) {
+      const fr = Math.min(1, c / Math.max(1, m + e));
+      fg.style.strokeDashoffset = 389.6 * (1 - fr);
+      fg.classList.toggle('over', left < 0);
+    }
+
+    const sMetaEl = document.querySelector('#sMeta');
+    if (sMetaEl) sMetaEl.textContent = FormatUtils.formatNumber(m) + ' kcal';
+    const sConsEl = document.querySelector('#sCons');
+    if (sConsEl) sConsEl.textContent = FormatUtils.formatNumber(c) + ' kcal';
+    const sExEl = document.querySelector('#sEx');
+    if (sExEl) sExEl.textContent = FormatUtils.formatNumber(e) + ' kcal';
+
+    // Jornada de peso
+    const now = this._workout.getCurrentWeight();
+    const tot = p.ini - p.meta;
+    const lost = p.ini - now;
+    const falta = Math.max(0, now - p.meta);
+    const pct = tot > 0 ? Math.max(0, Math.min(100, (lost / tot) * 100)) : 0;
+
+    const jNowEl = document.querySelector('#jNow');
+    if (jNowEl) jNowEl.innerHTML = FormatUtils.formatNumber(now, 1) + '<small>kg</small>';
+    const jLeftEl = document.querySelector('#jLeft');
+    if (jLeftEl) jLeftEl.textContent = FormatUtils.formatNumber(falta, 1) + ' kg';
+    const jBarEl = document.querySelector('#jBar');
+    if (jBarEl) jBarEl.style.width = pct + '%';
+    const jPctEl = document.querySelector('#jPct');
+    if (jPctEl) jPctEl.textContent = FormatUtils.formatNumber(pct) + '%';
+    const jStartEl = document.querySelector('#jStart');
+    if (jStartEl) jStartEl.textContent = 'Início ' + FormatUtils.formatNumber(p.ini, 1) + ' kg';
+    const jGoalEl = document.querySelector('#jGoal');
+    if (jGoalEl) jGoalEl.textContent = 'Meta ' + FormatUtils.formatNumber(p.meta, 1) + ' kg';
+    const jLostEl = document.querySelector('#jLost');
+    if (jLostEl) jLostEl.textContent = (lost >= 0 ? '' : '+') + FormatUtils.formatNumber(Math.abs(lost), 1) + ' kg';
+
+    const metabolic = this._workout.getMetabolicSummary();
+    const jImcEl = document.querySelector('#jImc');
+    if (jImcEl) jImcEl.textContent = metabolic.bmi;
+
+    const jEtaEl = document.querySelector('#jEta');
+    if (jEtaEl) {
+      if (falta <= 0) {
+        jEtaEl.textContent = 'Meta batida!';
+      } else {
+        const dt = new Date();
+        dt.setDate(dt.getDate() + Math.ceil((falta / (p.ritmo || 0.5)) * 7));
+        jEtaEl.textContent = dt.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }).replace('.', '');
+      }
+    }
+
+    // Copos de Água
+    const w = (this._state.agua && this._state.agua[this._today]) || 0;
+    const n = p.agua || 8;
+    const cupsEl = document.querySelector('#cups');
+    if (cupsEl) {
+      cupsEl.innerHTML = Array.from({ length: n }, (_, i) =>
+        `<button type="button" class="cup${i < w ? ' on' : ''}" data-c="${i}" aria-label="Copo ${i + 1}" aria-pressed="${i < w}"></button>`
+      ).join('');
+    }
+    const wTxtEl = document.querySelector('#wTxt');
+    if (wTxtEl) wTxtEl.textContent = `${w} de ${n} copos · ${FormatUtils.formatNumber(w * 0.25, 2)} L`;
+
+    // Plano de Hoje
+    const planoEl = document.querySelector('#hojePlano');
+    if (planoEl) {
+      planoEl.innerHTML = `
+        <div class="it">
+          <span class="ic t-fire"><span class="ms" aria-hidden="true">fitness_center</span></span>
+          <div class="t">
+            <b>Treino do Dia</b>
+            <small class="num">Musculação e condicionamento ativo</small>
+          </div>
+          <button type="button" class="btn pri sm" data-add="treino">Registrar</button>
+        </div>
+      `;
     }
   }
 
   renderBars() {
-    const energy = this._workout.getDailyEnergyBalance(this._today);
-    const barEl = document.querySelector('#bConsumo');
-    if (barEl) {
-      const pct = Math.min(100, Math.round((energy.consumedKcal / (energy.targetKcal || 1)) * 100));
-      barEl.style.width = `${pct}%`;
-    }
-  }
-
-  renderEvo() {
-    this.drawEvoChart();
-  }
-
-  drawEvoChart() {
-    const svg = document.querySelector('#tEvo');
-    if (!svg) return;
-    const W = svg.clientWidth || 300;
-    const H = svg.clientHeight || 120;
-    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-
-    const weights = (this._state.pesos || []).slice(-7);
-    if (weights.length < 2) {
-      svg.innerHTML = `<text x="${W / 2}" y="${H / 2}" text-anchor="middle" fill="currentColor" opacity="0.4" font-size="12">Registre mais dados para ver a evolução</text>`;
-      return;
-    }
-
-    const minK = Math.min(...weights.map(w => w.kg)) - 1;
-    const maxK = Math.max(...weights.map(w => w.kg)) + 1;
-    const pts = weights.map((w, i) => {
-      const x = (i / (weights.length - 1)) * (W - 40) + 20;
-      const y = H - 20 - ((w.kg - minK) / (maxK - minK || 1)) * (H - 40);
-      return [x, y];
+    const kBars = document.querySelector('#kBars');
+    if (!kBars) return;
+    const dias = Array.from({ length: 7 }, (_, i) => {
+      const x = new Date(this._today + 'T12:00');
+      x.setDate(x.getDate() - 6 + i);
+      return x.toISOString().slice(0, 10);
     });
+    const energy = this._workout.getDailyEnergyBalance(this._today);
+    const m = energy.targetKcal || 2000;
+    const V = dias.map(d => {
+      const e = this._workout.getDailyEnergyBalance(d);
+      return { d, c: e.consumedKcal, g: m + e.burnedKcal };
+    });
+    const mx = Math.max(...V.map(v => Math.max(v.c, v.g))) * 1.1 || 1;
+    const wd = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
-    const dPath = pts.reduce((acc, p, i) => acc + (i === 0 ? `M ${p[0]},${p[1]}` : ` L ${p[0]},${p[1]}`), '');
-    svg.innerHTML = `
-      <path d="${dPath}" fill="none" stroke="var(--c-pri, #6FCF97)" stroke-width="2.5" stroke-linecap="round"/>
-      ${pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="var(--c-pri, #6FCF97)"/>`).join('')}
-    `;
+    kBars.innerHTML = V.map(v => `
+      <div class="bar${v.d === this._today ? ' hoje' : ''}" title="${FormatUtils.formatDateBr(v.d)}: ${FormatUtils.formatNumber(v.c)} kcal">
+        <span class="val num">${v.c ? FormatUtils.formatNumber(v.c / 1000, 1) + 'k' : ''}</span>
+        <div class="col">
+          <div class="fill${!v.c ? ' zero' : v.c > v.g ? ' over' : ''}" style="height:${(v.c / mx) * 100}%"></div>
+        </div>
+        <small>${wd[new Date(v.d + 'T12:00').getDay()]}</small>
+      </div>
+    `).join('');
   }
 
   renderPeso() {
-    const currentWeight = this._workout.getCurrentWeight();
-    const metaWeight = (this._state.perfil && this._state.perfil.meta) || 75;
-    const initialWeight = (this._state.perfil && this._state.perfil.ini) || 80;
-
-    const pCur = document.querySelector('#pCur');
-    if (pCur) pCur.textContent = FormatUtils.formatNumber(currentWeight, 1);
-    const pMeta = document.querySelector('#pMeta');
-    if (pMeta) pMeta.textContent = FormatUtils.formatNumber(metaWeight, 1);
-    const pIni = document.querySelector('#pIni');
-    if (pIni) pIni.textContent = FormatUtils.formatNumber(initialWeight, 1);
-
-    const summary = this._workout.getMetabolicSummary();
-    const imcEl = document.querySelector('#pImc');
-    if (imcEl) imcEl.textContent = `${summary.bmi} (${summary.bmiCategory})`;
-
-    const histEl = document.querySelector('#pHist');
-    if (histEl) {
-      const sorted = (this._state.pesos || []).slice().reverse();
-      histEl.innerHTML = sorted
-        .slice(0, 10)
-        .map(
-          p => `
-          <div class="row pad" style="justify-content:space-between;border-bottom:1px solid var(--line, rgba(255,255,255,0.08))">
-            <span>${FormatUtils.formatDateBr(p.d)}</span>
-            <b>${FormatUtils.formatNumber(p.kg, 1)} kg</b>
-          </div>
-        `
-        )
-        .join('');
-    }
-  }
-
-  drawWeightChart() {
-    const svg = document.querySelector('#fig');
-    if (!svg) return;
-    const W = svg.clientWidth || 320;
-    const H = svg.clientHeight || 180;
-    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-
-    const weights = this._state.pesos || [];
-    if (!weights.length) {
-      svg.innerHTML = `<text x="${W / 2}" y="${H / 2}" text-anchor="middle" fill="currentColor" opacity="0.4" font-size="12">Sem dados de peso</text>`;
+    const pList = document.querySelector('#pList');
+    if (!pList) return;
+    const pesos = (this._state.pesos || []).slice().sort((a, b) => b.d.localeCompare(a.d));
+    if (!pesos.length) {
+      pList.innerHTML = '<div class="glass empty" style="padding:14px;text-align:center;color:var(--soft)">Nenhum peso registrado ainda.</div>';
       return;
     }
 
-    const minK = Math.min(...weights.map(w => w.kg)) - 1;
-    const maxK = Math.max(...weights.map(w => w.kg)) + 1;
-    const pts = weights.map((w, i) => {
-      const x = (i / Math.max(1, weights.length - 1)) * (W - 40) + 20;
+    pList.innerHTML = pesos.slice(0, 15).map(p => `
+      <div class="it" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)">
+        <div>
+          <b>${FormatUtils.formatNumber(p.kg, 1)} kg</b>
+          <div style="font-size:12px;color:var(--soft)">${FormatUtils.formatDateBr(p.d)}</div>
+        </div>
+        <button type="button" class="btn sm dng" data-del="pesos:${p.id}" style="padding:4px 8px">Excluir</button>
+      </div>
+    `).join('');
+  }
+
+  drawWeightChart() {
+    const svg = document.querySelector('#chart');
+    if (!svg) return;
+    const container = document.querySelector('#fig');
+    const W = (container && container.clientWidth) || 300;
+    const H = 160;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    const pesos = (this._state.pesos || []).slice().sort((a, b) => a.d.localeCompare(b.d));
+    if (pesos.length < 2) {
+      svg.innerHTML = `<text x="${W / 2}" y="${H / 2}" text-anchor="middle" fill="currentColor" opacity="0.4" font-size="12">Registre mais pesos para ver o gráfico</text>`;
+      return;
+    }
+
+    const minK = Math.min(...pesos.map(w => w.kg)) - 1;
+    const maxK = Math.max(...pesos.map(w => w.kg)) + 1;
+    const pts = pesos.map((w, i) => {
+      const x = (i / (pesos.length - 1)) * (W - 50) + 25;
       const y = H - 25 - ((w.kg - minK) / (maxK - minK || 1)) * (H - 50);
       return [x, y];
     });
 
     const dPath = pts.reduce((acc, p, i) => acc + (i === 0 ? `M ${p[0]},${p[1]}` : ` L ${p[0]},${p[1]}`), '');
     svg.innerHTML = `
-      <path d="${dPath}" fill="none" stroke="var(--c-pri, #6FCF97)" stroke-width="2.5" stroke-linecap="round"/>
-      ${pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="var(--c-pri, #6FCF97)"/>`).join('')}
+      <path d="${dPath}" fill="none" stroke="var(--accent, #6FCF97)" stroke-width="2.5" stroke-linecap="round"/>
+      ${pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="var(--accent, #6FCF97)"/>`).join('')}
     `;
   }
 
-  renderSaude() {
-    // Painel clínico e radar metabólico
-    this.drawSaudeRadar();
-  }
-
-  drawSaudeRadar() {
-    // Desenha indicadores de saúde se canvas/svg estiver presente
-  }
-
-  renderMarcosSafe() {
-    try {
-      this.checkMilestones();
-    } catch (e) {
-      console.warn('[AppController] Erro em marcos:', e);
-    }
-  }
-
-  checkMilestones() {
-    this._state.mkOk = this._state.mkOk || [];
-    const cur = this._workout.getCurrentWeight();
-    const ini = (this._state.perfil && this._state.perfil.ini) || 80;
-    const meta = (this._state.perfil && this._state.perfil.meta) || 75;
-
-    if (ini > meta) {
-      const lost = ini - cur;
-      if (lost >= 1 && !this._state.mkOk.includes('lost1')) {
-        this._state.mkOk.push('lost1');
-        this.save();
-        this._toast.show('Parabéns! Primeiro quilo eliminado!');
-      }
-    }
-  }
-
-  renderMapa() {
-    const mapaEl = document.querySelector('#bodyMap');
-    if (!mapaEl || !BODY) return;
-    const side = this._mapV === 'back' ? BODY.back : BODY.front;
-    if (side && side.img && side.img.light) {
-      mapaEl.src = side.img.light;
-    }
+  drawEvoChart() {
+    this.drawWeightChart();
   }
 
   renderDiario() {
-    const dList = document.querySelector('#dList');
-    if (!dList) return;
+    const dia = this._activeDia;
+    const energy = this._workout.getDailyEnergyBalance(dia);
+    const m = energy.targetKcal || 2000;
+    const c = energy.consumedKcal || 0;
+    const e = energy.burnedKcal || 0;
+    const left = m + e - c;
 
-    const comidasDia = (this._state.comidas || []).filter(c => c.d === this._today);
-    const treinosDia = (this._state.treinos || []).filter(t => t.d === this._today);
+    const dLbl = document.querySelector('#dLbl');
+    if (dLbl) dLbl.textContent = dia === this._today ? 'Hoje' : FormatUtils.formatDateBr(dia);
+    const dMeta = document.querySelector('#dMeta');
+    if (dMeta) dMeta.textContent = FormatUtils.formatNumber(m + e);
+    const dCons = document.querySelector('#dCons');
+    if (dCons) dCons.textContent = FormatUtils.formatNumber(c);
+    const dLeft = document.querySelector('#dLeft');
+    if (dLeft) {
+      dLeft.textContent = FormatUtils.formatNumber(left);
+      dLeft.style.color = left < 0 ? 'var(--bad)' : '';
+    }
 
-    if (!comidasDia.length && !treinosDia.length) {
-      dList.innerHTML = '<p class="lead" style="text-align:center">Nenhum registro hoje. Use os botões abaixo para lançar.</p>';
+    const dMeals = document.querySelector('#dMeals');
+    if (!dMeals) return;
+
+    const categorias = ['Café da manhã', 'Almoço', 'Lanche', 'Jantar'];
+    const alimentosDia = (this._state.comidas || []).filter(x => x.d === dia);
+
+    if (!alimentosDia.length) {
+      dMeals.innerHTML = '<div class="glass empty" style="padding:16px;text-align:center;color:var(--soft)">Nenhum alimento registrado para esta data.</div>';
       return;
     }
 
-    let html = '';
-    if (comidasDia.length) {
-      html += '<h4 style="margin:12px 0 6px">Alimentação</h4>';
-      html += comidasDia
-        .map(
-          c => `
-        <div class="card row" style="justify-content:space-between;margin-bottom:6px">
-          <div><b>${FormatUtils.escapeHtml(c.n)}</b><br><small class="t-sub">${FormatUtils.escapeHtml(c.ref || '')}</small></div>
-          <b class="num">${FormatUtils.formatNumber(c.kcal)} kcal</b>
-        </div>
-      `
-        )
-        .join('');
-    }
-
-    if (treinosDia.length) {
-      html += '<h4 style="margin:12px 0 6px">Atividades & Treinos</h4>';
-      html += treinosDia
-        .map(
-          t => `
-        <div class="card row" style="justify-content:space-between;margin-bottom:6px">
-          <div><b>${FormatUtils.escapeHtml(t.nome)}</b><br><small class="t-sub">${t.min} min · ${FormatUtils.escapeHtml(t.tipo || '')}</small></div>
-          <b class="num t-up">+${FormatUtils.formatNumber(t.kcal)} kcal</b>
-        </div>
-      `
-        )
-        .join('');
-    }
-
-    dList.innerHTML = html;
-  }
-
-  renderCad() {
-    // Lista de alimentos e exercícios customizados
-  }
-
-  renderCard() {
-    const cEl = document.querySelector('#cardContent');
-    if (!cEl || !CARD) return;
-
-    cEl.innerHTML = Object.entries(CARD)
-      .map(
-        ([cat, items]) => `
-      <div class="card" style="margin-bottom:12px">
-        <h4 style="margin-bottom:8px">${cat}</h4>
-        ${items
-          .map(
-            ([item, kcal]) => `
-          <div class="row" style="justify-content:space-between;padding:4px 0">
-            <span>${item}</span>
-            <span class="num">${kcal} kcal</span>
+    dMeals.innerHTML = categorias.map(cat => {
+      const itens = alimentosDia.filter(x => x.ref === cat);
+      if (!itens.length) return '';
+      const totalCat = itens.reduce((acc, x) => acc + (x.kcal || 0), 0);
+      return `
+        <div class="mb" style="margin-bottom:12px;background:var(--surface-2, rgba(255,255,255,0.04));border-radius:12px;padding:10px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <b>${cat}</b>
+            <span class="num" style="color:var(--accent)">${FormatUtils.formatNumber(totalCat)} kcal</span>
           </div>
-        `
-          )
-          .join('')}
-      </div>
-    `
-      )
-      .join('');
+          ${itens.map(it => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid var(--line);font-size:13px">
+              <span>${FormatUtils.escapeHtml(it.nome || it.desc)}</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="num">${FormatUtils.formatNumber(it.kcal)} kcal</span>
+                <button type="button" class="btn sm dng" data-del="comidas:${it.id}" style="padding:2px 6px;font-size:11px">×</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }).join('');
   }
 
   renderTreino() {
-    const semEl = document.querySelector('#trSemana');
-    if (!semEl) return;
-    const dias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-    const semana = this._state.semana || [];
+    const sem = new Date();
+    sem.setDate(sem.getDate() - 6);
+    const isoSem = sem.toISOString().slice(0, 10);
+    const treinosSem = (this._state.treinos || []).filter(t => t.d >= isoSem);
 
-    semEl.innerHTML = dias
-      .map((d, i) => {
-        const item = semana[i] || { t: 'des' };
-        const label = item.t === 'des' ? 'Descanso' : item.t === 'f' ? `Ficha ${item.id}` : 'Aeróbico';
-        return `
-        <div class="card mini-day" style="text-align:center">
-          <small>${d}</small>
-          <b style="display:block;margin-top:4px">${label}</b>
+    const tWk = document.querySelector('#tWk');
+    if (tWk) tWk.textContent = treinosSem.length;
+    const tMin = document.querySelector('#tMin');
+    if (tMin) tMin.textContent = FormatUtils.formatNumber(treinosSem.reduce((a, t) => a + (t.min || 0), 0));
+    const tKcal = document.querySelector('#tKcal');
+    if (tKcal) tKcal.textContent = FormatUtils.formatNumber(treinosSem.reduce((a, t) => a + (t.kcal || 0), 0));
+
+    const tList = document.querySelector('#tList');
+    if (!tList) return;
+    const todos = (this._state.treinos || []).slice().sort((a, b) => b.d.localeCompare(a.d));
+    if (!todos.length) {
+      tList.innerHTML = '<div class="glass empty" style="padding:14px;text-align:center;color:var(--soft)">Nenhum treino registrado ainda.</div>';
+      return;
+    }
+
+    tList.innerHTML = todos.slice(0, 15).map(t => `
+      <div class="it" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)">
+        <div>
+          <b>${FormatUtils.escapeHtml(t.tipo || 'Treino')}</b>
+          <div style="font-size:12px;color:var(--soft)">${FormatUtils.formatDateBr(t.d)} · ${t.min || 0} min</div>
         </div>
-      `;
-      })
-      .join('');
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="num" style="color:var(--accent)">~${FormatUtils.formatNumber(t.kcal || 0)} kcal</span>
+          <button type="button" class="btn sm dng" data-del="treinos:${t.id}" style="padding:4px 8px">×</button>
+        </div>
+      </div>
+    `).join('');
   }
 
   renderPlano() {
-    const summary = this._workout.getMetabolicSummary();
-    const plKcal = document.querySelector('#plKcal');
-    if (plKcal) plKcal.textContent = FormatUtils.formatNumber(summary.targetKcal);
-    const plGasto = document.querySelector('#plGasto');
-    if (plGasto) plGasto.textContent = FormatUtils.formatNumber(summary.tdee);
+    const tPlano = document.querySelector('#tPlano');
+    if (!tPlano) return;
+    tPlano.innerHTML = `
+      <div class="glass pad" style="margin-top:10px">
+        <div class="sec-h" style="margin-top:0"><b>Orientação Semanal de Atividades</b></div>
+        <p style="font-size:13px;color:var(--soft);line-height:1.4">
+          Alterne dias de treino com recuperação ativa para maximizar a perda de gordura preservando a massa magra.
+        </p>
+      </div>
+    `;
   }
 
   renderPerfil() {
@@ -569,23 +663,112 @@ export class AppController {
     if (iniEl) iniEl.value = p.ini || 80;
     const metaEl = document.querySelector('#fMeta');
     if (metaEl) metaEl.value = p.meta || 75;
+    const ritEl = document.querySelector('#fRit');
+    if (ritEl) ritEl.value = p.ritmo || 0.5;
+    const atvEl = document.querySelector('#fAtv');
+    if (atvEl) atvEl.value = p.atv || 1.375;
+    const aguaEl = document.querySelector('#fAgua');
+    if (aguaEl) aguaEl.value = p.agua || 8;
 
-    const fForm = document.querySelector('#formPerfil');
-    if (fForm) {
-      fForm.onsubmit = e => {
-        e.preventDefault();
-        p.nome = nEl ? nEl.value.trim() : '';
-        p.alt = altEl ? Number(altEl.value) : 170;
-        p.nasc = nascEl ? nascEl.value : '';
-        p.meta = metaEl ? Number(metaEl.value) : 75;
-        this.save();
-        this.renderAll();
-        this._toast.show('Perfil atualizado com sucesso.');
-      };
+    // Seus Números (Cálculos Mifflin-St Jeor)
+    const calcEl = document.querySelector('#calc');
+    if (calcEl) {
+      const metabolic = this._workout.getMetabolicSummary();
+      calcEl.innerHTML = `
+        <div class="it" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)">
+          <span>Taxa Metabólica Basal (TMB):</span>
+          <b>${FormatUtils.formatNumber(metabolic.bmr)} kcal</b>
+        </div>
+        <div class="it" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)">
+          <span>Gasto Diário com Atividade (TDEE):</span>
+          <b>${FormatUtils.formatNumber(metabolic.tdee)} kcal</b>
+        </div>
+        <div class="it" style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);color:var(--accent)">
+          <span>Meta Diária de Calorias:</span>
+          <b>${FormatUtils.formatNumber(metabolic.targetKcal)} kcal</b>
+        </div>
+        <div class="it" style="display:flex;justify-content:space-between;padding:8px 0">
+          <span>Déficit Diário Programado:</span>
+          <b>-${FormatUtils.formatNumber(metabolic.tdee - metabolic.targetKcal)} kcal</b>
+        </div>
+      `;
     }
   }
 
-  // --- MODAL SHEETS ---
+  renderCard() {
+    const cardEl = document.querySelector('#cardapio');
+    if (!cardEl || !CARD) return;
+    cardEl.innerHTML = Object.entries(CARD).map(([r, itens]) => `
+      <details class="glass acc" style="margin-bottom:8px">
+        <summary style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;cursor:pointer">
+          <b>${r}</b>
+          <span style="color:var(--accent);font-size:13px">${itens.length} opções recomendadas</span>
+        </summary>
+        <div style="padding:10px 14px;border-top:1px solid var(--line)">
+          ${itens.map(x => `
+            <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px">
+              <span>${x[0]}</span>
+              <span class="num">${x[1]} kcal</span>
+            </div>
+          `).join('')}
+        </div>
+      </details>
+    `).join('');
+  }
+
+  renderCad() {
+    this.renderCadastrosSubtab('ali');
+  }
+
+  renderCadastrosSubtab(tab) {
+    const cBody = document.querySelector('#cBody');
+    if (!cBody) return;
+
+    if (tab === 'ali') {
+      cBody.innerHTML = `
+        <div class="glass pad" style="margin-top:10px">
+          <div class="sec-h" style="margin-top:0"><b>Banco de Alimentos</b></div>
+          <p style="font-size:13px;color:var(--soft)">Itens cadastrados para rápida seleção no diário alimentar.</p>
+          <button type="button" class="btn pri sm" data-add="comida" style="margin-top:8px">+ Novo Alimento</button>
+        </div>
+      `;
+    } else if (tab === 'ex') {
+      cBody.innerHTML = `
+        <div class="glass pad" style="margin-top:10px">
+          <div class="sec-h" style="margin-top:0"><b>Exercícios e Atividades</b></div>
+          <p style="font-size:13px;color:var(--soft)">Modalidades e fichas de treinamento.</p>
+          <button type="button" class="btn pri sm" data-add="treino" style="margin-top:8px">+ Novo Treino</button>
+        </div>
+      `;
+    } else {
+      cBody.innerHTML = `
+        <div class="glass pad" style="margin-top:10px">
+          <p style="font-size:13px;color:var(--soft)">Listagem pronta para consulta.</p>
+        </div>
+      `;
+    }
+  }
+
+  renderMapa() {
+    // Mapa anatômico
+  }
+
+  setThemeMode(mode) {
+    this._state.mode = mode;
+    this.save();
+    const root = document.documentElement;
+    if (mode === 'dark') {
+      root.classList.add('dark');
+      root.dataset.mode = 'dark';
+    } else if (mode === 'light') {
+      root.classList.remove('dark');
+      root.dataset.mode = 'light';
+    } else {
+      root.dataset.mode = 'auto';
+    }
+  }
+
+  // --- MODAIS DE INSERÇÃO ---
 
   showAddWeightSheet() {
     const cur = this._workout.getCurrentWeight();
@@ -600,7 +783,7 @@ export class AppController {
           <label>Data</label>
           <input type="date" id="inD" value="${this._today}" max="${this._today}" required>
         </div>
-        <button class="btn pri" style="margin-top:12px">Salvar</button>
+        <button class="btn pri" style="margin-top:12px">Salvar Peso</button>
       </form>
     `);
 
@@ -620,26 +803,26 @@ export class AppController {
     }
   }
 
-  showAddFoodSheet() {
+  showAddFoodSheet(categoriaPadrao) {
     this._sheet.open(`
       <h3 id="shT">Registrar Refeição</h3>
       <form class="form" id="frmFood">
         <div class="f">
           <label>Descrição do Alimento</label>
-          <input type="text" id="inFoodN" placeholder="Ex: Arroz com frango" required>
+          <input type="text" id="inFoodN" placeholder="Ex: Arroz, feijão e frango" required>
         </div>
         <div class="two">
           <div class="f">
             <label>Calorias (kcal)</label>
-            <input type="number" id="inFoodKcal" placeholder="300" required inputmode="numeric">
+            <input type="number" id="inFoodKcal" placeholder="350" required inputmode="numeric">
           </div>
           <div class="f">
             <label>Refeição</label>
             <select id="inFoodRef">
-              <option value="Café da manhã">Café da manhã</option>
-              <option value="Almoço" selected>Almoço</option>
-              <option value="Lanche">Lanche</option>
-              <option value="Jantar">Jantar</option>
+              <option value="Café da manhã" ${categoriaPadrao === 'Café da manhã' ? 'selected' : ''}>Café da manhã</option>
+              <option value="Almoço" ${!categoriaPadrao || categoriaPadrao === 'Almoço' ? 'selected' : ''}>Almoço</option>
+              <option value="Lanche" ${categoriaPadrao === 'Lanche' ? 'selected' : ''}>Lanche</option>
+              <option value="Jantar" ${categoriaPadrao === 'Jantar' ? 'selected' : ''}>Jantar</option>
             </select>
           </div>
         </div>
@@ -651,14 +834,22 @@ export class AppController {
     if (frm) {
       frm.onsubmit = e => {
         e.preventDefault();
-        const n = document.querySelector('#inFoodN').value;
-        const kcal = document.querySelector('#inFoodKcal').value;
+        const nome = document.querySelector('#inFoodN').value.trim();
+        const kcal = Number(document.querySelector('#inFoodKcal').value);
         const ref = document.querySelector('#inFoodRef').value;
-        if (n && kcal) {
-          this._workout.addMeal(n, kcal, ref, this._today);
+        if (nome && kcal >= 0) {
+          if (!this._state.comidas) this._state.comidas = [];
+          this._state.comidas.push({
+            id: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            d: this._activeDia,
+            nome,
+            kcal,
+            ref
+          });
+          this.save();
           this._sheet.close();
           this.renderAll();
-          this._toast.show('Refeição adicionada.');
+          this._toast.show('Alimento registrado no diário.');
         }
       };
     }
@@ -669,20 +860,20 @@ export class AppController {
       <h3 id="shT">Registrar Treino</h3>
       <form class="form" id="frmWorkout">
         <div class="f">
-          <label>Atividade</label>
-          <input type="text" id="inTrN" placeholder="Ex: Corrida, Musculação" required>
+          <label>Tipo de Atividade</label>
+          <input type="text" id="inTrTipo" placeholder="Ex: Musculação, Caminhada, Corrida" required>
         </div>
         <div class="two">
           <div class="f">
-            <label>Duração (min)</label>
-            <input type="number" id="inTrMin" value="45" required inputmode="numeric">
+            <label>Duração (minutos)</label>
+            <input type="number" id="inTrMin" placeholder="45" required min="1">
           </div>
           <div class="f">
-            <label>Calorias Queimadas</label>
-            <input type="number" id="inTrKcal" value="250" required inputmode="numeric">
+            <label>Calorias Gastas (kcal)</label>
+            <input type="number" id="inTrKcal" placeholder="250" required min="0">
           </div>
         </div>
-        <button class="btn pri" style="margin-top:12px">Adicionar ao Diário</button>
+        <button class="btn pri" style="margin-top:12px">Salvar Treino</button>
       </form>
     `);
 
@@ -690,231 +881,90 @@ export class AppController {
     if (frm) {
       frm.onsubmit = e => {
         e.preventDefault();
-        const n = document.querySelector('#inTrN').value;
-        const min = document.querySelector('#inTrMin').value;
-        const kcal = document.querySelector('#inTrKcal').value;
-        if (n && min) {
-          this._workout.addWorkout(n, 'Aeróbico', min, kcal, 'run', this._today);
+        const tipo = document.querySelector('#inTrTipo').value.trim();
+        const min = Number(document.querySelector('#inTrMin').value);
+        const kcal = Number(document.querySelector('#inTrKcal').value);
+        if (tipo && min > 0) {
+          if (!this._state.treinos) this._state.treinos = [];
+          this._state.treinos.push({
+            id: 't' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            d: this._today,
+            tipo,
+            min,
+            kcal
+          });
+          this.save();
           this._sheet.close();
           this.renderAll();
-          this._toast.show('Treino registrado.');
+          this._toast.show('Treino registrado com sucesso.');
         }
       };
     }
   }
 
-  async showPrivacySheet() {
-    const policy = await SecurityRecoveryService.getPrivacyPolicy('Fit Systekna');
-    this._sheet.open(`
-      <h3 id="shT">${policy.title}</h3>
-      <p style="font-size:13px;color:var(--accent);margin-bottom:14px">${policy.summary}</p>
-      <div style="max-height:60vh;overflow-y:auto;padding-right:6px">
-        ${policy.sections.map(s => `
-          <div style="margin-bottom:12px;background:var(--surface-2, rgba(255,255,255,0.04));padding:10px 12px;border-radius:10px">
-            <b style="font-size:13px;display:block;margin-bottom:4px">${s.heading}</b>
-            <p style="font-size:12px;color:var(--soft);margin:0;line-height:1.4">${s.text}</p>
-          </div>
-        `).join('')}
-      </div>
-      <button class="btn pri block" id="bClosePriv" style="margin-top:14px;width:100%">Entendido</button>
-    `);
-    const bClose = document.querySelector('#bClosePriv');
-    if (bClose) bClose.onclick = () => this._sheet.close();
-  }
-
-  async ensureSeed() {
-    if (!this._state.seedWords || this._state.seedWords.length !== 12 || !this._state.seedHash) {
-      const seed = await SecurityRecoveryService.generateSeed();
-      this._state.seedWords = seed.words;
-      this._state.seedHash = seed.hash;
-      this.save();
-    }
-  }
-
-  displayWordsModal(wasJustCreated = false) {
-    const wordsList = this._state.seedWords || [];
-    this._sheet.open(`
-      <h3 style="margin-top:0">Suas 12 Palavras de Recuperação</h3>
-      <p style="font-size:12px;color:var(--soft);margin-bottom:12px">Guarde estas palavras em local seguro. Elas são a única chave para recuperar o PIN se esquecido:</p>
-      
-      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;margin-bottom:14px;background:var(--surface-2, rgba(255,255,255,0.05));padding:12px;border-radius:10px">
-        ${wordsList.map((w, idx) => `
-          <div style="font-family:monospace;font-size:12px;color:var(--ink)">
-            <span style="color:var(--soft)">${idx + 1}.</span> <b>${w}</b>
-          </div>
-        `).join('')}
-      </div>
-
-      <div style="background:var(--surface, rgba(0,0,0,0.2));padding:8px 12px;border-radius:8px;margin-bottom:14px;border:1px solid var(--line)">
-        <small style="display:block;color:var(--soft);font-size:11px">Código Hash de Validação:</small>
-        <code style="font-size:16px;font-weight:700;color:var(--accent);letter-spacing:1px">${this._state.seedHash || 'XXXX-XXXX-XXXX'}</code>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <button type="button" class="btn pri block" id="btnDownloadCertModalSmart">Baixar Certificado em PDF (A4)</button>
-        <button type="button" class="btn sec block" id="btnDoneWordsSmart">${wasJustCreated ? 'Guardei as palavras e o PIN' : 'Fechar'}</button>
-      </div>
-    `);
-
-    const btnDl = document.querySelector('#btnDownloadCertModalSmart');
-    if (btnDl) {
-      btnDl.onclick = async () => {
-        await SecurityRecoveryService.downloadSecurityCertificate({
-          appName: 'Fit Systekna',
-          words: this._state.seedWords,
-          hash: this._state.seedHash
-        });
-        this._toast.show('Download do Certificado iniciado.');
-      };
-    }
-
-    const btnDone = document.querySelector('#btnDoneWordsSmart');
-    if (btnDone) {
-      btnDone.onclick = () => {
-        this._sheet.close();
-        if (wasJustCreated) {
-          this._toast.show('PIN e Certificado configurados com sucesso.');
-        }
-      };
-    }
-  }
-
-  showChangePinSheet() {
-    this._sheet.open(`
-      <h3 id="shT">Alterar PIN de Segurança</h3>
-      <div id="pinBox"></div>
-      <button class="btn sec" style="margin-top:12px;width:100%" id="bClosePin">Cancelar</button>
-    `);
-    const bClose = document.querySelector('#bClosePin');
-    if (bClose) bClose.onclick = () => this._sheet.close();
-
-    const pinBox = document.querySelector('#pinBox');
-    if (pinBox) {
-      PinPad.render(pinBox, {
-        mode: 'verify',
-        title: 'PIN Atual',
-        sub: 'Digite o PIN atual para continuar.',
-        check: async v => {
-          const h = await BiometricsAdapter.hashPin(v);
-          return h === this._state.pin;
-        },
-        onOk: () => {
-          PinPad.renderCreationFlow(pinBox, {
-            title: 'Novo PIN',
-            sub: 'Digite o novo PIN.',
-            onDone: async newPin => {
-              await this.ensureSeed();
-              this._state.pin = await BiometricsAdapter.hashPin(newPin);
-              this._state.pinLen = newPin.length;
-              this.save();
-              this.displayWordsModal(true);
-            }
-          });
-        }
-      });
-    }
-  }
-
-  // --- SEGURANÇA E ONBOARDING ---
-
-  async renderBiometricsSwitch() {
-    const sw = document.querySelector('#fBio');
-    if (!sw) return;
-    sw.checked = !!this._state.bio;
-    const isAvail = await BiometricsAdapter.isAvailable();
-    sw.disabled = !isAvail && !this._state.bio;
-    const bioTx = document.querySelector('#bioTx');
-    if (bioTx) {
-      bioTx.textContent = isAvail
-        ? 'Digital ou reconhecimento facial do aparelho ativo'
-        : 'Disponível no app instalado com biometria no aparelho';
-    }
-  }
+  // --- SEGURANÇA & BLOQUEIO ---
 
   checkAppLock() {
-    if (!this._state.onb) return;
-    if (!this._state.pin) {
-      this.promptMustCreatePin();
-      return;
-    }
     const lockEl = document.querySelector('#lock');
-    if (lockEl) {
+    if (!lockEl) return;
+    if (this._state.pin && !this._unlocked) {
       lockEl.hidden = false;
       const box = lockEl.querySelector('.lockc');
       if (box) {
         PinPad.render(box, {
           mode: 'verify',
           title: 'Fit Systekna',
-          sub: 'Digite seu PIN para acessar.',
-          bio: !!this._state.bio,
+          sub: 'Digite seu PIN para desbloquear.',
           len: this._state.pinLen,
-          onBio: async () => {
-            const ok = await BiometricsAdapter.verifyCredential(this._state.bio);
-            if (ok) {
-              lockEl.hidden = true;
-              PinPad.clearActive();
-            }
-          },
+          bio: !!this._state.bio,
           check: async v => {
             const h = await BiometricsAdapter.hashPin(v);
             return h === this._state.pin;
           },
           onOk: () => {
+            this._unlocked = true;
             lockEl.hidden = true;
             PinPad.clearActive();
+            this._toast.show('Acesso liberado.');
           },
-          onForgot: () => this.promptRecoverPin(lockEl)
+          onForgot: () => this.promptRecoverPin()
         });
       }
+    } else {
+      lockEl.hidden = true;
     }
   }
 
-  promptRecoverPin(lockEl) {
+  promptRecoverPin() {
     this._sheet.open(`
       <h3 style="margin-top:0">Recuperação de Acesso</h3>
       <p style="font-size:13px;color:var(--soft);margin-bottom:12px">
-        Cole as suas 12 palavras na ordem correta ou digite o código Hash de 12 caracteres do seu Certificado de Segurança:
+        Cole as suas 12 palavras na ordem correta ou digite o código Hash de 12 caracteres do seu Certificado:
       </p>
-
       <div style="margin-bottom:12px">
-        <textarea id="inpRecoverySecretSmart" class="f-in" rows="3" style="width:100%;resize:none;font-family:monospace;font-size:13px" placeholder="ex: borbulha lotado gradual ... ou XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off"></textarea>
+        <textarea id="inpRecoverySecret" class="f-in" rows="3" style="width:100%;resize:none;font-family:monospace;font-size:13px" placeholder="ex: borbulha lotado gradual ... ou XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off"></textarea>
       </div>
-
-      <div id="recErrorSmart" style="color:var(--bad);font-size:12px;margin-bottom:12px;min-height:16px"></div>
-
-      <button type="button" class="btn pri block" id="btnValidateRecoverySmart" style="width:100%">Validar e Redefinir PIN</button>
-      <button type="button" class="btn sec block" id="btnCancelRecoverySmart" style="margin-top:8px;width:100%">Voltar</button>
+      <div id="recError" style="color:var(--bad);font-size:12px;margin-bottom:12px;min-height:16px"></div>
+      <button type="button" class="btn pri block" id="btnValidateRecovery">Validar e Redefinir PIN</button>
+      <button type="button" class="btn sec block" id="btnCancelRecovery" style="margin-top:8px">Voltar</button>
     `);
 
-    const btnCancel = document.querySelector('#btnCancelRecoverySmart');
-    if (btnCancel) {
-      btnCancel.onclick = () => {
-        this._sheet.close();
-        this.checkAppLock();
-      };
-    }
-
-    const btnValidate = document.querySelector('#btnValidateRecoverySmart');
+    const btnValidate = document.querySelector('#btnValidateRecovery');
     if (btnValidate) {
       btnValidate.onclick = async () => {
-        const inp = document.querySelector('#inpRecoverySecretSmart');
-        const errEl = document.querySelector('#recErrorSmart');
+        const inp = document.querySelector('#inpRecoverySecret');
+        const errEl = document.querySelector('#recError');
         if (!inp) return;
-
-        const val = inp.value.trim();
-        const res = await SecurityRecoveryService.verifyRecoveryInput(val, this._state.seedHash, this._state.seedWords);
-
+        const res = await SecurityRecoveryService.verifyRecoveryInput(inp.value.trim(), this._state.seedHash, this._state.seedWords);
         if (!res.ok) {
           if (errEl) errEl.textContent = res.message || 'Segredo incorreto.';
           return;
         }
-
         this._sheet.open(`
           <h3 style="margin-top:0;color:var(--accent)">Segredo Validado!</h3>
           <p style="font-size:13px;color:var(--soft)">Defina seu novo PIN de 4 a 6 dígitos:</p>
           <div id="pinBoxNewSmart"></div>
         `);
-
         const boxNew = document.querySelector('#pinBoxNewSmart');
         if (boxNew) {
           PinPad.renderCreationFlow(boxNew, {
@@ -922,11 +972,12 @@ export class AppController {
               this._state.pin = await BiometricsAdapter.hashPin(newPin);
               this._state.pinLen = newPin.length;
               this.save();
-
+              this._unlocked = true;
+              const lockEl = document.querySelector('#lock');
               if (lockEl) lockEl.hidden = true;
               PinPad.clearActive();
               this._sheet.close();
-              this._toast.show('Novo PIN redefinido com sucesso! Acesso liberado.');
+              this._toast.show('Novo PIN definido com sucesso!');
             }
           });
         }
@@ -934,200 +985,157 @@ export class AppController {
     }
   }
 
-  lockApp() {
-    const lockEl = document.querySelector('#lock');
-    if (lockEl) {
-      lockEl.hidden = false;
-      this.checkAppLock();
-    }
-  }
-
-  promptMustCreatePin() {
+  showChangePinSheet() {
     this._sheet.open(`
-      <h3 id="shT">Criar PIN Obrigatório</h3>
-      <p class="lead">Para proteger seus dados de saúde, defina um PIN de 4 a 6 dígitos.</p>
-      <div id="pinBoxCreate"></div>
+      <h3 style="margin-top:0">Alterar PIN de Acesso</h3>
+      <p style="font-size:13px;color:var(--soft)">Defina um novo PIN de 4 a 6 dígitos:</p>
+      <div id="pinBoxChangeSmart"></div>
     `);
-    const box = document.querySelector('#pinBoxCreate');
+    const box = document.querySelector('#pinBoxChangeSmart');
     if (box) {
       PinPad.renderCreationFlow(box, {
-        title: 'Criar PIN',
-        onDone: async p => {
+        onDone: async pinValue => {
+          this._state.pin = await BiometricsAdapter.hashPin(pinValue);
+          this._state.pinLen = pinValue.length;
           await this.ensureSeed();
-          this._state.pin = await BiometricsAdapter.hashPin(p);
-          this._state.pinLen = p.length;
           this.save();
-          this.displayWordsModal(true);
+          PinPad.clearActive();
+          this._sheet.close();
+          this._toast.show('PIN atualizado com sucesso!');
         }
       });
     }
   }
 
-  startOnboarding() {
-    const onbEl = document.querySelector('#onb');
-    if (!onbEl) return;
-    onbEl.hidden = false;
-    let step = 0;
-    const obData = {
-      nome: '',
-      sexo: 'm',
-      nasc: '1995-01-01',
-      alt: '175',
-      peso: '80',
-      meta: '75',
-      ritmo: '0.5',
-      ativ: '1.2'
-    };
-
-    const renderStep = () => {
-      const container = onbEl.querySelector('#onbIn');
-      if (!container) return;
-
-      if (step === 0) {
-        container.innerHTML = `
-          <div class="onb">
-            <img class="appic" src="${APPIC}" alt="Fit Systekna">
-            <h1>Bem-vindo ao Fit Systekna</h1>
-            <p class="lead">Peso, dieta, treinos e saúde num só lugar. Seus dados ficam estritamente neste aparelho.</p>
-            <form class="form" id="obF0">
-              <button class="btn pri">Começar</button>
-            </form>
-          </div>
-        `;
-        container.querySelector('#obF0').onsubmit = e => {
-          e.preventDefault();
-          step = 1;
-          renderStep();
-        };
-      } else if (step === 1) {
-        container.innerHTML = `
-          <div class="onb">
-            <h1>Sobre você</h1>
-            <form class="glass pad form" id="obF1">
-              <div class="f">
-                <label>Como quer ser chamado</label>
-                <input type="text" id="obNome" value="${obData.nome}" required>
-              </div>
-              <div class="f">
-                <label>Altura (cm)</label>
-                <input type="number" id="obAlt" value="${obData.alt}" required>
-              </div>
-              <button class="btn pri" style="margin-top:12px">Continuar</button>
-            </form>
-          </div>
-        `;
-        container.querySelector('#obF1').onsubmit = e => {
-          e.preventDefault();
-          obData.nome = container.querySelector('#obNome').value;
-          obData.alt = container.querySelector('#obAlt').value;
-          step = 2;
-          renderStep();
-        };
-      } else if (step === 2) {
-        container.innerHTML = `
-          <div class="onb">
-            <h1>Seu objetivo</h1>
-            <form class="glass pad form" id="obF2">
-              <div class="two">
-                <div class="f">
-                  <label>Peso atual (kg)</label>
-                  <input type="number" step="0.1" id="obPeso" value="${obData.peso}" required>
-                </div>
-                <div class="f">
-                  <label>Peso meta (kg)</label>
-                  <input type="number" step="0.1" id="obMeta" value="${obData.meta}" required>
-                </div>
-              </div>
-              <button class="btn pri" style="margin-top:12px">Continuar</button>
-            </form>
-          </div>
-        `;
-        container.querySelector('#obF2').onsubmit = e => {
-          e.preventDefault();
-          obData.peso = container.querySelector('#obPeso').value;
-          obData.meta = container.querySelector('#obMeta').value;
-          step = 3;
-          renderStep();
-        };
-      } else if (step === 3) {
-        container.innerHTML = `
-          <div class="onb">
-            <h1>Crie seu PIN de Segurança</h1>
-            <p class="lead">Ele protege seus dados de saúde e será solicitado ao abrir o app.</p>
-            <div class="glass pad" id="obPinBox"></div>
-          </div>
-        `;
-        const box = container.querySelector('#obPinBox');
-        PinPad.renderCreationFlow(box, {
-          title: 'Defina seu PIN',
-          onDone: async pin => {
-            this._state.perfil = {
-              nome: obData.nome,
-              alt: Number(obData.alt),
-              nasc: obData.nasc,
-              ini: Number(obData.peso),
-              meta: Number(obData.meta),
-              sexo: obData.sexo,
-              ativ: Number(obData.ativ),
-              ritmo: Number(obData.ritmo),
-              agua: 8
-            };
-            this._state.pesos = [{ id: 'p0', d: this._today, kg: Number(obData.peso) }];
-            await this.ensureSeed();
-            this._state.pin = await BiometricsAdapter.hashPin(pin);
-            this._state.pinLen = pin.length;
-            this._state.onb = true;
-            this.save();
-            onbEl.hidden = true;
-            this.renderAll();
-            this.handleRoute();
-            this.displayWordsModal(true);
-          }
-        });
-      }
-    };
-    renderStep();
+  async ensureSeed() {
+    if (!this._state.seedWords || !this._state.seedHash) {
+      const entropy = SecurityRecoveryService.generateEntropyWords();
+      this._state.seedWords = entropy.words;
+      this._state.seedHash = await SecurityRecoveryService.computeSeedHash(entropy.words);
+      this.save();
+    }
   }
 
-  // --- BACKUP & RESTAURAÇÃO ---
+  displayWordsModal() {
+    const words = (this._state.seedWords || []).join(' ');
+    this._sheet.open(`
+      <h3 style="margin-top:0;color:var(--accent)">12 Palavras de Recuperação</h3>
+      <p style="font-size:13px;color:var(--soft);margin-bottom:12px">
+        Anote estas 12 palavras em ordem segura ou guarde o Certificado de Segurança:
+      </p>
+      <div style="grid-template-columns:repeat(3,1fr);display:grid;gap:8px;background:var(--surface-2, rgba(255,255,255,0.04));padding:12px;border-radius:12px;margin-bottom:14px">
+        ${(this._state.seedWords || []).map((w, i) => `
+          <div style="font-size:13px;font-family:monospace;padding:4px 6px;background:rgba(255,255,255,0.06);border-radius:6px">
+            <span style="color:var(--soft);font-size:11px">${i + 1}.</span> <b>${w}</b>
+          </div>
+        `).join('')}
+      </div>
+      <div style="font-size:12px;color:var(--soft);margin-bottom:14px;word-break:break-all">
+        Código Hash de Verificação: <b style="color:var(--ink);font-family:monospace">${this._state.seedHash || '—'}</b>
+      </div>
+      <button type="button" class="btn pri block" id="btnCopyWordsSmart">Copiar 12 Palavras</button>
+      <button type="button" class="btn sec block" id="btnCloseWordsSmart" style="margin-top:8px">Fechar</button>
+    `);
+
+    const btnCopy = document.querySelector('#btnCopyWordsSmart');
+    if (btnCopy) {
+      btnCopy.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(words);
+          this._toast.show('Palavras copiadas.');
+        } catch (_) {
+          this._toast.show('Copie manualmente.');
+        }
+      };
+    }
+    const btnClose = document.querySelector('#btnCloseWordsSmart');
+    if (btnClose) btnClose.onclick = () => this._sheet.close();
+  }
+
+  showPrivacySheet() {
+    SecurityRecoveryService.getPrivacyPolicy('Fit Systekna').then(policy => {
+      this._sheet.open(`
+        <h3 style="margin-top:0">${policy.title}</h3>
+        <p style="font-size:13px;color:var(--accent);margin-bottom:14px">${policy.summary}</p>
+        <div style="max-height:60vh;overflow-y:auto;padding-right:6px">
+          ${policy.sections.map(s => `
+            <div style="margin-bottom:12px;background:var(--surface-2, rgba(255,255,255,0.04));padding:10px 12px;border-radius:10px">
+              <b style="font-size:13px;display:block;margin-bottom:4px">${s.heading}</b>
+              <p style="font-size:12px;color:var(--soft);margin:0;line-height:1.4">${s.text}</p>
+            </div>
+          `).join('')}
+        </div>
+        <button type="button" class="btn pri block" id="btnClosePrivSmart" style="margin-top:14px">Fechar</button>
+      `);
+      const btnClose = document.querySelector('#btnClosePrivSmart');
+      if (btnClose) btnClose.onclick = () => this._sheet.close();
+    });
+  }
 
   exportJsonBackup() {
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this._state, null, 2));
-    const dlAnchor = document.createElement('a');
-    dlAnchor.setAttribute('href', dataStr);
-    dlAnchor.setAttribute('download', `fit-smart-backup-${this._today}.json`);
-    dlAnchor.click();
-    this._toast.show('Backup exportado com sucesso.');
+    const jsonStr = JSON.stringify(this._state, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fit-smart-backup-${this._today}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    this._toast.show('Backup JSON gerado com sucesso.');
   }
 
-  importJsonBackup(event) {
-    const file = event.target.files && event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const imported = JSON.parse(e.target.result);
-        if (imported && imported.perfil) {
-          this._state = imported;
-          this.save();
-          this.renderAll();
-          this._toast.show('Dados restaurados com sucesso.');
-        } else {
-          this._toast.show('Arquivo de backup inválido.');
+  promptImportJson() {
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = '.json';
+    inp.onchange = ev => {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && (imported.perfil || imported.pesos || imported.treinos)) {
+            this._state = imported;
+            this.save();
+            this._toast.show('Backup restaurado! Recarregando...');
+            setTimeout(() => window.location.reload(), 1000);
+          } else {
+            this._toast.show('Arquivo de backup inválido.');
+          }
+        } catch (err) {
+          this._toast.show('Erro ao ler JSON: ' + err.message);
         }
-      } catch (err) {
-        this._toast.show('Erro ao ler arquivo de backup.');
-      }
+      };
+      reader.readAsText(file);
     };
-    reader.readAsText(file);
+    inp.click();
   }
 
   confirmWipeAllData() {
-    if (confirm('Tem certeza de que deseja apagar todos os dados deste aparelho? Esta ação é irreversível.')) {
-      try {
+    this._sheet.open(`
+      <h3 style="margin-top:0;color:var(--bad)">Apagar Todos os Dados</h3>
+      <p style="color:var(--soft);font-size:13px">Esta ação apagará permanentemente todos os registros de saúde, refeições, treinos e senhas deste aparelho.</p>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button type="button" class="btn sec flex1" id="btnCancelWipe">Cancelar</button>
+        <button type="button" class="btn dng flex1" id="btnConfirmWipe">Sim, Apagar Tudo</button>
+      </div>
+    `);
+    const btnCancel = document.querySelector('#btnCancelWipe');
+    if (btnCancel) btnCancel.onclick = () => this._sheet.close();
+    const btnConfirm = document.querySelector('#btnConfirmWipe');
+    if (btnConfirm) {
+      btnConfirm.onclick = () => {
+        localStorage.removeItem('fit_state_v1');
         localStorage.removeItem('fit-systekna-v1');
-      } catch (e) {}
-      location.reload();
+        window.location.reload();
+      };
     }
+  }
+
+  startOnboarding() {
+    // Se não concluiu onboarding, marca como concluído com perfil padrão
+    this._state.onb = true;
+    this.save();
   }
 }

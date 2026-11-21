@@ -1,5 +1,5 @@
 /* Fit Systekna — service worker. Troque VERSAO a cada atualização do app. */
-const VERSAO = 'fit-v1.2.1-20261121';
+const VERSAO = 'fit-v1.2.2-20261121';
 const ARQUIVOS = [
   './',
   './index.html',

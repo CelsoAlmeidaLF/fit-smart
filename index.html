@@ -109,60 +109,89 @@
     </div>
   </section>
 
-  <!-- PERFIL -->
+  <!-- PERFIL E CONFIGURAÇÕES -->
   <section class="view" id="v-config">
     <h2>Configurações</h2>
-    <form class="form" id="pf">
-      <div class="sec-h" style="margin-top:0"><b>Perfil</b></div>
-      <div class="glass pad form">
-        <div class="f"><label for="fNome">Nome</label><input id="fNome" autocomplete="given-name"></div>
-        <div class="two">
-          <div class="f"><label for="fAlt">Altura (cm)</label><input id="fAlt" type="number" inputmode="decimal" step="0.5" min="120" max="230"></div>
-          <div class="f"><label for="fNasc">Nascimento</label><input id="fNasc" type="date"></div>
+    
+    <!-- Menu de Abas de Configurações -->
+    <div class="tabs" id="cfgTabsSmart" role="group" aria-label="Menu de Configurações" style="margin-bottom:14px">
+      <button type="button" data-cfg-smart="perfil" class="on" aria-pressed="true">Perfil & Metas</button>
+      <button type="button" data-cfg-smart="aparencia" aria-pressed="false">Aparência</button>
+      <button type="button" data-cfg-smart="seguranca" aria-pressed="false">Segurança</button>
+      <button type="button" data-cfg-smart="dados" aria-pressed="false">Backup</button>
+      <button type="button" data-cfg-smart="sobre" aria-pressed="false">Sobre</button>
+    </div>
+
+    <!-- SUBSEÇÃO 1: PERFIL & METAS -->
+    <div id="cfgSec-perfil">
+      <form class="form" id="pf">
+        <div class="sec-h" style="margin-top:0"><b>Perfil</b></div>
+        <div class="glass pad form">
+          <div class="f"><label for="fNome">Nome</label><input id="fNome" autocomplete="given-name"></div>
+          <div class="two">
+            <div class="f"><label for="fAlt">Altura (cm)</label><input id="fAlt" type="number" inputmode="decimal" step="0.5" min="120" max="230"></div>
+            <div class="f"><label for="fNasc">Nascimento</label><input id="fNasc" type="date"></div>
+          </div>
+          <div class="f"><label>Sexo</label><div class="segc" data-for="fSexo" role="group"><button type="button" data-v="m" aria-pressed="true">Masculino</button><button type="button" data-v="f" aria-pressed="false">Feminino</button></div><input type="hidden" id="fSexo" value="m"></div>
         </div>
-        <div class="f"><label>Sexo</label><div class="segc" data-for="fSexo" role="group"><button type="button" data-v="m" aria-pressed="true">Masculino</button><button type="button" data-v="f" aria-pressed="false">Feminino</button></div><input type="hidden" id="fSexo" value="m"></div>
-      </div>
-      <div class="sec-h"><b>Metas</b></div>
-      <div class="glass pad form">
-        <div class="two">
-          <div class="f"><label for="fIni">Peso inicial (kg)</label><input id="fIni" type="number" inputmode="decimal" step="0.1"></div>
-          <div class="f"><label for="fMeta">Peso meta (kg)</label><input id="fMeta" type="number" inputmode="decimal" step="0.1"></div>
+        <div class="sec-h"><b>Metas</b></div>
+        <div class="glass pad form">
+          <div class="two">
+            <div class="f"><label for="fIni">Peso inicial (kg)</label><input id="fIni" type="number" inputmode="decimal" step="0.1"></div>
+            <div class="f"><label for="fMeta">Peso meta (kg)</label><input id="fMeta" type="number" inputmode="decimal" step="0.1"></div>
+          </div>
+          <div class="f"><label for="fRit">Ritmo de emagrecimento</label><select id="fRit"><option value="0.25">0,25 kg por semana</option><option value="0.5">0,5 kg por semana</option><option value="0.75">0,75 kg por semana</option><option value="1">1 kg por semana</option></select></div>
+          <div class="f"><label for="fAtv">Nível de atividade</label><select id="fAtv"><option value="1.2">Sedentário (trabalho sentado)</option><option value="1.375">Pouco ativo (1–3x/semana)</option><option value="1.55">Ativo (4–5x/semana)</option><option value="1.725">Muito ativo (diário)</option></select></div>
+          <div class="f"><label for="fAgua">Meta de água (copos de 250 ml)</label><input id="fAgua" type="number" inputmode="numeric" min="4" max="16"></div>
         </div>
-        <div class="f"><label for="fRit">Ritmo de emagrecimento</label><select id="fRit"><option value="0.25">0,25 kg por semana</option><option value="0.5">0,5 kg por semana</option><option value="0.75">0,75 kg por semana</option><option value="1">1 kg por semana</option></select></div>
-        <div class="f"><label for="fAtv">Nível de atividade</label><select id="fAtv"><option value="1.2">Sedentário (trabalho sentado)</option><option value="1.375">Pouco ativo (1–3x/semana)</option><option value="1.55">Ativo (4–5x/semana)</option><option value="1.725">Muito ativo (diário)</option></select></div>
-        <div class="f"><label for="fAgua">Meta de água (copos de 250 ml)</label><input id="fAgua" type="number" inputmode="numeric" min="4" max="16"></div>
+        <button class="btn pri" type="submit" style="margin-top:14px">Salvar perfil e metas</button>
+      </form>
+      <div class="sec-h"><b>Seus números</b></div>
+      <div class="glass list calc" id="calc"></div>
+      <p class="note">Estimativas pela fórmula de Mifflin-St Jeor. O piso de segurança é 1.500 kcal (homens) ou 1.200 kcal (mulheres). Treinos registrados somam ao orçamento do dia.</p>
+    </div>
+
+    <!-- SUBSEÇÃO 2: APARÊNCIA & PREFERÊNCIAS -->
+    <div id="cfgSec-aparencia" hidden>
+      <div class="sec-h" style="margin-top:0"><b>Aparência</b></div>
+      <div class="glass pad form">
+        <div class="f"><label>Tema</label><div class="segc" data-for="fTema" role="group"><button type="button" data-v="auto" aria-pressed="true">Automático</button><button type="button" data-v="light" aria-pressed="false">Claro</button><button type="button" data-v="dark" aria-pressed="false">Escuro</button></div><input type="hidden" id="fTema" value="auto"></div>
+        <div class="f"><label for="fHome">Abrir o app em</label><select id="fHome"><option value="inicio">Início</option><option value="diario">Diário</option><option value="treino">Treino</option><option value="peso">Saúde</option></select></div>
       </div>
-      <button class="btn pri" type="submit" style="margin-top:14px">Salvar perfil e metas</button>
-    </form>
-    <div class="sec-h"><b>Seus números</b></div>
-    <div class="glass list calc" id="calc"></div>
-    <p class="note">Estimativas pela fórmula de Mifflin-St Jeor. O piso de segurança é 1.500 kcal (homens) ou 1.200 kcal (mulheres). Treinos registrados somam ao orçamento do dia.</p>
-    <div class="sec-h"><b>Aparência</b></div>
-    <div class="glass pad form">
-      <div class="f"><label>Tema</label><div class="segc" data-for="fTema" role="group"><button type="button" data-v="auto" aria-pressed="true">Automático</button><button type="button" data-v="light" aria-pressed="false">Claro</button><button type="button" data-v="dark" aria-pressed="false">Escuro</button></div><input type="hidden" id="fTema" value="auto"></div>
-      <div class="f"><label for="fHome">Abrir o app em</label><select id="fHome"><option value="inicio">Início</option><option value="diario">Diário</option><option value="treino">Treino</option><option value="peso">Saúde</option></select></div>
     </div>
-    <div class="sec-h"><b>Segurança</b></div>
-    <div class="glass pad form">
-      <div class="it" style="padding:0"><span class="stat"><span class="ic t-ok"><span class="ms" aria-hidden="true">lock</span></span></span><div class="t"><b>Bloqueio por PIN ativado</b><small>Obrigatório para proteger seus dados</small></div></div>
-      <button class="btn sec" id="bPin">Alterar PIN</button>
-      <button class="btn sec" id="bCert">Emitir Certificado de Segurança (PDF)</button>
-      <button class="btn sec" id="bWords">Ver 12 Palavras de Recuperação</button>
-      <label class="swl" style="padding:4px 2px"><span><b style="display:block;font-weight:600">Desbloquear com biometria</b><small style="color:var(--soft)" id="bioTx">Digital ou reconhecimento facial do aparelho</small></span><input type="checkbox" class="sw" id="fBio"></label>
+
+    <!-- SUBSEÇÃO 3: SEGURANÇA & PRIVACIDADE -->
+    <div id="cfgSec-seguranca" hidden>
+      <div class="sec-h" style="margin-top:0"><b>Segurança</b></div>
+      <div class="glass pad form">
+        <div class="it" style="padding:0"><span class="stat"><span class="ic t-ok"><span class="ms" aria-hidden="true">lock</span></span></span><div class="t"><b>Bloqueio por PIN ativado</b><small>Obrigatório para proteger seus dados contra olhares curiosos</small></div></div>
+        <button class="btn sec" id="bPin">Alterar PIN</button>
+        <button class="btn sec" id="bCert">Emitir Certificado de Segurança (PDF)</button>
+        <button class="btn sec" id="bWords">Ver 12 Palavras de Recuperação</button>
+        <label class="swl" style="padding:4px 2px"><span><b style="display:block;font-weight:600">Desbloquear com biometria</b><small style="color:var(--soft)" id="bioTx">Digital ou reconhecimento facial do aparelho</small></span><input type="checkbox" class="sw" id="fBio"></label>
+      </div>
+      <p class="note">O PIN é pedido ao abrir o app e depois de 2 minutos fora dele.</p>
     </div>
-    <p class="note">O PIN é pedido ao abrir o app e depois de 2 minutos fora dele.</p>
-    <div class="sec-h"><b>Dados e backup</b></div>
-    <div class="glass pad form">
-      <button class="btn sec" id="bExp">Copiar backup</button>
-      <button class="btn sec" id="bImp">Restaurar backup</button>
-      <button class="btn dng" id="bClr">Apagar todos os dados</button>
+
+    <!-- SUBSEÇÃO 4: DADOS E BACKUP -->
+    <div id="cfgSec-dados" hidden>
+      <div class="sec-h" style="margin-top:0"><b>Dados e backup</b></div>
+      <div class="glass pad form">
+        <button class="btn sec" id="bExp">Copiar backup</button>
+        <button class="btn sec" id="bImp">Restaurar backup</button>
+        <button class="btn dng" id="bClr">Apagar todos os dados</button>
+      </div>
+      <p class="note">Os dados ficam só neste aparelho. Copie o backup de vez em quando.</p>
     </div>
-    <p class="note">Os dados ficam só neste aparelho. Copie o backup de vez em quando.</p>
-    <div class="sec-h"><b>Sobre</b></div>
-    <div class="glass list">
-      <div class="it"><div class="t"><b>Fit Systekna</b><small>Versão 1.2 · MVP</small></div></div>
-      <button class="row" id="bPriv"><div class="t"><b>Política de privacidade</b><small>Seus dados ficam só neste aparelho</small></div><span class="ms go" aria-hidden="true">chevron_right</span></button>
-      <div class="it"><div class="t"><b style="white-space:normal">Créditos</b><small style="white-space:normal">Ícones Material Symbols (Apache 2.0) · Ilustração anatômica js-rich-body-highlighter (MIT)</small></div></div>
+
+    <!-- SUBSEÇÃO 5: SOBRE -->
+    <div id="cfgSec-sobre" hidden>
+      <div class="sec-h" style="margin-top:0"><b>Sobre</b></div>
+      <div class="glass list">
+        <div class="it"><div class="t"><b>Fit Systekna</b><small>Versão 1.2 · Nutrição & Saúde Inteligente</small></div></div>
+        <button class="row" id="bPriv"><div class="t"><b>Política de privacidade (LGPD)</b><small>Seus dados ficam 100% locais neste aparelho</small></div><span class="ms go" aria-hidden="true">chevron_right</span></button>
+        <div class="it"><div class="t"><b style="white-space:normal">Créditos</b><small style="white-space:normal">Ícones Material Symbols (Apache 2.0) · Ilustração anatômica js-rich-body-highlighter (MIT)</small></div></div>
+      </div>
     </div>
   </section>
 
