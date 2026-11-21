@@ -1,0 +1,896 @@
+[
+  {
+    "id": "peitoral-maior",
+    "nome_do_musculo": "Peitoral Maior",
+    "categoria": "Peitoral, Ombros e Pescoço",
+    "regiao": "Peitoral",
+    "vista_recomendada": "anterior",
+    "imagem": "04_peitoral_ombros_pescoco/14_peitoral_maior.jpg",
+    "descricao": "Músculo principal do tórax anterior; responsável por adução e flexão horizontal do ombro.",
+    "padrao_movimento": "empurrar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Supino reto com barra ou halteres",
+      "Supino inclinado",
+      "Crucifixo no cabo ou máquina"
+    ],
+    "musculos_sinergistas": [
+      "Deltóide Anterior",
+      "Tríceps Braquial"
+    ],
+    "dica_execucao": "Mantenha as escápulas retraídas e apoiadas no banco para proteger a articulação do ombro."
+  },
+  {
+    "id": "deltoides-geral",
+    "nome_do_musculo": "Deltóides (Geral)",
+    "categoria": "Peitoral, Ombros e Pescoço",
+    "regiao": "Ombros",
+    "vista_recomendada": "anterior",
+    "imagem": "04_peitoral_ombros_pescoco/15_deltoides_geral.jpg",
+    "descricao": "Conjunto completo do músculo deltoide que recobre a articulação do ombro.",
+    "padrao_movimento": "empurrar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Desenvolvimento militar com barra ou halteres",
+      "Elevação lateral",
+      "Elevação frontal"
+    ],
+    "musculos_sinergistas": [
+      "Trapézio",
+      "Tríceps Braquial",
+      "Peitoral Maior"
+    ],
+    "dica_execucao": "Evite elevar os ombros em direção às orelhas durante abduções e desenvolvimentos."
+  },
+  {
+    "id": "deltoide-anterior",
+    "nome_do_musculo": "Deltóide Anterior",
+    "categoria": "Peitoral, Ombros e Pescoço",
+    "regiao": "Ombros",
+    "vista_recomendada": "anterior",
+    "imagem": "04_peitoral_ombros_pescoco/16_deltoide_anterior.jpg",
+    "descricao": "Porção frontal do deltoide; atua na flexão do ombro e movimentos de empurrar.",
+    "padrao_movimento": "empurrar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Elevação frontal com halteres ou polia",
+      "Desenvolvimento de ombros",
+      "Supino inclinado"
+    ],
+    "musculos_sinergistas": [
+      "Peitoral Maior",
+      "Deltóide Lateral (Médio)",
+      "Serrátil Anterior"
+    ],
+    "dica_execucao": "Controle a descida do braço sem embalar o tronco."
+  },
+  {
+    "id": "deltoide-lateral",
+    "nome_do_musculo": "Deltóide Lateral (Médio)",
+    "categoria": "Peitoral, Ombros e Pescoço",
+    "regiao": "Ombros",
+    "vista_recomendada": "anterior",
+    "imagem": "04_peitoral_ombros_pescoco/17_deltoide_lateral.jpg",
+    "descricao": "Porção lateral do deltoide; principal motor da abdução do braço.",
+    "padrao_movimento": "abducao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Elevação lateral com halteres",
+      "Elevação lateral no cabo",
+      "Desenvolvimento na máquina"
+    ],
+    "musculos_sinergistas": [
+      "Supraespinal",
+      "Trapézio",
+      "Deltóide Anterior"
+    ],
+    "dica_execucao": "Conduza o movimento direcionando os cotovelos para fora e para cima, sem jogar o peso para o trapézio superior."
+  },
+  {
+    "id": "esternocleidomastoideo-pescoco",
+    "nome_do_musculo": "Esternocleidomastóideo (Pescoço)",
+    "categoria": "Peitoral, Ombros e Pescoço",
+    "regiao": "Pescoço",
+    "vista_recomendada": "anterior",
+    "imagem": "04_peitoral_ombros_pescoco/18_esternocleidomastoideo_pescoco.jpg",
+    "descricao": "Musculatura cervical anterior e lateral responsável pela flexão e rotação da cabeça.",
+    "padrao_movimento": "flexao_cervical",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Flexão cervical deitada",
+      "Rotação cervical controlada",
+      "Exercícios isométricos de pescoço"
+    ],
+    "musculos_sinergistas": [
+      "Escalenos",
+      "Platisma",
+      "Trapézio"
+    ],
+    "dica_execucao": "Execute movimentos lentos e controlados, sem trancos ou hiperextensão brusca da cervical."
+  },
+  {
+    "id": "latissimo-do-dorso",
+    "nome_do_musculo": "Latíssimo do Dorso (Dorsal)",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Costas",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/19_latissimo_do_dorso.jpg",
+    "descricao": "Músculo largo das costas; atua na extensão, adução e rotação medial do ombro.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Puxada frontal na barra ou polia",
+      "Remada curvada",
+      "Pullover na polia ou com halter"
+    ],
+    "musculos_sinergistas": [
+      "Redondo Maior e Deltóide Posterior",
+      "Bíceps Braquial",
+      "Trapézio"
+    ],
+    "dica_execucao": "Inicie a puxada deprimindo e retraíndo a escápula antes de dobrar os cotovelos."
+  },
+  {
+    "id": "trapezio",
+    "nome_do_musculo": "Trapézio",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Costas Superiores",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/20_trapezio.jpg",
+    "descricao": "Músculo cervico-torácico responsável pela elevação, retração e depressão escapular.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Encolhimento de ombros com halteres ou barra",
+      "Remada alta",
+      "Crucifixo inverso"
+    ],
+    "musculos_sinergistas": [
+      "Rombóides (Maior e Menor)",
+      "Levantador da Escápula",
+      "Deltóide Lateral (Médio)"
+    ],
+    "dica_execucao": "Evite girar os ombros em círculos durante o encolhimento; eleve e abaixe na vertical."
+  },
+  {
+    "id": "romboides",
+    "nome_do_musculo": "Rombóides (Maior e Menor)",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Costas Superiores",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/21_romboides.jpg",
+    "descricao": "Músculos interescapulares que realizam a retração e estabilização das escápulas.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Remada baixa com pegada neutra ou aberta",
+      "Face pull",
+      "Remada na máquina com peito apoiado"
+    ],
+    "musculos_sinergistas": [
+      "Trapézio",
+      "Redondo Maior e Deltóide Posterior",
+      "Infraespinal (Manguito Rotador)"
+    ],
+    "dica_execucao": "Faça uma pausa firme de 1 segundo aproximando as escápulas no pico da contração."
+  },
+  {
+    "id": "eretor-da-espinha",
+    "nome_do_musculo": "Eretor da Espinha (Lombar)",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Lombar",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/22_eretor_da_espinha.jpg",
+    "descricao": "Coluna muscular paravertebral responsável pela extensão e sustentação do tronco.",
+    "padrao_movimento": "dobrar_quadril",
+    "tempo_recuperacao_horas": 72,
+    "exercicios_recomendados": [
+      "Levantamento terra / stiff",
+      "Hiperextensão lombar no banco",
+      "Bom-dia (Good morning)"
+    ],
+    "musculos_sinergistas": [
+      "Glúteo Máximo",
+      "Isquiotibiais (Geral)",
+      "Quadrado Lombar"
+    ],
+    "dica_execucao": "Mantenha a coluna neutra durante todo o movimento e evite arredondar a lombar sob carga."
+  },
+  {
+    "id": "quadrado-lombar",
+    "nome_do_musculo": "Quadrado Lombar",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Lombar",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/23_quadrado_lombar.jpg",
+    "descricao": "Estabilizador profundo da região lombar e da pelve; auxilia na inclinação lateral.",
+    "padrao_movimento": "estabilizacao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Prancha lateral",
+      "Caminhada do fazendeiro unilateral (suitcase carry)",
+      "Extensão lombar isométrica"
+    ],
+    "musculos_sinergistas": [
+      "Oblíquos Externos",
+      "Eretor da Espinha (Lombar)",
+      "Glúteo Médio"
+    ],
+    "dica_execucao": "Priorize o controle pélvico e evite inclinações laterais explosivas com sobrecarga."
+  },
+  {
+    "id": "redondo-maior-deltoide-posterior",
+    "nome_do_musculo": "Redondo Maior e Deltóide Posterior",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Costas / Ombro Posterior",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/24_redondo_maior_deltoide_posterior.jpg",
+    "descricao": "Complexo posterior do ombro e axila; atua na extensão e abdução horizontal.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Crucifixo inverso com halteres ou máquina",
+      "Face pull",
+      "Remada aberta"
+    ],
+    "musculos_sinergistas": [
+      "Infraespinal (Manguito Rotador)",
+      "Trapézio",
+      "Latíssimo do Dorso (Dorsal)"
+    ],
+    "dica_execucao": "Afaste os braços em arco sem jogar o tronco para frente ou encolher o pescoço."
+  },
+  {
+    "id": "supraespinal",
+    "nome_do_musculo": "Supraespinal (Manguito Rotador)",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Manguito Rotador",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/25_supraespinal.jpg",
+    "descricao": "Músculo superior da escápula que inicia a abdução do ombro e estabiliza a cabeça umeral.",
+    "padrao_movimento": "estabilizacao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Elevação em plano escapular (scaption) com carga leve",
+      "Abdução isométrica de ombro",
+      "Exercícios de estabilidade escapular"
+    ],
+    "musculos_sinergistas": [
+      "Deltóide Lateral (Médio)",
+      "Infraespinal (Manguito Rotador)",
+      "Trapézio"
+    ],
+    "dica_execucao": "Use cargas leves e controle rigoroso; dor aguda no ombro exige avaliação profissional."
+  },
+  {
+    "id": "infraespinal",
+    "nome_do_musculo": "Infraespinal (Manguito Rotador)",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Manguito Rotador",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/26_infraespinal.jpg",
+    "descricao": "Principal rotador externo do ombro na fossa infraespinal da escápula.",
+    "padrao_movimento": "rotacao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Rotação externa de ombro no cabo ou elástico",
+      "Rotação externa deitado de lado com halter",
+      "Face pull com rotação externa"
+    ],
+    "musculos_sinergistas": [
+      "Redondo Menor (Manguito Rotador)",
+      "Redondo Maior e Deltóide Posterior",
+      "Trapézio"
+    ],
+    "dica_execucao": "Mantenha o cotovelo colado ou levemente apoiado junto ao corpo e evite amplitude excessiva."
+  },
+  {
+    "id": "redondo-menor",
+    "nome_do_musculo": "Redondo Menor (Manguito Rotador)",
+    "categoria": "Costas e Manguito Rotador",
+    "regiao": "Manguito Rotador",
+    "vista_recomendada": "posterior",
+    "imagem": "05_costas_manguito_rotador/27_redondo_menor.jpg",
+    "descricao": "Músculo auxiliar da rotação externa e estabilização posterior do ombro.",
+    "padrao_movimento": "rotacao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Rotação externa com halter em decúbito lateral",
+      "Rotação externa na polia baixa",
+      "Abdução horizontal com polegar para cima"
+    ],
+    "musculos_sinergistas": [
+      "Infraespinal (Manguito Rotador)",
+      "Redondo Maior e Deltóide Posterior",
+      "Rombóides (Maior e Menor)"
+    ],
+    "dica_execucao": "Execute sem pressa e mantenha o punho alinhado com o antebraço."
+  },
+  {
+    "id": "reto-abdominal",
+    "nome_do_musculo": "Reto Abdominal",
+    "categoria": "Abdômen e Core",
+    "regiao": "Abdômen",
+    "vista_recomendada": "anterior",
+    "imagem": "06_abdomen_core/28_reto_abdominal.jpg",
+    "descricao": "Músculo anterior do abdômen responsável pela flexão da coluna toracolombar.",
+    "padrao_movimento": "flexao_tronco",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Abdominal crunch no solo ou máquina",
+      "Elevação de pernas na barra ou paralela",
+      "Abdominal na polia alta"
+    ],
+    "musculos_sinergistas": [
+      "Oblíquos Externos",
+      "Transverso do Abdômen",
+      "Iliopsoas (em elevações de perna)"
+    ],
+    "dica_execucao": "Expire ao contrair o abdômen e evite puxar a cabeça com as mãos."
+  },
+  {
+    "id": "obliquos-externos",
+    "nome_do_musculo": "Oblíquos Externos",
+    "categoria": "Abdômen e Core",
+    "regiao": "Abdômen Lateral",
+    "vista_recomendada": "anterior",
+    "imagem": "06_abdomen_core/29_obliquos_externos.jpg",
+    "descricao": "Musculatura lateral do tronco; atua na rotação e flexão lateral do tronco.",
+    "padrao_movimento": "rotacao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Abdominal bicicleta",
+      "Rotação no cabo (woodchopper)",
+      "Prancha lateral"
+    ],
+    "musculos_sinergistas": [
+      "Reto Abdominal",
+      "Transverso do Abdômen",
+      "Quadrado Lombar"
+    ],
+    "dica_execucao": "Gere a rotação a partir do tronco e não apenas movendo os braços."
+  },
+  {
+    "id": "transverso-do-abdomen",
+    "nome_do_musculo": "Transverso do Abdômen",
+    "categoria": "Abdômen e Core",
+    "regiao": "Core Profundo",
+    "vista_recomendada": "anterior",
+    "imagem": "06_abdomen_core/30_transverso_do_abdomen.jpg",
+    "descricao": "Cinta abdominal profunda responsável pela estabilização intra-abdominal e lombar.",
+    "padrao_movimento": "estabilizacao",
+    "tempo_recuperacao_horas": 24,
+    "exercicios_recomendados": [
+      "Prancha frontal isométrica",
+      "Dead bug",
+      "Bird-dog"
+    ],
+    "musculos_sinergistas": [
+      "Reto Abdominal",
+      "Oblíquos Externos",
+      "Eretor da Espinha (Lombar)"
+    ],
+    "dica_execucao": "Mantenha o abdômen firme como se fosse preparar-se para um impacto leve, sem prender a respiração por tempo excessivo."
+  },
+  {
+    "id": "serratil-anterior",
+    "nome_do_musculo": "Serrátil Anterior",
+    "categoria": "Abdômen e Core",
+    "regiao": "Tórax Lateral",
+    "vista_recomendada": "anterior",
+    "imagem": "06_abdomen_core/31_serratil_anterior.jpg",
+    "descricao": "Músculo lateral das costelas que realiza a protração e rotação superior da escápula.",
+    "padrao_movimento": "empurrar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Flexão com protração escapular (push-up plus)",
+      "Pullover",
+      "Serrátil no cabo com extensão frontal"
+    ],
+    "musculos_sinergistas": [
+      "Peitoral Maior",
+      "Deltóide Anterior",
+      "Trapézio"
+    ],
+    "dica_execucao": "Projete as escápulas para frente ao final da fase de empurrar mantendo os cotovelos firmes."
+  },
+  {
+    "id": "biceps-braquial",
+    "nome_do_musculo": "Bíceps Braquial",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Braço Anterior",
+    "vista_recomendada": "anterior",
+    "imagem": "07_bracos_antebracos/32_biceps_braquial.jpg",
+    "descricao": "Músculo flexor do cotovelo e supinador do antebraço.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Rosca direta com barra ou halteres",
+      "Rosca alternada com supinação",
+      "Rosca scott"
+    ],
+    "musculos_sinergistas": [
+      "Braquial",
+      "Braquiorradial",
+      "Coracobraquial e Cabeça Curta do Bíceps"
+    ],
+    "dica_execucao": "Mantenha os cotovelos próximos ao tronco e evite balançar o corpo para levantar a carga."
+  },
+  {
+    "id": "coracobraquial-cabeca-curta-biceps",
+    "nome_do_musculo": "Coracobraquial e Cabeça Curta do Bíceps",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Braço Medial/Anterior",
+    "vista_recomendada": "anterior",
+    "imagem": "07_bracos_antebracos/33_coracobraquial_cabeca_curta_biceps.jpg",
+    "descricao": "Porção medial anterior do braço; auxilia na flexão e adução do ombro e flexão do cotovelo.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Rosca concentrada",
+      "Rosca no banco inclinado",
+      "Flexão de ombro com pegada neutra"
+    ],
+    "musculos_sinergistas": [
+      "Bíceps Braquial",
+      "Braquial",
+      "Deltóide Anterior"
+    ],
+    "dica_execucao": "Controle o alongamento do braço sem perder a estabilidade do ombro."
+  },
+  {
+    "id": "braquial",
+    "nome_do_musculo": "Braquial",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Braço Profundo",
+    "vista_recomendada": "anterior",
+    "imagem": "07_bracos_antebracos/34_braquial.jpg",
+    "descricao": "Flexor puro do cotovelo situado sob o bíceps braquial.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Rosca martelo com halteres ou corda",
+      "Rosca inversa",
+      "Rosca scott com pegada neutra"
+    ],
+    "musculos_sinergistas": [
+      "Braquiorradial",
+      "Bíceps Braquial",
+      "Flexores do Antebraço"
+    ],
+    "dica_execucao": "Mantenha o punho firme e neutro durante a rosca martelo para focar a flexão do cotovelo."
+  },
+  {
+    "id": "triceps-braquial-geral",
+    "nome_do_musculo": "Tríceps Braquial (Geral)",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Braço Posterior",
+    "vista_recomendada": "posterior",
+    "imagem": "07_bracos_antebracos/35_triceps_braquial_geral.jpg",
+    "descricao": "Principal extensor do cotovelo cobrindo a região posterior do braço.",
+    "padrao_movimento": "empurrar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Tríceps na polia (barra ou corda)",
+      "Tríceps testa",
+      "Mergulho nas paralelas"
+    ],
+    "musculos_sinergistas": [
+      "Cabeça Longa do Tríceps",
+      "Deltóide Anterior",
+      "Peitoral Maior"
+    ],
+    "dica_execucao": "Estenda o cotovelo com controle sem deixar o ombro avançar excessivamente."
+  },
+  {
+    "id": "cabeca-longa-triceps",
+    "nome_do_musculo": "Cabeça Longa do Tríceps",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Braço Posterior Medial",
+    "vista_recomendada": "posterior",
+    "imagem": "07_bracos_antebracos/36_cabeca_longa_triceps.jpg",
+    "descricao": "Porção biarticular do tríceps; atua na extensão do cotovelo e extensão do ombro.",
+    "padrao_movimento": "empurrar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Tríceps francês acima da cabeça",
+      "Tríceps na polia com braços elevados",
+      "Tríceps testa inclinado"
+    ],
+    "musculos_sinergistas": [
+      "Tríceps Braquial (Geral)",
+      "Deltóide Anterior",
+      "Latíssimo do Dorso (Dorsal)"
+    ],
+    "dica_execucao": "Posicionar o braço elevado aumenta o alongamento inicial da cabeça longa do tríceps."
+  },
+  {
+    "id": "antebraco-geral",
+    "nome_do_musculo": "Antebraço (Geral)",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Antebraço",
+    "vista_recomendada": "anterior",
+    "imagem": "07_bracos_antebracos/37_antebraco_geral.jpg",
+    "descricao": "Conjunto muscular responsável pela preensão manual e movimentos do punho.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Rosca de punho",
+      "Rosca martelo",
+      "Suspensão na barra (dead hang) / farmer walk"
+    ],
+    "musculos_sinergistas": [
+      "Braquiorradial",
+      "Flexores do Antebraço",
+      "Extensores do Antebraço"
+    ],
+    "dica_execucao": "Aumente a carga gradualmente para evitar sobrecarga nos tendões do cotovelo e punho."
+  },
+  {
+    "id": "braquiorradial",
+    "nome_do_musculo": "Braquiorradial",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Antebraço Lateral",
+    "vista_recomendada": "anterior",
+    "imagem": "07_bracos_antebracos/38_braquiorradial.jpg",
+    "descricao": "Músculo lateral do antebraço; flexiona o cotovelo especialmente em pegada neutra.",
+    "padrao_movimento": "puxar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Rosca martelo",
+      "Rosca inversa com barra EZ ou halteres",
+      "Rosca na polia com corda"
+    ],
+    "musculos_sinergistas": [
+      "Braquial",
+      "Bíceps Braquial",
+      "Extensores do Antebraço"
+    ],
+    "dica_execucao": "Mantenha o antebraço firme e evite flexionar o punho para trás na subida."
+  },
+  {
+    "id": "flexores-do-antebraco",
+    "nome_do_musculo": "Flexores do Antebraço",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Antebraço Anterior",
+    "vista_recomendada": "anterior",
+    "imagem": "07_bracos_antebracos/39_flexores_do_antebraco.jpg",
+    "descricao": "Grupo flexor do punho e dos dedos; essencial para força de pegada.",
+    "padrao_movimento": "flexao_punho",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Flexão de punho com barra ou halteres",
+      "Aperto de pegada (hand gripper)",
+      "Remada com barra grossa"
+    ],
+    "musculos_sinergistas": [
+      "Antebraço (Geral)",
+      "Braquiorradial"
+    ],
+    "dica_execucao": "Apoie o antebraço em um banco deixando apenas o punho livre para executar a amplitude completa."
+  },
+  {
+    "id": "extensores-do-antebraco",
+    "nome_do_musculo": "Extensores do Antebraço",
+    "categoria": "Braços e Antebraços",
+    "regiao": "Antebraço Posterior",
+    "vista_recomendada": "anterior",
+    "imagem": "07_bracos_antebracos/40_extensores_do_antebraco.jpg",
+    "descricao": "Grupo extensor do punho e dos dedos na face posterior do antebraço.",
+    "padrao_movimento": "extensao_punho",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Extensão de punho com halter ou barra leve",
+      "Rosca inversa",
+      "Exercícios de estabilidade de punho"
+    ],
+    "musculos_sinergistas": [
+      "Braquiorradial",
+      "Antebraço (Geral)"
+    ],
+    "dica_execucao": "Utilize cargas leves a moderadas com execução limpa para fortalecer a região lateral do cotovelo."
+  },
+  {
+    "id": "gluteo-maximo",
+    "nome_do_musculo": "Glúteo Máximo",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Glúteos",
+    "vista_recomendada": "posterior",
+    "imagem": "08_gluteos_quadril_coxas/41_gluteo_maximo.jpg",
+    "descricao": "Maior músculo glúteo; principal extensor e rotador externo do quadril.",
+    "padrao_movimento": "dobrar_quadril",
+    "tempo_recuperacao_horas": 72,
+    "exercicios_recomendados": [
+      "Elevação pélvica (hip thrust)",
+      "Agachamento livre ou búlgaro",
+      "Stiff / levantamento terra romeno"
+    ],
+    "musculos_sinergistas": [
+      "Isquiotibiais (Geral)",
+      "Glúteo Médio",
+      "Quadríceps (Geral)"
+    ],
+    "dica_execucao": "Estenda o quadril sem hiperestender a coluna lombar no topo do movimento."
+  },
+  {
+    "id": "gluteo-medio",
+    "nome_do_musculo": "Glúteo Médio",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Quadril Lateral",
+    "vista_recomendada": "posterior",
+    "imagem": "08_gluteos_quadril_coxas/42_gluteo_medio.jpg",
+    "descricao": "Principal abdutor do quadril e estabilizador pélvico durante o apoio unipodal.",
+    "padrao_movimento": "abducao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Cadeira abdutora",
+      "Abdução de quadril no cabo ou com mini band",
+      "Agachamento búlgaro com inclinação leve"
+    ],
+    "musculos_sinergistas": [
+      "Tensor da Fáscia Lata",
+      "Glúteo Máximo",
+      "Quadrado Lombar"
+    ],
+    "dica_execucao": "Evite inclinar o tronco excessivamente para o lado oposto durante abduções."
+  },
+  {
+    "id": "tensor-da-fascia-lata",
+    "nome_do_musculo": "Tensor da Fáscia Lata",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Quadril Anterolateral",
+    "vista_recomendada": "posterior",
+    "imagem": "08_gluteos_quadril_coxas/43_tensor_da_fascia_lata.jpg",
+    "descricao": "Atua na abdução, flexão e rotação medial do quadril junto ao trato iliotibial.",
+    "padrao_movimento": "abducao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Abdução de quadril com leve rotação interna",
+      "Cadeira abdutora",
+      "Passada lateral"
+    ],
+    "musculos_sinergistas": [
+      "Glúteo Médio",
+      "Glúteo Máximo",
+      "Sartório"
+    ],
+    "dica_execucao": "Combine fortalecimento com mobilidade de quadril e tornozelo para reduzir tensão lateral."
+  },
+  {
+    "id": "quadriceps-geral",
+    "nome_do_musculo": "Quadríceps (Geral)",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Coxa Anterior",
+    "vista_recomendada": "anterior",
+    "imagem": "08_gluteos_quadril_coxas/44_quadriceps_geral.jpg",
+    "descricao": "Grupo extensor do joelho composto por reto femoral e vastos.",
+    "padrao_movimento": "agachar",
+    "tempo_recuperacao_horas": 72,
+    "exercicios_recomendados": [
+      "Agachamento livre ou no smith",
+      "Leg press 45°",
+      "Cadeira extensora"
+    ],
+    "musculos_sinergistas": [
+      "Glúteo Máximo",
+      "Vasto Medial",
+      "Adutores da Coxa"
+    ],
+    "dica_execucao": "Mantenha o joelho alinhado na direção da ponta do pé durante toda a descida e subida."
+  },
+  {
+    "id": "vasto-medial",
+    "nome_do_musculo": "Vasto Medial",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Coxa Anteromedial",
+    "vista_recomendada": "anterior",
+    "imagem": "08_gluteos_quadril_coxas/45_vasto_medial.jpg",
+    "descricao": "Porção medial distal do quadríceps; importante na extensão final e estabilidade patelar.",
+    "padrao_movimento": "agachar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Cadeira extensora com controle na fase final",
+      "Agachamento com calcanhares elevados",
+      "Passada / afundo"
+    ],
+    "musculos_sinergistas": [
+      "Quadríceps (Geral)",
+      "Adutores da Coxa",
+      "Glúteo Máximo"
+    ],
+    "dica_execucao": "Evite travar o joelho com impacto seco no final da extensão; faça contração controlada."
+  },
+  {
+    "id": "isquiotibiais-geral",
+    "nome_do_musculo": "Isquiotibiais (Geral)",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Coxa Posterior",
+    "vista_recomendada": "posterior",
+    "imagem": "08_gluteos_quadril_coxas/46_isquiotibiais_geral.jpg",
+    "descricao": "Grupo posterior da coxa responsável pela flexão do joelho e extensão do quadril.",
+    "padrao_movimento": "dobrar_quadril",
+    "tempo_recuperacao_horas": 72,
+    "exercicios_recomendados": [
+      "Mesa ou cadeira flexora",
+      "Stiff com barra ou halteres",
+      "Levantamento terra romeno (RDL)"
+    ],
+    "musculos_sinergistas": [
+      "Glúteo Máximo",
+      "Bíceps Femoral",
+      "Gastrocnêmio (Panturrilha Superficial)"
+    ],
+    "dica_execucao": "Mantenha leve flexão nos joelhos nos exercícios de dobrar quadril e sinta o alongamento posterior sem curvar a lombar."
+  },
+  {
+    "id": "biceps-femoral",
+    "nome_do_musculo": "Bíceps Femoral",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Coxa Posterolateral",
+    "vista_recomendada": "posterior",
+    "imagem": "08_gluteos_quadril_coxas/47_biceps_femoral.jpg",
+    "descricao": "Porção lateral dos isquiotibiais; flexiona o joelho e estende o quadril.",
+    "padrao_movimento": "flexao_joelho",
+    "tempo_recuperacao_horas": 72,
+    "exercicios_recomendados": [
+      "Mesa flexora deitada",
+      "Cadeira flexora",
+      "Stiff"
+    ],
+    "musculos_sinergistas": [
+      "Isquiotibiais (Geral)",
+      "Glúteo Máximo",
+      "Gastrocnêmio (Panturrilha Superficial)"
+    ],
+    "dica_execucao": "Não tire o quadril do banco durante a flexão do joelho."
+  },
+  {
+    "id": "adutores-da-coxa",
+    "nome_do_musculo": "Adutores da Coxa",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Coxa Medial",
+    "vista_recomendada": "anterior",
+    "imagem": "08_gluteos_quadril_coxas/48_adutores_da_coxa.jpg",
+    "descricao": "Grupo medial responsável pela adução do quadril.",
+    "padrao_movimento": "aducao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Cadeira adutora",
+      "Agachamento sumô",
+      "Adução de quadril na polia"
+    ],
+    "musculos_sinergistas": [
+      "Grácil",
+      "Glúteo Máximo",
+      "Quadríceps (Geral)"
+    ],
+    "dica_execucao": "Controle o retorno na abertura para evitar sobrecarga súbita na virilha."
+  },
+  {
+    "id": "gracil",
+    "nome_do_musculo": "Grácil",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Coxa Medial",
+    "vista_recomendada": "anterior",
+    "imagem": "08_gluteos_quadril_coxas/49_gracil.jpg",
+    "descricao": "Músculo longo e superficial da face medial da coxa; aduz o quadril e flexiona o joelho.",
+    "padrao_movimento": "aducao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Cadeira adutora",
+      "Agachamento sumô",
+      "Adução isométrica com bola entre os joelhos"
+    ],
+    "musculos_sinergistas": [
+      "Adutores da Coxa",
+      "Sartório",
+      "Isquiotibiais (Geral)"
+    ],
+    "dica_execucao": "Aqueça bem a região medial antes de trabalhar amplitudes amplas."
+  },
+  {
+    "id": "sartorio",
+    "nome_do_musculo": "Sartório",
+    "categoria": "Glúteos, Quadril e Coxas",
+    "regiao": "Coxa Anterior Oblíqua",
+    "vista_recomendada": "anterior",
+    "imagem": "08_gluteos_quadril_coxas/50_sartorio.jpg",
+    "descricao": "Músculo mais longo do corpo humano; cruza obliquamente a coxa auxiliando flexão e rotação externa.",
+    "padrao_movimento": "flexao_quadril",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Elevação de perna com leve rotação externa",
+      "Flexão de quadril no cabo",
+      "Mobilidade e fortalecimento de quadril"
+    ],
+    "musculos_sinergistas": [
+      "Tensor da Fáscia Lata",
+      "Quadríceps (Geral)",
+      "Grácil"
+    ],
+    "dica_execucao": "Execute movimentos suaves e controlados, sem forçar a rotação do joelho."
+  },
+  {
+    "id": "gastrocnemio",
+    "nome_do_musculo": "Gastrocnêmio (Panturrilha Superficial)",
+    "categoria": "Pernas Inferiores e Panturrilhas",
+    "regiao": "Panturrilha",
+    "vista_recomendada": "posterior",
+    "imagem": "09_pernas_panturrilhas/51_gastrocnemio.jpg",
+    "descricao": "Porção superficial biarticular da panturrilha; realiza flexão plantar do tornozelo.",
+    "padrao_movimento": "flexao_plantar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Panturrilha em pé na máquina ou smith",
+      "Panturrilha no leg press com pernas estendidas",
+      "Elevação unilateral de panturrilha"
+    ],
+    "musculos_sinergistas": [
+      "Sóleo (Panturrilha Profunda)",
+      "Fibulares Longo e Curto"
+    ],
+    "dica_execucao": "Faça pausa de 1 segundo no alongamento inferior e no pico da contração superior."
+  },
+  {
+    "id": "soleo",
+    "nome_do_musculo": "Sóleo (Panturrilha Profunda)",
+    "categoria": "Pernas Inferiores e Panturrilhas",
+    "regiao": "Panturrilha Profunda",
+    "vista_recomendada": "posterior",
+    "imagem": "09_pernas_panturrilhas/52_soleo.jpg",
+    "descricao": "Músculo profundo da panturrilha ativo na flexão plantar, especialmente com joelho flexionado.",
+    "padrao_movimento": "flexao_plantar",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Panturrilha sentado na máquina",
+      "Panturrilha sentado com halter sobre os joelhos",
+      "Flexão plantar com joelhos semiflexionados"
+    ],
+    "musculos_sinergistas": [
+      "Gastrocnêmio (Panturrilha Superficial)",
+      "Fibulares Longo e Curto"
+    ],
+    "dica_execucao": "Mantenha os joelhos flexionados durante todo o exercício para enfatizar o sóleo."
+  },
+  {
+    "id": "tibial-anterior",
+    "nome_do_musculo": "Tibial Anterior",
+    "categoria": "Pernas Inferiores e Panturrilhas",
+    "regiao": "Perna Anterior (Canela)",
+    "vista_recomendada": "anterior",
+    "imagem": "09_pernas_panturrilhas/53_tibial_anterior.jpg",
+    "descricao": "Principal dorsiflexor do tornozelo e inversor do pé.",
+    "padrao_movimento": "dorsiflexao",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Elevação da ponta dos pés (tib raise) encostado na parede",
+      "Dorsiflexão no cabo ou com elástico",
+      "Caminhada sobre os calcanhares"
+    ],
+    "musculos_sinergistas": [
+      "Extensores longos dos dedos"
+    ],
+    "dica_execucao": "Ótimo para saúde dos joelhos e estabilidade do tornozelo; use amplitudes controladas."
+  },
+  {
+    "id": "fibulares-longo-e-curto",
+    "nome_do_musculo": "Fibulares Longo e Curto",
+    "categoria": "Pernas Inferiores e Panturrilhas",
+    "regiao": "Perna Lateral",
+    "vista_recomendada": "anterior",
+    "imagem": "09_pernas_panturrilhas/54_fibulares_longo_e_curto.jpg",
+    "descricao": "Músculos laterais da perna responsáveis pela eversão do pé e estabilidade lateral do tornozelo.",
+    "padrao_movimento": "eversao_tornozelo",
+    "tempo_recuperacao_horas": 48,
+    "exercicios_recomendados": [
+      "Eversão de tornozelo com elástico ou cabo",
+      "Exercícios de equilíbrio unipodal em superfície instável",
+      "Panturrilha com foco em apoio estável"
+    ],
+    "musculos_sinergistas": [
+      "Gastrocnêmio (Panturrilha Superficial)",
+      "Sóleo (Panturrilha Profunda)"
+    ],
+    "dica_execucao": "Mova apenas o pé/tornozelo para fora, mantendo a perna estável."
+  }
+]
