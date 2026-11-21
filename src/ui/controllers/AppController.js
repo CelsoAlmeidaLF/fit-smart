@@ -31,6 +31,7 @@ export class AppController {
     this._restEnd = 0;
     this._activeDia = this._today;
     this._activeCfgTab = 'perfil';
+    this._evoEx = '';
   }
 
   init() {
@@ -61,6 +62,8 @@ export class AppController {
     this.renderDiario();
     this.renderTreino();
     this.renderPlano();
+    this.renderFichas();
+    this.renderTreinoEvo();
     this.renderPerfil();
     this.renderCard();
     this.renderCad();
@@ -137,8 +140,11 @@ export class AppController {
             const div = document.querySelector('#t' + k.charAt(0).toUpperCase() + k.slice(1));
             if (div) div.hidden = (k !== sub);
           });
-          if (sub === 'evo') setTimeout(() => this.drawEvoChart(), 60);
-          if (sub === 'mapa') this.renderMapa();
+          if (sub === 'plano') this.renderPlano();
+          else if (sub === 'fichas') this.renderFichas();
+          else if (sub === 'evo') this.renderTreinoEvo();
+          else if (sub === 'mapa') this.renderMapa();
+          else if (sub === 'hist') this.renderTreino();
         }
         // Sub-abas de Cadastros
         else if (forId === 'cSeg') {
@@ -192,6 +198,30 @@ export class AppController {
             this._toast.show('Registro excluído.');
           }
         }
+        return;
+      }
+
+      // Ações Especiais de Treino e Gestão
+      const actBtn = e.target.closest('[data-act]');
+      if (actBtn) {
+        const act = actBtn.dataset.act;
+        if (act === 'semana') this.sheetSemana();
+        else if (act === 'novaficha') this.sheetEditFicha();
+        else if (act === 'novoex') this.showAddWorkoutSheet();
+        return;
+      }
+
+      // Execução Rápida de Treino ou Ficha [data-go]
+      const goBtn = e.target.closest('[data-go]');
+      if (goBtn) {
+        this.handleStartWorkout(goBtn.dataset.go);
+        return;
+      }
+
+      // Edição de Ficha [data-edf]
+      const edfBtn = e.target.closest('[data-edf]');
+      if (edfBtn) {
+        this.sheetEditFicha(edfBtn.dataset.edf);
         return;
       }
 
@@ -671,17 +701,808 @@ export class AppController {
     `).join('');
   }
 
+  // --- GESTÃO E CÁLCULO DE TREINOS SEMANAIS ---
+
+  planoDia(d) {
+    const diaSem = new Date(d + 'T12:00').getDay();
+    const e = (this._state.semana || [])[diaSem] || { t: 'des' };
+    if (e.t === 'f' && this._state.fichas && this._state.fichas[e.id]) {
+      const f = this._state.fichas[e.id];
+      return { ...e, n: 'Academia · ' + f.nome, ic: 'dumb', kcal: this.kcalDe(f.met, e.min) };
+    }
+    if (e.t === 'a' && this._state.atividades) {
+      const a = this._state.atividades.find(x => x.id === e.id);
+      if (a) return { ...e, n: a.nome, ic: a.ic || 'walk', kcal: this.kcalDe(a.met, e.min) };
+    }
+    return { t: 'des', n: 'Descanso', ic: 'rest', kcal: 0 };
+  }
+
+  kcalDe(met, min) {
+    const peso = this._workout.getCurrentWeight();
+    return Math.round((met || 3.5) * peso * (min || 45) / 60);
+  }
+
+  treinoFeito(d) {
+    return (this._state.treinos || []).some(t => t.d === d);
+  }
+
+  goKey(p) {
+    return p.t === 'des' ? '' : p.t + ':' + p.id;
+  }
+
+  getIcoSvg(ic, size = 18) {
+    switch (ic) {
+      case 'dumb':
+        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>`;
+      case 'run':
+        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="m4 17 5-3 3 3 5-2"/><path d="M14 14V9l-3 2-4-2"/></svg>`;
+      case 'walk':
+        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="m9 20 3-6 2 3 3-1"/><path d="m6 17 4-5 1 2"/></svg>`;
+      case 'bike':
+        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>`;
+      case 'check':
+        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+      case 'calendar':
+        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`;
+      default:
+        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+    }
+  }
+
   renderPlano() {
     const tPlano = document.querySelector('#tPlano');
     if (!tPlano) return;
+
+    const hoje = new Date(this._today + 'T12:00');
+    const seg = new Date(hoje);
+    seg.setDate(hoje.getDate() - ((hoje.getDay() + 6) % 7));
+
+    const dias = Array.from({ length: 7 }, (_, i) => {
+      const x = new Date(seg);
+      x.setDate(seg.getDate() + i);
+      return x.toISOString().slice(0, 10);
+    });
+
+    const nome = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+    const P = dias.map(d => this.planoDia(d));
+    const pt = this.planoDia(this._today);
+    const okT = this.treinoFeito(this._today);
+
+    const tTr = P.reduce((a, p) => a + p.kcal, 0);
+    const tMin = P.reduce((a, p) => a + (p.min || 0), 0);
+
+    const metabolic = this._workout.getMetabolicSummary();
+    const deficitDiario = Math.max(0, metabolic.tdee - metabolic.targetKcal);
+    const dDieta = deficitDiario * 7;
+    const kgEstimado = (dDieta + tTr) / 7700;
+
     tPlano.innerHTML = `
-      <div class="glass pad" style="margin-top:10px">
-        <div class="sec-h" style="margin-top:0"><b>Orientação Semanal de Atividades</b></div>
-        <p style="font-size:13px;color:var(--soft);line-height:1.4">
-          Alterne dias de treino com recuperação ativa para maximizar a perda de gordura preservando a massa magra.
+      <div class="sec-h" style="margin-top:8px">
+        <b>Sua semana de treinos</b>
+        <button class="link" data-act="semana">Editar semana</button>
+      </div>
+
+      <div class="glass" style="margin-bottom:12px">
+        <div class="week">
+          ${dias.map((d, i) => {
+            const p = P[i];
+            const f = this.treinoFeito(d);
+            const isHoje = d === this._today;
+            const cls = `wd${isHoje ? ' hoje' : ''}${p.t === 'des' ? ' des' : ''}${f ? ' ok' : ''}`;
+            const icSvg = f ? this.getIcoSvg('check', 16) : this.getIcoSvg(p.ic, 16);
+            return `
+              <div class="${cls}" title="${FormatUtils.escapeHtml(p.n)}">
+                <span>${nome[new Date(d + 'T12:00').getDay()]}</span>
+                <span class="ic t-fire">${icSvg}</span>
+                <b class="num">${p.kcal ? FormatUtils.formatNumber(p.kcal) : '—'}</b>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="foot">
+          <span class="stat"><span class="ic t-fire">${this.getIcoSvg(pt.ic, 18)}</span></span>
+          <div class="t">
+            <b>Hoje · ${FormatUtils.escapeHtml(pt.n)}</b>
+            <small class="num">${pt.t === 'des' ? 'Recupere: sono e hidratação em dia' : pt.min + ' min · ~' + FormatUtils.formatNumber(pt.kcal) + ' kcal'}</small>
+          </div>
+          ${okT ? '<span class="badge ok" style="padding:4px 8px;border-radius:8px;font-size:12px">Concluído</span>' : pt.t === 'des' ? '' : `<button class="btn pri sm" style="width:auto;padding:0 16px" data-go="${this.goKey(pt)}">Começar</button>`}
+        </div>
+
+        <div class="foot">
+          <span class="stat"><span class="ic t-acc">${this.getIcoSvg('calendar', 18)}</span></span>
+          <div class="t">
+            <b>Total planejado</b>
+            <small class="num">${FormatUtils.formatNumber(tMin)} min de treino na semana</small>
+          </div>
+          <b class="num" style="color:var(--accent)">~${FormatUtils.formatNumber(tTr)} kcal</b>
+        </div>
+      </div>
+
+      <div class="sec-h"><b>Projeção Semanal de Resultados</b></div>
+      <div class="glass pad" style="margin-bottom:12px">
+        <div class="mini" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;margin:0">
+          <div><small style="color:var(--soft)">Déficit Dieta</small><b class="num" style="display:block;font-size:16px;margin-top:2px">−${FormatUtils.formatNumber(dDieta)} kcal</b></div>
+          <div><small style="color:var(--soft)">Gasto Treinos</small><b class="num" style="display:block;font-size:16px;margin-top:2px">−${FormatUtils.formatNumber(tTr)} kcal</b></div>
+          <div><small style="color:var(--soft)">Perda Estimada</small><b class="num" style="display:block;font-size:16px;margin-top:2px;color:var(--accent)">~${FormatUtils.formatNumber(kgEstimado, 2)} kg</b></div>
+        </div>
+        <p class="note" style="margin:10px 2px 0">
+          Estimativa baseada em 7.700 kcal ≈ 1 kg de gordura corporal. O déficit da dieta isolado projeta ~${FormatUtils.formatNumber(dDieta / 7700, 2)} kg/semana.
         </p>
       </div>
     `;
+  }
+
+  renderFichas() {
+    const tFichas = document.querySelector('#tFichas');
+    if (!tFichas) return;
+
+    const fichas = Object.entries(this._state.fichas || {});
+    if (!fichas.length) {
+      tFichas.innerHTML = `
+        <div class="sec-h" style="margin-top:8px">
+          <b>0 fichas</b>
+          <button class="link" data-act="novaficha">+ Criar ficha</button>
+        </div>
+        <div class="glass empty" style="padding:16px;text-align:center;color:var(--soft)">
+          Nenhuma ficha de musculação cadastrada ainda. Toque em "+ Criar ficha" para montar seu treino.
+        </div>
+      `;
+      return;
+    }
+
+    tFichas.innerHTML = `
+      <div class="sec-h" style="margin-top:8px">
+        <b>${fichas.length} fichas cadastradas</b>
+        <button class="link" data-act="novaficha">+ Nova ficha</button>
+      </div>
+
+      ${fichas.map(([k, F]) => {
+        const kcalEst = this.kcalDe(F.met, F.min);
+        return `
+          <details class="glass acc" style="margin-bottom:10px">
+            <summary style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer">
+              <span class="stat"><span class="ic t-fire">${this.getIcoSvg('dumb', 18)}</span></span>
+              <div class="t" style="flex:1">
+                <b>${FormatUtils.escapeHtml(F.nome)}</b>
+                <small class="num" style="color:var(--soft);display:block;font-size:12px">
+                  ${F.ex.length} exercícios · ${F.min} min · ~${FormatUtils.formatNumber(kcalEst)} kcal
+                </small>
+              </div>
+              <span class="ms chev" aria-hidden="true">expand_more</span>
+            </summary>
+            <div class="bd" style="padding:10px 14px 14px;border-top:1px solid var(--line)">
+              ${F.ex.map(e => `
+                <div class="xr" style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px">
+                  <div>
+                    <b>${FormatUtils.escapeHtml(e.n)}</b>
+                    ${this._state.cargas && this._state.cargas[e.n] ? `<div style="color:var(--accent);font-size:11px">Última carga: ${FormatUtils.formatNumber(this._state.cargas[e.n], 1)} kg</div>` : ''}
+                  </div>
+                  <span class="num" style="color:var(--soft)">${FormatUtils.escapeHtml(e.sr)}</span>
+                </div>
+              `).join('')}
+              <div style="display:flex;gap:10px;margin-top:12px">
+                <button class="btn pri sm flex1" data-go="f:${k}">Começar treino</button>
+                <button class="btn sec sm" data-edf="${k}">Editar ficha</button>
+              </div>
+            </div>
+          </details>
+        `;
+      }).join('')}
+      <p class="note" style="margin-top:8px">
+        Ao realizar cada série, anote a carga levantada. O app salva automaticamente seu histórico e calcula recordes.
+      </p>
+    `;
+  }
+
+  renderTreinoEvo() {
+    const tEvo = document.querySelector('#tEvo');
+    if (!tEvo) return;
+
+    const hcarga = this._state.hcarga || {};
+    const nomes = Object.keys(hcarga).filter(n => hcarga[n] && hcarga[n].length).sort((a, b) => a.localeCompare(b, 'pt'));
+
+    if (!this._evoEx || !nomes.includes(this._evoEx)) {
+      this._evoEx = nomes[0] || '';
+    }
+
+    const H = this._evoEx ? (hcarga[this._evoEx] || []) : [];
+    const ini = H[0];
+    const ult = H[H.length - 1];
+    const gan = ini && ult ? ult.kg - ini.kg : 0;
+
+    tEvo.innerHTML = `
+      <div class="f" style="margin-top:12px">
+        <label for="evSel">Exercício para evolução</label>
+        <select id="evSel">
+          ${nomes.length ? nomes.map(n => `<option value="${FormatUtils.escapeHtml(n)}"${n === this._evoEx ? ' selected' : ''}>${FormatUtils.escapeHtml(n)}</option>`).join('') : '<option value="">Nenhuma carga registrada ainda</option>'}
+        </select>
+      </div>
+
+      ${H.length ? `
+        <div class="glass pad" style="margin-top:12px">
+          <div class="mini" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;margin:0 0 14px">
+            <div><small style="color:var(--soft)">Inicial</small><b class="num" style="display:block;font-size:16px">${FormatUtils.formatNumber(ini.kg, 1)} kg</b></div>
+            <div><small style="color:var(--soft)">Atual</small><b class="num" style="display:block;font-size:16px">${FormatUtils.formatNumber(ult.kg, 1)} kg</b></div>
+            <div><small style="color:var(--soft)">Evolução</small><b class="num" style="display:block;font-size:16px;color:var(${gan >= 0 ? '--ok' : '--bad'})">${gan >= 0 ? '+' : ''}${FormatUtils.formatNumber(gan, 1)} kg</b></div>
+          </div>
+          <div class="evo" style="height:190px;position:relative"><svg id="evoSvg" style="width:100%;height:100%"></svg></div>
+        </div>
+
+        <div class="sec-h"><b>Histórico de Cargas</b><span style="color:var(--soft);font-size:13px">${H.length} registros</span></div>
+        <div class="glass list">
+          ${[...H].reverse().slice(0, 8).map((h, i, a) => {
+            const p = a[i + 1];
+            const df = p ? h.kg - p.kg : 0;
+            return `
+              <div class="it" style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)">
+                <div class="t">
+                  <b class="num">${FormatUtils.formatNumber(h.kg, 1)} kg ${h.pr ? '<span class="tag ok" style="margin-left:6px;font-size:10px;padding:2px 6px">Recorde</span>' : ''}</b>
+                  <small style="display:block;color:var(--soft);font-size:11px">${FormatUtils.formatDateBr(h.d)}</small>
+                </div>
+                ${p && df ? `<span class="num" style="color:var(${df > 0 ? '--ok' : '--bad'})">${df > 0 ? '+' : ''}${FormatUtils.formatNumber(df, 1)} kg</span>` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      ` : `
+        <div class="glass empty" style="margin-top:12px;padding:16px;text-align:center;color:var(--soft)">
+          Ao concluir um treino de ficha, anote a carga de cada exercício. Sua progressão de força aparecerá aqui em gráficos e marcos.
+        </div>
+      `}
+    `;
+
+    const evSel = document.querySelector('#evSel');
+    if (evSel) {
+      evSel.onchange = () => {
+        this._evoEx = evSel.value;
+        this.renderTreinoEvo();
+      };
+    }
+
+    if (H.length) {
+      setTimeout(() => this.drawEvo(), 50);
+    }
+  }
+
+  drawEvo() {
+    const s = document.querySelector('#evoSvg');
+    if (!s) return;
+    const W = s.clientWidth || 320;
+    const Hh = s.clientHeight || 190;
+
+    const H = (this._state.hcarga || {})[this._evoEx] || [];
+    if (!H.length) return;
+
+    const ks = H.map(h => h.kg);
+    const lo = Math.floor(Math.min(...ks) * 0.9);
+    const hi = Math.ceil(Math.max(...ks) * 1.08) || 1;
+
+    const L = 34, R = 10, T = 14, B = 22, n = H.length;
+    const X = i => n === 1 ? (L + W - R) / 2 : L + i / (n - 1) * (W - L - R);
+    const Y = k => T + (hi - k) / ((hi - lo) || 1) * (Hh - T - B);
+
+    const pts = H.map((h, i) => [X(i), Y(h.kg)]);
+    const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    const ticks = [lo, Math.round((lo + hi) / 2), hi];
+
+    s.innerHTML = `
+      <defs>
+        <linearGradient id="geSmart" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--accent, #6FCF97)" stop-opacity=".35"/>
+          <stop offset="1" stop-color="var(--accent, #6FCF97)" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      ${ticks.map(t => `<line x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--line, rgba(255,255,255,0.08))"/><text x="${L - 6}" y="${Y(t) + 4}" text-anchor="end" fill="var(--faint, #888)" font-size="11">${t}</text>`).join('')}
+      ${n > 1 ? `<path d="${line} L${pts[n - 1][0]} ${Hh - B} L${pts[0][0]} ${Hh - B} Z" fill="url(#geSmart)"/>` : ''}
+      <path d="${line}" fill="none" stroke="var(--accent, #6FCF97)" stroke-width="2.5" stroke-linejoin="round"/>
+      ${pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="var(--accent, #6FCF97)" stroke="#fff" stroke-width="1.5"/>`).join('')}
+      <text x="${L}" y="${Hh - 4}" fill="var(--faint, #888)" font-size="11">${FormatUtils.formatDateBr(H[0].d).slice(0, 5)}</text>
+      ${n > 1 ? `<text x="${W - R}" y="${Hh - 4}" text-anchor="end" fill="var(--faint, #888)" font-size="11">${FormatUtils.formatDateBr(H[n - 1].d).slice(0, 5)}</text>` : ''}
+    `;
+  }
+
+  renderMapa() {
+    const tMapa = document.querySelector('#tMapa');
+    if (!tMapa || !BODY) return;
+
+    const B = BODY[this._mapV] || BODY.front;
+    const sel = B.m.find(m => m.id === this._mapSel);
+
+    const fg = new Set(this._mapF && this._state.fichas && this._state.fichas[this._mapF] ? this._state.fichas[this._mapF].ex.map(e => {
+      const x = (this._state.exercicios || []).find(it => it.nome === e.n);
+      return x ? x.g : null;
+    }).filter(Boolean) : []);
+
+    const W = 361.156, H = 541.867;
+    let pill = '';
+    if (sel) {
+      const tw = sel.pt.length * 7.4 + 22;
+      const x = Math.min(W - tw / 2 - 4, Math.max(tw / 2 + 4, sel.a[0]));
+      const y = sel.a[1] - 30;
+      pill = `<g class="pill"><rect x="${x - tw / 2}" y="${y - 13}" width="${tw}" height="24" rx="12" fill="var(--surface-2, #202824)" stroke="var(--accent, #6FCF97)"/><text x="${x}" y="${y + 4}" fill="#fff" font-size="12" text-anchor="middle" font-weight="600">${FormatUtils.escapeHtml(sel.pt)}</text></g>`;
+    }
+
+    const exs = sel ? (this._state.exercicios || []).filter(x => x.g === sel.g).sort((a, b) => a.nome.localeCompare(b.nome, 'pt')) : [];
+
+    tMapa.innerHTML = `
+      <div class="two" style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f">
+          <label>Vista anatômica</label>
+          <div class="segc" data-for="mapVLocal" role="group">
+            <button type="button" data-v="front" class="${this._mapV === 'front' ? 'on' : ''}" aria-pressed="${this._mapV === 'front'}">Frente</button>
+            <button type="button" data-v="back" class="${this._mapV === 'back' ? 'on' : ''}" aria-pressed="${this._mapV === 'back'}">Costas</button>
+          </div>
+        </div>
+        <div class="f">
+          <label for="mF">Destacar ficha</label>
+          <select id="mF">
+            <option value="">Nenhuma</option>
+            ${Object.entries(this._state.fichas || {}).map(([k, f]) => `<option value="${k}"${k === this._mapF ? ' selected' : ''}>${FormatUtils.escapeHtml(f.nome)}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+
+      <div class="f" style="margin-top:12px">
+        <label for="mS">Músculo</label>
+        <select id="mS">
+          <option value="">Selecione ou toque no desenho…</option>
+          ${B.m.map((m, i) => `<option value="${m.id}"${m.id === this._mapSel ? ' selected' : ''}>${i + 1}. ${FormatUtils.escapeHtml(m.pt)}</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="glass pad" style="margin-top:12px;display:flex;flex-direction:column;align-items:center">
+        <div class="body" style="max-width:320px;width:100%">
+          <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa muscular anatômico" style="width:100%;height:auto;cursor:pointer">
+            <image class="lt" href="${B.img.light}" width="${W}" height="${H}"/>
+            <image class="dk" href="${B.img.dark}" width="${W}" height="${H}"/>
+            ${B.m.map(m => `
+              <path data-m="${m.id}" d="${m.d}" transform="translate(${m.t[0]} ${m.t[1]})" class="${m.id === this._mapSel ? 'on' : fg.has(m.g) ? 'fic' : ''}" fill="${m.id === this._mapSel ? 'var(--accent, #6FCF97)' : fg.has(m.g) ? 'rgba(230,126,34,0.4)' : 'transparent'}" stroke="${m.id === this._mapSel ? '#fff' : 'none'}">
+                <title>${FormatUtils.escapeHtml(m.pt)}</title>
+              </path>
+            `).join('')}
+            ${B.m.map((m, i) => `
+              <g class="mk${m.id === this._mapSel ? ' on' : ''}" data-m="${m.id}">
+                <circle cx="${m.a[0]}" cy="${m.a[1]}" r="10" fill="${m.id === this._mapSel ? 'var(--accent, #6FCF97)' : 'rgba(0,0,0,0.6)'}" stroke="#fff" stroke-width="1"/>
+                <text x="${m.a[0]}" y="${m.a[1] + 4}" fill="#fff" font-size="10" text-anchor="middle">${i + 1}</text>
+              </g>
+            `).join('')}
+            ${pill}
+          </svg>
+        </div>
+        ${this._mapF ? `<p class="note" style="text-align:center;margin-top:6px"><span style="color:#E67E22;font-weight:600">Laranja</span>: músculos trabalhados na ficha selecionada</p>` : ''}
+      </div>
+
+      <div class="sec-h"><b>Músculos · ${this._mapV === 'front' ? 'Frente' : 'Costas'}</b></div>
+      <div class="glass leg" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:8px;padding:12px;margin-bottom:12px">
+        ${B.m.map((m, i) => `
+          <div class="${m.id === this._mapSel ? 'on' : ''}" data-m="${m.id}" style="cursor:pointer;padding:6px;border-radius:8px;background:${m.id === this._mapSel ? 'var(--accent-soft, rgba(111,207,151,0.15))' : 'transparent'};font-size:12px">
+            <i style="font-weight:700;color:var(--accent);margin-right:4px">${i + 1}.</i>
+            <span>${FormatUtils.escapeHtml(m.pt)}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      ${sel ? `
+        <div class="sec-h">
+          <b>Exercícios para ${FormatUtils.escapeHtml(sel.g)}</b>
+          <button class="link" data-add="treino">+ Cadastrar exercício</button>
+        </div>
+        <div class="glass list" style="margin-bottom:14px">
+          ${exs.length ? exs.map(x => `
+            <div class="it" style="padding:10px 14px;border-bottom:1px solid var(--line)">
+              <b>${FormatUtils.escapeHtml(x.nome)}</b>
+              <small style="display:block;color:var(--soft);font-size:12px">${FormatUtils.escapeHtml(x.sr || '3 × 12')}</small>
+            </div>
+          `).join('') : '<div class="glass empty" style="padding:14px;text-align:center;color:var(--soft)">Nenhum exercício cadastrado para este grupo.</div>'}
+        </div>
+      ` : ''}
+    `;
+
+    // Listeners do Mapa
+    const mF = document.querySelector('#mF');
+    if (mF) {
+      mF.onchange = () => {
+        this._mapF = mF.value;
+        this.renderMapa();
+      };
+    }
+
+    const mS = document.querySelector('#mS');
+    if (mS) {
+      mS.onchange = () => {
+        this._mapSel = mS.value;
+        this.renderMapa();
+      };
+    }
+
+    const segBtns = tMapa.querySelectorAll('.segc[data-for="mapVLocal"] button');
+    segBtns.forEach(btn => {
+      btn.onclick = () => {
+        this._mapV = btn.dataset.v;
+        this.renderMapa();
+      };
+    });
+  }
+
+  // --- MODAIS E EXECUTORES DE TREINO ---
+
+  handleStartWorkout(goKey) {
+    if (!goKey) return;
+    const [t, id] = goKey.split(':');
+    const pt = this.planoDia(this._today);
+    const min = (pt.t === t && pt.id === id) ? pt.min : 0;
+    if (t === 'f') {
+      this.sheetFicha(id, min);
+    } else {
+      this.showAddWorkoutSheet(id);
+    }
+  }
+
+  sheetSemana() {
+    const nome = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const ord = [1, 2, 3, 4, 5, 6, 0];
+    const sem = this._state.semana || [];
+
+    const optsPlano = (e) => {
+      const v = e.t === 'des' ? 'des' : e.t + ':' + e.id;
+      return `
+        <option value="des"${v === 'des' ? ' selected' : ''}>Descanso</option>
+        <optgroup label="Fichas de musculação">
+          ${Object.entries(this._state.fichas || {}).map(([k, f]) => `<option value="f:${k}"${v === 'f:' + k ? ' selected' : ''}>${FormatUtils.escapeHtml(f.nome)}</option>`).join('')}
+        </optgroup>
+        <optgroup label="Atividades físicas">
+          ${(this._state.atividades || []).map(a => `<option value="a:${a.id}"${v === 'a:' + a.id ? ' selected' : ''}>${FormatUtils.escapeHtml(a.nome)}</option>`).join('')}
+        </optgroup>
+      `;
+    };
+
+    this._sheet.open(`
+      <h3 id="shT">Planejar Semana de Treinos</h3>
+      <form class="form" id="frmSemana">
+        ${ord.map(g => {
+          const e = sem[g] || { t: 'des' };
+          return `
+            <div class="exr" style="display:grid;grid-template-columns:minmax(0,1fr) 90px;gap:8px;margin-bottom:8px">
+              <div class="f">
+                <label for="sd${g}">${nome[g]}</label>
+                <select id="sd${g}">${optsPlano(e)}</select>
+              </div>
+              <div class="f">
+                <label for="sm${g}">Minutos</label>
+                <input id="sm${g}" type="number" inputmode="numeric" min="5" max="300" value="${e.min || (e.t === 'a' ? 30 : 50)}">
+              </div>
+            </div>
+          `;
+        }).join('')}
+        <button class="btn pri" style="margin-top:14px">Salvar Plano Semanal</button>
+      </form>
+    `);
+
+    const frm = document.querySelector('#frmSemana');
+    if (frm) {
+      frm.onsubmit = e => {
+        e.preventDefault();
+        const novaSem = [0, 1, 2, 3, 4, 5, 6].map(g => {
+          const v = document.querySelector('#sd' + g).value;
+          const min = parseInt(document.querySelector('#sm' + g).value, 10) || 0;
+          if (v === 'des') return { t: 'des' };
+          const [t, id] = v.split(':');
+          return { t, id, min };
+        });
+        this._state.semana = novaSem;
+        this.save();
+        this._sheet.close();
+        this.renderPlano();
+        this._toast.show('Plano da semana atualizado com sucesso.');
+      };
+    }
+  }
+
+  sheetFicha(k, minP) {
+    const F = (this._state.fichas || {})[k];
+    if (!F) return;
+
+    this._sheet.open(`
+      <h3 id="shT">${FormatUtils.escapeHtml(F.nome)}</h3>
+      
+      <div class="rest glass" id="restBox" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:12px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="ms" aria-hidden="true">timer</span>
+          <div>
+            <small style="color:var(--soft);display:block;font-size:11px">Descanso</small>
+            <b class="num" id="rTVal" style="font-size:16px">01:30</b>
+          </div>
+        </div>
+        <select id="rSelTime" style="padding:4px 8px;border-radius:8px">
+          <option value="45">00:45</option>
+          <option value="60">01:00</option>
+          <option value="90" selected>01:30</option>
+          <option value="120">02:00</option>
+          <option value="180">03:00</option>
+        </select>
+        <button type="button" class="btn pri sm" id="rGoTimer" style="width:auto;padding:0 12px">Iniciar</button>
+      </div>
+
+      <div id="xExList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        ${F.ex.map((e, i) => `
+          <div class="ex glass" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px">
+            <button type="button" class="ck" data-ck="${i}" aria-pressed="false" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+            <div style="flex:1">
+              <b>${FormatUtils.escapeHtml(e.n)}</b>
+              <small style="display:block;color:var(--soft);font-size:11px">${FormatUtils.escapeHtml(e.sr)}</small>
+            </div>
+            <input type="number" step="0.5" inputmode="decimal" placeholder="kg" style="width:70px;text-align:center" data-i="${i}" value="${(this._state.cargas && this._state.cargas[e.n]) || ''}">
+          </div>
+        `).join('')}
+      </div>
+
+      <form class="form" id="frmFinishFicha">
+        <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="f">
+            <label>Duração (minutos)</label>
+            <input id="xMinFicha" type="number" inputmode="numeric" min="5" max="300" value="${minP || F.min || 50}" required>
+          </div>
+          <div class="f">
+            <label>Gasto estimado</label>
+            <div class="num" id="xEstFicha" style="height:44px;display:flex;align-items:center;font-size:16px;color:var(--accent);font-weight:700">~0 kcal</div>
+          </div>
+        </div>
+        <button class="btn pri" style="margin-top:14px">Concluir Treino</button>
+      </form>
+    `);
+
+    // Timer e Cálculos do Treino
+    const minInput = document.querySelector('#xMinFicha');
+    const estEl = document.querySelector('#xEstFicha');
+    const updateEst = () => {
+      const min = parseInt(minInput ? minInput.value : 50, 10) || 50;
+      const k = this.kcalDe(F.met, min);
+      if (estEl) estEl.textContent = `~${FormatUtils.formatNumber(k)} kcal`;
+    };
+    if (minInput) minInput.oninput = updateEst;
+    updateEst();
+
+    // Toggle de séries concluídas
+    const ckBtns = document.querySelectorAll('.ck[data-ck]');
+    ckBtns.forEach(btn => {
+      btn.onclick = () => {
+        const on = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', on);
+        btn.style.background = on ? 'var(--accent, #6FCF97)' : 'none';
+        btn.style.color = on ? '#000' : 'inherit';
+        if (on) this.startRestTimer();
+      };
+    });
+
+    const rGoBtn = document.querySelector('#rGoTimer');
+    if (rGoBtn) {
+      rGoBtn.onclick = () => {
+        if (this._restInterval) this.stopRestTimer();
+        else this.startRestTimer();
+      };
+    }
+
+    const frm = document.querySelector('#frmFinishFicha');
+    if (frm) {
+      frm.onsubmit = e => {
+        e.preventDefault();
+        const min = parseInt(document.querySelector('#xMinFicha').value, 10) || 50;
+        const estKcal = this.kcalDe(F.met, min);
+
+        this._state.cargas = this._state.cargas || {};
+        this._state.hcarga = this._state.hcarga || {};
+        const prs = [];
+
+        document.querySelectorAll('#xExList input[data-i]').forEach(inp => {
+          const val = parseFloat(inp.value.replace(',', '.'));
+          if (val > 0) {
+            const exNome = F.ex[inp.dataset.i].n;
+            const historico = (this._state.hcarga[exNome] || []).filter(h => h.d !== this._today);
+            const recordeAnterior = historico.length ? Math.max(...historico.map(h => h.kg)) : 0;
+            const isPr = historico.length && val > recordeAnterior;
+
+            if (isPr) {
+              prs.push({ nome: exNome, kg: val, diff: val - recordeAnterior });
+            }
+
+            this._state.cargas[exNome] = val;
+            historico.push({ d: this._today, kg: val, pr: isPr ? 1 : 0 });
+            historico.sort((a, b) => a.d.localeCompare(b.d));
+            this._state.hcarga[exNome] = historico;
+          }
+        });
+
+        this.stopRestTimer();
+        this._state.treinos = this._state.treinos || [];
+        this._state.treinos.push({
+          id: FormatUtils.uid(),
+          d: this._today,
+          tipo: `${F.nome}`,
+          ic: 'dumb',
+          min,
+          kcal: estKcal
+        });
+
+        this.save();
+        this._sheet.close();
+        this.renderAll();
+
+        if (prs.length) {
+          this._sheet.open(`
+            <div style="text-align:center;padding:10px 0">
+              <h3 style="margin:8px 0;color:var(--accent)">Novo Recorde Pessoal!</h3>
+              <p style="font-size:14px;color:var(--soft)">Parabéns pela dedicação! Você superou sua melhor carga:</p>
+              <div class="glass list" style="margin:14px 0">
+                ${prs.map(p => `
+                  <div class="it" style="display:flex;justify-content:space-between;padding:10px 14px">
+                    <b>${FormatUtils.escapeHtml(p.nome)}</b>
+                    <span class="num" style="color:var(--accent)"><b>${FormatUtils.formatNumber(p.kg, 1)} kg</b> (+${FormatUtils.formatNumber(p.diff, 1)} kg)</span>
+                  </div>
+                `).join('')}
+              </div>
+              <button class="btn pri" id="bOkPr">Continuar</button>
+            </div>
+          `);
+          const bOkPr = document.querySelector('#bOkPr');
+          if (bOkPr) bOkPr.onclick = () => this._sheet.close();
+        } else {
+          this._toast.show('Treino concluído e registrado no histórico.');
+        }
+      };
+    }
+  }
+
+  startRestTimer() {
+    const rSel = document.querySelector('#rSelTime');
+    const segs = parseInt(rSel ? rSel.value : 90, 10) || 90;
+    this._restEnd = Date.now() + segs * 1000;
+    const rGo = document.querySelector('#rGoTimer');
+    if (rGo) rGo.textContent = 'Parar';
+
+    if (this._restInterval) clearInterval(this._restInterval);
+    this._restInterval = setInterval(() => this.tickRestTimer(), 500);
+    this.tickRestTimer();
+  }
+
+  tickRestTimer() {
+    const el = document.querySelector('#rTVal');
+    if (!el) {
+      this.stopRestTimer();
+      return;
+    }
+    const left = Math.max(0, Math.round((this._restEnd - Date.now()) / 1000));
+    const m = Math.floor(left / 60);
+    const s = left % 60;
+    el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+    if (!left) {
+      this.stopRestTimer();
+      WebAudioAdapter.playPinSuccess();
+      el.textContent = 'Bora!';
+      this._toast.show('Descanso finalizado! Inicie a próxima série.');
+    }
+  }
+
+  stopRestTimer() {
+    if (this._restInterval) {
+      clearInterval(this._restInterval);
+      this._restInterval = null;
+    }
+    const rGo = document.querySelector('#rGoTimer');
+    if (rGo) rGo.textContent = 'Iniciar';
+  }
+
+  sheetEditFicha(k) {
+    const isNew = !k;
+    const F = isNew ? { nome: 'Nova Ficha', min: 50, met: 3.5, ex: [{ n: 'Supino reto', sr: '3 × 12' }] } : structuredClone(this._state.fichas[k]);
+    if (!F) return;
+
+    this._sheet.open(`
+      <h3 id="shT">${isNew ? 'Criar Nova Ficha' : 'Editar Ficha'}</h3>
+      <form class="form" id="frmEditFicha">
+        <div class="f">
+          <label>Nome da ficha</label>
+          <input id="fNomeFicha" value="${FormatUtils.escapeHtml(F.nome)}" required>
+        </div>
+        <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="f">
+            <label>Duração padrão (min)</label>
+            <input id="fMinFicha" type="number" min="10" max="180" value="${F.min || 50}" required>
+          </div>
+          <div class="f">
+            <label>Intensidade</label>
+            <select id="fMetFicha">
+              <option value="3" ${F.met === 3 ? 'selected' : ''}>Leve (3.0 MET)</option>
+              <option value="3.5" ${F.met === 3.5 ? 'selected' : ''}>Moderada (3.5 MET)</option>
+              <option value="5" ${F.met === 5 ? 'selected' : ''}>Intensa (5.0 MET)</option>
+              <option value="6" ${F.met === 6 ? 'selected' : ''}>Muito Intensa (6.0 MET)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="sec-h" style="margin-top:12px"><b>Exercícios da Ficha</b></div>
+        <div id="fichaExList" style="display:flex;flex-direction:column;gap:8px">
+          ${F.ex.map((e, idx) => `
+            <div class="ex-row glass" style="display:grid;grid-template-columns:minmax(0,1fr) 90px 32px;gap:8px;padding:8px 10px;border-radius:10px;align-items:center">
+              <input type="text" class="ex-n" value="${FormatUtils.escapeHtml(e.n)}" placeholder="Nome do exercício" required>
+              <input type="text" class="ex-sr" value="${FormatUtils.escapeHtml(e.sr)}" placeholder="3 × 12">
+              <button type="button" class="btn sm dng rm-ex" data-rm="${idx}" style="padding:0;height:32px;width:32px">×</button>
+            </div>
+          `).join('')}
+        </div>
+        <button type="button" class="btn sec sm" id="bAddExToFicha" style="margin-top:8px">+ Adicionar Exercício</button>
+
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button class="btn pri flex1">Salvar Ficha</button>
+          ${!isNew ? `<button type="button" class="btn dng sm" id="bDelFicha">Excluir</button>` : ''}
+        </div>
+      </form>
+    `);
+
+    const listEl = document.querySelector('#fichaExList');
+    const addBtn = document.querySelector('#bAddExToFicha');
+    if (addBtn && listEl) {
+      addBtn.onclick = () => {
+        const div = document.createElement('div');
+        div.className = 'ex-row glass';
+        div.style.cssText = 'display:grid;grid-template-columns:minmax(0,1fr) 90px 32px;gap:8px;padding:8px 10px;border-radius:10px;align-items:center';
+        div.innerHTML = `
+          <input type="text" class="ex-n" placeholder="Nome do exercício" required>
+          <input type="text" class="ex-sr" value="3 × 12" placeholder="3 × 12">
+          <button type="button" class="btn sm dng rm-ex" style="padding:0;height:32px;width:32px">×</button>
+        `;
+        listEl.appendChild(div);
+        div.querySelector('.rm-ex').onclick = () => div.remove();
+      };
+    }
+
+    document.querySelectorAll('.rm-ex').forEach(btn => {
+      btn.onclick = () => btn.closest('.ex-row').remove();
+    });
+
+    const delBtn = document.querySelector('#bDelFicha');
+    if (delBtn) {
+      delBtn.onclick = () => {
+        delete this._state.fichas[k];
+        this.save();
+        this._sheet.close();
+        this.renderAll();
+        this._toast.show('Ficha excluída.');
+      };
+    }
+
+    const frm = document.querySelector('#frmEditFicha');
+    if (frm) {
+      frm.onsubmit = e => {
+        e.preventDefault();
+        const nome = document.querySelector('#fNomeFicha').value.trim();
+        const min = parseInt(document.querySelector('#fMinFicha').value, 10) || 50;
+        const met = parseFloat(document.querySelector('#fMetFicha').value) || 3.5;
+
+        const exs = [];
+        document.querySelectorAll('.ex-row').forEach(row => {
+          const n = row.querySelector('.ex-n').value.trim();
+          const sr = row.querySelector('.ex-sr').value.trim() || '3 × 12';
+          if (n) exs.push({ n, sr });
+        });
+
+        if (!exs.length) {
+          this._toast.show('Adicione ao menos um exercício na ficha.');
+          return;
+        }
+
+        this._state.fichas = this._state.fichas || {};
+        const id = isNew ? FormatUtils.uid() : k;
+        this._state.fichas[id] = { nome, min, met, ex: exs };
+        this.save();
+        this._sheet.close();
+        this.renderAll();
+        this._toast.show('Ficha salva com sucesso.');
+      };
+    }
   }
 
   renderPerfil() {
@@ -782,9 +1603,7 @@ export class AppController {
     }
   }
 
-  renderMapa() {
-    // Mapa anatômico
-  }
+
 
   setThemeMode(mode) {
     this._state.mode = mode;
