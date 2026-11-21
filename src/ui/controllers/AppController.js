@@ -824,22 +824,10 @@ export class AppController {
   }
 
   getIcoSvg(ic, size = 18) {
-    switch (ic) {
-      case 'dumb':
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>`;
-      case 'run':
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="m4 17 5-3 3 3 5-2"/><path d="M14 14V9l-3 2-4-2"/></svg>`;
-      case 'walk':
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="m9 20 3-6 2 3 3-1"/><path d="m6 17 4-5 1 2"/></svg>`;
-      case 'bike':
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>`;
-      case 'check':
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
-      case 'calendar':
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`;
-      default:
-        return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+    if (typeof window !== 'undefined' && window.FinancIcons && typeof window.FinancIcons.svg === 'function') {
+      return window.FinancIcons.svg(ic, { size });
     }
+    return '';
   }
 
   renderPlano() {
@@ -1321,7 +1309,7 @@ export class AppController {
         ${F.ex.map((e, i) => `
           <div class="ex glass" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px">
             <button type="button" class="ck" data-ck="${i}" aria-pressed="false" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              ${this.getIcoSvg('check', 16)}
             </button>
             <div style="flex:1">
               <b>${FormatUtils.escapeHtml(e.n)}</b>
@@ -1886,8 +1874,8 @@ export class AppController {
       <p style="font-size:13px;color:var(--soft);margin-bottom:12px">
         Cole as suas 12 palavras na ordem correta ou digite o código Hash de 12 caracteres do seu Certificado:
       </p>
-      <div style="margin-bottom:12px">
-        <textarea id="inpRecoverySecret" class="f-in" rows="3" style="width:100%;resize:none;font-family:monospace;font-size:13px" placeholder="ex: borbulha lotado gradual ... ou XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off"></textarea>
+      <div class="f" style="margin-bottom:12px">
+        <textarea id="inpRecoverySecret" rows="3" style="width:100%;resize:none;font-family:monospace;font-size:13px" placeholder="ex: borbulha lotado gradual ... ou XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off"></textarea>
       </div>
       <div id="recError" style="color:var(--bad);font-size:12px;margin-bottom:12px;min-height:16px"></div>
       <button type="button" class="btn pri block" id="btnValidateRecovery">Validar e Redefinir PIN</button>
