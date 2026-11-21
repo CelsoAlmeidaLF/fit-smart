@@ -350,3 +350,43 @@ nav a.on span{background:var(--accent-soft)}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:40;transform:translate(-50%,20px);opacity:0;pointer-events:none;display:flex;gap:12px;align-items:center;padding:10px 10px 10px 16px;border-radius:16px;background:#0E2742;color:#fff;font-size:14px;transition:.3s;max-width:calc(100% - 32px)}
 .toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .toast button{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer}
+
+/* ==================== RESPONSIVIDADE MULTI-DISPOSITIVO (Mariana UI/UX) ==================== */
+/* 1. Mobile Pequeno (< 360px) */
+@media (max-width: 360px) {
+  .app { padding-inline: 10px; }
+  .quick { gap: 6px; }
+  .qa span { width: 48px; height: 48px; }
+  .two { gap: 8px; }
+  .bars { height: 120px; }
+  .grid3 { grid-template-columns: 1fr; }
+  .week { gap: 1px; padding: 6px 2px; }
+}
+
+/* 2. Tablets (641px - 1024px) */
+@media (min-width: 641px) {
+  .app { max-width: 760px; padding-inline: 24px; }
+  nav .bar { max-width: 600px; }
+  .sheet { max-width: 680px; }
+  .today { grid-template-columns: 180px 1fr; gap: 24px; }
+  .ring { width: 180px; height: 180px; }
+  .quick { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+}
+
+/* 3. Telas Médias (1025px - 1440px) */
+@media (min-width: 1025px) {
+  .app { max-width: 1040px; padding-inline: 32px; }
+  nav .bar { max-width: 680px; }
+  .sheet { max-width: 800px; }
+  .today { grid-template-columns: 200px 1fr; gap: 32px; }
+  .ring { width: 200px; height: 200px; }
+}
+
+/* 4. Monitores Grandes e Ultrawide (> 1440px / 1920px - 4K) */
+@media (min-width: 1441px) {
+  .app { max-width: 1200px; margin: 0 auto; }
+  nav .bar { max-width: 720px; }
+  .sheet { max-width: 900px; }
+}
+
