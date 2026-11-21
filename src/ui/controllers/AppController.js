@@ -2,6 +2,7 @@ import { FormatUtils } from '../../domain/utils/FormatUtils.js';
 import { BmrTdeeCalculatorModel } from '../../domain/models/BmrTdeeCalculatorModel.js';
 import { HydrationModel } from '../../domain/models/HydrationModel.js';
 import { BODY } from '../../domain/catalogs/BodyDiagramCatalog.js';
+import { BODY_SILHOUETTES } from '../components/HevyMuscleRenderer.js';
 import { GRUPOS, EXS, CARD } from '../../domain/catalogs/WorkoutCatalog.js';
 import { BiometricsAdapter } from '../../infrastructure/security/BiometricsAdapter.js';
 import { WebAudioAdapter } from '../../infrastructure/audio/WebAudioAdapter.js';
@@ -1147,20 +1148,23 @@ export class AppController {
 
       <div class="glass pad" style="margin-top:12px;display:flex;flex-direction:column;align-items:center">
         <div class="body" style="max-width:320px;width:100%">
-          <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa muscular anatômico" style="width:100%;height:auto;cursor:pointer">
-            <image class="lt" href="${B.img.light}" width="${W}" height="${H}"/>
-            <image class="dk" href="${B.img.dark}" width="${W}" height="${H}"/>
-            ${B.m.map(m => `
-              <path data-m="${m.id}" d="${m.d}" transform="translate(${m.t[0]} ${m.t[1]})" class="${m.id === this._mapSel ? 'on' : fg.has(m.g) ? 'fic' : ''}" fill="${m.id === this._mapSel ? 'var(--accent, #6FCF97)' : fg.has(m.g) ? 'rgba(230,126,34,0.4)' : 'transparent'}" stroke="${m.id === this._mapSel ? '#fff' : 'none'}">
-                <title>${FormatUtils.escapeHtml(m.pt)}</title>
-              </path>
-            `).join('')}
-            ${B.m.map((m, i) => `
-              <g class="mk${m.id === this._mapSel ? ' on' : ''}" data-m="${m.id}">
-                <circle cx="${m.a[0]}" cy="${m.a[1]}" r="10" fill="${m.id === this._mapSel ? 'var(--accent, #6FCF97)' : 'rgba(0,0,0,0.6)'}" stroke="#fff" stroke-width="1"/>
-                <text x="${m.a[0]}" y="${m.a[1] + 4}" fill="#fff" font-size="10" text-anchor="middle">${i + 1}</text>
-              </g>
-            `).join('')}
+          <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa muscular anatômico 2D" style="width:100%;height:auto;cursor:pointer;display:block">
+            <!-- Silhueta Base Humana 2D Estilo Hevy / Strong -->
+            <path d="${BODY_SILHOUETTES[this._mapV] || BODY_SILHOUETTES.front}" fill="#1A221E" stroke="#26352F" stroke-width="1.3" />
+            <!-- Camada de Músculos Anatômicos 2D -->
+            ${B.m.map(m => {
+              const isSel = m.id === this._mapSel;
+              const isFicha = fg.has(m.g);
+              const fill = isSel ? 'var(--accent, #6FCF97)' : isFicha ? 'rgba(230,126,34,0.55)' : '#222C27';
+              const stroke = isSel ? '#FFFFFF' : '#161D19';
+              const strokeW = isSel ? '1.8' : '0.8';
+              const filter = isSel ? 'style="filter:drop-shadow(0 0 8px rgba(111,207,151,0.75))"' : '';
+              return `
+                <path data-m="${m.id}" d="${m.d}" transform="translate(${m.t[0]} ${m.t[1]})" class="${isSel ? 'on' : isFicha ? 'fic' : ''}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}" ${filter} style="cursor:pointer;transition:all 0.2s">
+                  <title>${FormatUtils.escapeHtml(m.pt)}</title>
+                </path>
+              `;
+            }).join('')}
             ${pill}
           </svg>
         </div>
