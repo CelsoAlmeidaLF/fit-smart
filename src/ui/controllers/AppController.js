@@ -535,14 +535,21 @@ export class AppController {
     // Plano de Hoje
     const planoEl = document.querySelector('#hojePlano');
     if (planoEl) {
+      const pt = this.planoDia(this._today);
+      const okT = this.treinoFeito(this._today);
       planoEl.innerHTML = `
-        <div class="it">
-          <span class="ic t-fire"><span class="ms" aria-hidden="true">fitness_center</span></span>
-          <div class="t">
-            <b>Treino do Dia</b>
-            <small class="num">Musculação e condicionamento ativo</small>
+        <div class="it" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+          <span class="stat" style="flex:none"><span class="ic ${pt.t === 'des' ? 't-acc' : 't-fire'}">${this.getIcoSvg(pt.ic, 20)}</span></span>
+          <div class="t" style="flex:1;min-width:0">
+            <b style="display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${FormatUtils.escapeHtml(pt.n)}</b>
+            <small class="num" style="display:block;color:var(--faint);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pt.t === 'des' ? 'Recupere: sono e hidratação em dia' : pt.min + ' min · ~' + FormatUtils.formatNumber(pt.kcal) + ' kcal'}</small>
           </div>
-          <button type="button" class="btn pri sm" data-add="treino">Registrar</button>
+          ${okT 
+            ? '<span class="badge ok" style="padding:4px 10px;border-radius:8px;font-size:12px;white-space:nowrap;flex:none">Feito ✓</span>' 
+            : pt.t === 'des' 
+              ? '' 
+              : `<button type="button" class="btn pri sm" style="width:auto;flex:none;white-space:nowrap;height:38px;padding:0 16px" data-go="${this.goKey(pt)}">Começar</button>`
+          }
         </div>
       `;
     }

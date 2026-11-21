@@ -120,10 +120,11 @@ h2{font:300 28px/1.1 var(--font);letter-spacing:-.02em;margin:0 0 16px}
 .list{overflow:hidden}
 .it{display:flex;align-items:center;gap:12px;padding:10px 14px}
 .it+.it{border-top:1px solid var(--line)}
-.it .t{flex:1}
+.it .t{flex:1;min-width:0}
 .it b{display:block;font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.it small{color:var(--faint);font-size:12px}
+.it small{color:var(--faint);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .it .v{font-weight:600;font-size:14px}
+.it .btn,.it>.btn,.foot .btn,.foot>.btn{width:auto!important;flex:none!important;height:38px;padding:0 16px;white-space:nowrap!important}
 .del{width:36px;height:36px;border:0;border-radius:50%;background:none;color:var(--faint);cursor:pointer;display:grid;place-items:center}
 .del:hover{color:var(--bad);background:var(--accent-soft)}
 .empty{padding:26px 16px;text-align:center;color:var(--soft);font-size:14px}
@@ -150,6 +151,8 @@ h2{font:300 28px/1.1 var(--font);letter-spacing:-.02em;margin:0 0 16px}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
 .calc .it b{white-space:normal}
 .btn{height:50px;border:0;border-radius:14px;padding:0 20px;font:600 15px var(--font);cursor:pointer;width:100%}
+.btn.block{width:100%}
+.btn.auto{width:auto;flex:none}
 .btn.pri{color:#fff;background:var(--gloss);box-shadow:var(--gloss-edge),0 8px 18px -10px rgba(26,122,212,.9)}
 .btn.sec{background:var(--glass-strong);box-shadow:var(--edge);color:var(--ink)}
 .btn.dng{background:none;color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent)}
@@ -210,7 +213,7 @@ nav a.on span{background:var(--accent-soft)}
 .xr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;padding:6px 16px;font-size:13px;align-items:baseline}
 .xr span{color:var(--soft);white-space:nowrap}.xr small{grid-column:1/-1;color:var(--faint);font-size:11px}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px 0}
-.btn.sm{height:40px;font-size:14px;border-radius:12px}
+.btn.sm{height:38px;font-size:14px;border-radius:12px;width:auto;flex:none;white-space:nowrap;padding:0 16px}
 .rules{margin:0;padding:10px 16px 14px 34px;font-size:13px;color:var(--soft);display:grid;gap:6px}
 .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;padding:10px 8px}
 .wd{display:grid;justify-items:center;gap:5px;padding:8px 0;border-radius:14px;font-size:11px;color:var(--soft);text-align:center}
