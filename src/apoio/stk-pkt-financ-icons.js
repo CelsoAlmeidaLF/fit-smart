@@ -144,6 +144,62 @@
       const html = svg(el.dataset.icon, { size: Number(el.dataset.size) || undefined, label: el.getAttribute('aria-label'), cls: el.className });
       if (html) el.outerHTML = html;
     });
+
+    // 2. Substituição automática de ligaduras legadas <span class="ms">...</span> por SVG oficial Lucide
+    // (Apenas quando não estiver em modo nativo Material Symbols)
+    if (typeof document !== 'undefined' && (!document.body || document.body.dataset.iconMode !== 'material-symbols')) {
+      scope.querySelectorAll('span.ms').forEach(el => {
+        const name = el.textContent ? el.textContent.trim() : '';
+        if (name) {
+          const sz = 20;
+          const html = svg(name, { size: sz });
+          if (html) el.outerHTML = html;
+        }
+      });
+    }
+
+    // 3. Requisito Canônico de Segurança: Alternância tátil de visibilidade com SVG eye/eye-off
+    initPasswordToggles(scope);
+  }
+
+  function initPasswordToggles(scope = document) {
+    if (!scope || !scope.querySelectorAll) return;
+    scope.querySelectorAll('input[type="password"]').forEach(input => {
+      if (input.dataset.hasPwToggle || input.closest('.pw-field-wrap') || input.closest('[data-pin-keypad]')) return;
+      if (input.classList.contains('pin-digit') || input.maxLength === 1) return;
+      input.dataset.hasPwToggle = 'true';
+
+      const wrap = document.createElement('div');
+      wrap.className = 'pw-field-wrap';
+      wrap.style.cssText = 'position:relative;display:inline-flex;align-items:center;width:100%;box-sizing:border-box;';
+      
+      input.parentNode.insertBefore(wrap, input);
+      wrap.appendChild(input);
+      input.style.paddingRight = '42px';
+      
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'pw-toggle-btn';
+      btn.setAttribute('aria-label', 'Alternar visibilidade da senha');
+      btn.setAttribute('tabindex', '0');
+      btn.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;padding:6px;display:inline-flex;align-items:center;justify-content:center;color:currentColor;opacity:0.65;z-index:2;line-height:1;transition:opacity 0.2s;';
+      
+      btn.innerHTML = svg('eye', { size: 18 }) || '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>';
+      
+      btn.addEventListener('mouseenter', () => { btn.style.opacity = '1.0'; });
+      btn.addEventListener('mouseleave', () => { btn.style.opacity = '0.65'; });
+      
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isPw = input.type === 'password';
+        input.type = isPw ? 'text' : 'password';
+        btn.innerHTML = isPw 
+          ? (svg('eye-off', { size: 18 }) || '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49\"/><path d=\"M14.084 14.158a3 3 0 0 1-4.242-4.242\"/><path d=\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143\"/><path d=\"m2 2 20 20\"/></svg>')
+          : (svg('eye', { size: 18 }) || '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>');
+      });
+      wrap.appendChild(btn);
+    });
   }
 
   const api = { svg, hydrate, names: Object.keys(PATHS), aliases: ALIASES };
