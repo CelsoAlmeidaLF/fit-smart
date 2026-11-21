@@ -1,0 +1,18 @@
+{
+  "name": "fit-smart",
+  "version": "1.2.0",
+  "description": "Fit Smart - PWA Local-First de Nutrição, Saúde e Treino",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "keywords": [
+    "fitness",
+    "pwa",
+    "hexagonal-architecture",
+    "local-first",
+    "nutrition"
+  ],
+  "author": "Systekna",
+  "license": "UNLICENSED"
+}
