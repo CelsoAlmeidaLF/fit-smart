@@ -1,4 +1,4 @@
-const VERSAO = 'fit-v1.3.1-20261121';
+const VERSAO = 'fit-v1.3.2-20261121';
 const ARQUIVOS = [
   './',
   './index.html',
@@ -6,12 +6,12 @@ const ARQUIVOS = [
   './manifest.webmanifest',
   './src/Program.js',
   './src/ui/styles/styles.css',
+  './src/ui/styles/material-symbols-rounded.woff2',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './src/apoio/apoio.css',
-  './src/apoio/stk-pkt-financ-icons.js',
   './src/apoio/stk-pkt-doacao.js',
   './src/apoio/stk-pkt-feedback.js',
   './src/apoio/stk-pkt-qrcode.js',

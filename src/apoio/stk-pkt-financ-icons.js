@@ -144,16 +144,6 @@
       const html = svg(el.dataset.icon, { size: Number(el.dataset.size) || undefined, label: el.getAttribute('aria-label'), cls: el.className });
       if (html) el.outerHTML = html;
     });
-
-    // 2. Substituição automática de ligaduras legadas <span class="ms">...</span> por SVG oficial Lucide
-    scope.querySelectorAll('span.ms').forEach(el => {
-      const name = el.textContent ? el.textContent.trim() : '';
-      if (name) {
-        const sz = 20;
-        const html = svg(name, { size: sz });
-        if (html) el.outerHTML = html;
-      }
-    });
   }
 
   const api = { svg, hydrate, names: Object.keys(PATHS), aliases: ALIASES };

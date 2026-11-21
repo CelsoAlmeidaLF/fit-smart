@@ -45,8 +45,10 @@ body{min-height:100vh;font:15px/1.5 var(--font);color:var(--ink);background:var(
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
 button,input,select{font-family:inherit;color:inherit}
 .num{font-variant-numeric:tabular-nums;white-space:nowrap}
-.ms{font-family:"MS Rounded";font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";font-feature-settings:"liga";-webkit-font-smoothing:antialiased;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;user-select:none;overflow:hidden;width:1em;height:1em}
-.ic .ms,.qa.pri .ms,nav a.on .ms,.ck .ms{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24}
+@font-face{font-family:"MS Rounded";font-style:normal;font-weight:100 700;font-display:block;src:url("material-symbols-rounded.woff2") format("woff2")}
+@font-face{font-family:"Material Symbols Rounded";font-style:normal;font-weight:100 700;font-display:block;src:url("material-symbols-rounded.woff2") format("woff2")}
+.ms{font-family:"Material Symbols Rounded","MS Rounded";font-weight:normal;font-style:normal;font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";font-feature-settings:"liga";-webkit-font-smoothing:antialiased;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;user-select:none;overflow:hidden;width:1em;height:1em}
+.ic .ms,.qa.pri .ms,nav a.on .ms,.ck .ms,.btn.pri .ms{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24}
 .ic .ms{font-size:20px}.qa .ms{font-size:26px}.ck .ms{font-size:18px}.del .ms{font-size:20px}
 svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .sky{position:fixed;inset:0;z-index:-1;background:var(--sky)}

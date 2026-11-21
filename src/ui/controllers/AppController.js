@@ -824,10 +824,27 @@ export class AppController {
   }
 
   getIcoSvg(ic, size = 18) {
-    if (typeof window !== 'undefined' && window.FinancIcons && typeof window.FinancIcons.svg === 'function') {
-      return window.FinancIcons.svg(ic, { size });
-    }
-    return '';
+    const MSI = {
+      walk: 'directions_walk',
+      hike: 'hiking',
+      run: 'directions_run',
+      bike: 'directions_bike',
+      dumb: 'fitness_center',
+      swim: 'pool',
+      ball: 'sports_soccer',
+      basket: 'sports_basketball',
+      tennis: 'sports_tennis',
+      music: 'music_note',
+      step: 'stairs',
+      yoga: 'self_improvement',
+      martial: 'sports_martial_arts',
+      bolt: 'bolt',
+      rest: 'bedtime',
+      check: 'check',
+      calendar: 'calendar_month'
+    };
+    const glyph = MSI[ic] || ic || 'bolt';
+    return `<span class="ms" aria-hidden="true">${glyph}</span>`;
   }
 
   renderPlano() {
