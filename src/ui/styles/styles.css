@@ -410,3 +410,30 @@ nav a.on span{background:var(--accent-soft)}
   .sheet { max-width: 900px; }
 }
 
+
+/* Figuras musculares (imagens do data.zip): status como borda/selo/legenda, nunca pintado sobre a imagem */
+.mfig{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit;background:#F0F1F3}
+.mimg::after,.dhero::after{content:"";position:absolute;inset:0;border-radius:inherit;border:3px solid transparent;pointer-events:none;transition:border-color .2s}
+.dhero{position:relative}.dhero.dsm{width:104px;flex:none;margin:0;border-radius:14px}
+.mcard.s-ok .mimg::after,.dhero.s-ok::after{border-color:var(--ok)}
+.mcard.s-warn .mimg::after,.dhero.s-warn::after{border-color:var(--warn)}
+.mcard.s-bad .mimg::after,.dhero.s-bad::after{border-color:var(--bad)}
+.mcard.s-new .mimg::after,.dhero.s-new::after{border-color:color-mix(in srgb,var(--faint) 45%,transparent);border-width:2px}
+.mcard:focus-visible,.mleg-it:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ready{grid-template-columns:minmax(0,1fr) clamp(130px,42vw,190px)}.ready .body{max-width:none}
+.bfig{margin:0;border-radius:16px;overflow:hidden;background:#F0F1F3;aspect-ratio:896/1200;box-shadow:var(--edge)}
+.bfig img{display:block;width:100%;height:100%;object-fit:cover}
+.mlegbox{margin-top:12px}
+.mleg-grp h4{margin:14px 0 6px;font-size:12px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--soft)}
+.mleg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.mleg-it{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 10px;border:0;border-radius:14px;text-align:left;font:inherit;color:inherit;cursor:pointer;background:var(--glass);box-shadow:var(--edge);transition:transform .2s}
+.mleg-it:active{transform:scale(.97)}
+.mleg-it.on{box-shadow:var(--edge),0 0 0 2px var(--accent)}
+.mleg-it.mk{box-shadow:var(--edge),inset 4px 0 0 var(--fire)}
+.mleg-t{min-width:0;overflow-wrap:anywhere}
+.mleg-t b{display:block;font-size:13px;font-weight:600;line-height:1.2}
+.mleg-t small{display:block;font-size:11px;line-height:1.25;color:var(--soft)}
+@media (prefers-reduced-motion:reduce){.mimg::after,.dhero::after,.mleg-it{transition:none}}
+.mapfig{display:flex;flex-direction:column;align-items:center;gap:12px}
+.mapfig-body{width:min(220px,60%)}
+.mapfig-sel{display:flex;align-items:center;gap:12px;width:100%}

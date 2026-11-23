@@ -1,4 +1,4 @@
-const VERSAO = 'fit-v1.3.2-20261121';
+const VERSAO = 'fit-v1.3.3-20261123';
 const ARQUIVOS = [
   './',
   './index.html',

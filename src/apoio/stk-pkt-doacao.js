@@ -419,7 +419,7 @@
     const b = document.createElement('button');
     b.className = 'dz-root dz-fab';
     b.type = 'button';
-    b.textContent = '☕ Apoiar';
+    b.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg><span>Apoiar</span>';
     b.addEventListener('click', () => abrir());
     document.body.appendChild(b);
   }

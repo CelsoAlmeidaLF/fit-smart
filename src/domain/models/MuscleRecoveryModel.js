@@ -64,6 +64,46 @@ export class MuscleRecoveryModel {
     return this.MUSCLE_IMAGE_MAP[muscleId] || null;
   }
 
+  /** Vistas do corpo inteiro (data.zip > 02_vistas_corporais_isoladas) */
+  static BODY_VIEW_IMAGES = {
+    front: 'assets/musculos/02_vistas_corporais_isoladas/05_vista_anterior_frente.jpg',
+    back: 'assets/musculos/02_vistas_corporais_isoladas/08_vista_posterior_costas.jpg'
+  };
+
+  static BODY_VIEW_LABELS = { front: 'anterior (frente)', back: 'posterior (costas)' };
+
+  /** Ícones regionais (data.zip > icones_musculos_app_fitness), usados só se o músculo não tiver foto própria */
+  static REGIONAL_ICON_RULES = [
+    [/pescoço/i, 'assets/icones_musculos/01_peitoral_ombros_pescoco/03_icone_pescoco.jpg'],
+    [/ombro/i, 'assets/icones_musculos/01_peitoral_ombros_pescoco/02_icone_deltoides.jpg'],
+    [/peitoral/i, 'assets/icones_musculos/01_peitoral_ombros_pescoco/01_icone_peitoral_maior.jpg'],
+    [/manguito|costas superiores/i, 'assets/icones_musculos/02_costas_manguito_rotador/07_icone_manguito_rotador.jpg'],
+    [/lombar/i, 'assets/icones_musculos/02_costas_manguito_rotador/06_icone_lombar_eretor_espinha.jpg'],
+    [/costas/i, 'assets/icones_musculos/02_costas_manguito_rotador/04_icone_latissimo_do_dorso.jpg'],
+    [/lateral|tórax/i, 'assets/icones_musculos/03_abdomen_core/09_icone_obliquos.jpg'],
+    [/abd|core/i, 'assets/icones_musculos/03_abdomen_core/08_icone_reto_abdominal.jpg'],
+    [/braço posterior/i, 'assets/icones_musculos/04_bracos_antebracos/11_icone_triceps.jpg'],
+    [/braço/i, 'assets/icones_musculos/04_bracos_antebracos/10_icone_biceps.jpg'],
+    [/antebraço/i, 'assets/icones_musculos/04_bracos_antebracos/12_icone_antebraco.jpg'],
+    [/glúteo|quadril/i, 'assets/icones_musculos/05_gluteos_coxas_pernas/13_icone_gluteo_maximo.jpg'],
+    [/coxa posterior|posterolateral/i, 'assets/icones_musculos/05_gluteos_coxas_pernas/15_icone_isquiotibiais.jpg'],
+    [/coxa medial/i, 'assets/icones_musculos/05_gluteos_coxas_pernas/16_icone_adutores_da_coxa.jpg'],
+    [/coxa/i, 'assets/icones_musculos/05_gluteos_coxas_pernas/14_icone_quadriceps.jpg'],
+    [/panturrilha/i, 'assets/icones_musculos/05_gluteos_coxas_pernas/17_icone_gastrocnemio.jpg'],
+    [/perna/i, 'assets/icones_musculos/05_gluteos_coxas_pernas/18_icone_tibial_anterior.jpg']
+  ];
+
+  static getRegionalIconPath(muscle) {
+    const region = String((muscle && muscle.r) || '');
+    const rule = this.REGIONAL_ICON_RULES.find(([re]) => re.test(region));
+    return rule ? rule[1] : null;
+  }
+
+  /** Foto própria do músculo; se não houver, ícone regional; nunca desenho por código */
+  static getMuscleImage(muscle) {
+    return this.getMuscleIconPath(muscle.id) || this.getRegionalIconPath(muscle);
+  }
+
   static getStatusIconSvg(key) {
     switch (key) {
       case 'ok':

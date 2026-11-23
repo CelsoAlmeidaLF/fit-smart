@@ -1,8 +1,8 @@
 import { FormatUtils } from '../../domain/utils/FormatUtils.js';
 import { BmrTdeeCalculatorModel } from '../../domain/models/BmrTdeeCalculatorModel.js';
 import { HydrationModel } from '../../domain/models/HydrationModel.js';
-import { BODY } from '../../domain/catalogs/BodyDiagramCatalog.js';
-import { BODY_SILHOUETTES } from '../components/HevyMuscleRenderer.js';
+import { MUSCLE_CATALOG } from '../../domain/catalogs/MuscleCatalog.js';
+import { MuscleFigureRenderer } from '../components/MuscleFigureRenderer.js';
 import { GRUPOS, EXS, CARD } from '../../domain/catalogs/WorkoutCatalog.js';
 import { BiometricsAdapter } from '../../infrastructure/security/BiometricsAdapter.js';
 import { WebAudioAdapter } from '../../infrastructure/audio/WebAudioAdapter.js';
@@ -538,7 +538,7 @@ export class AppController {
             <small class="num" style="display:block;color:var(--faint);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pt.t === 'des' ? 'Recupere: sono e hidratação em dia' : pt.min + ' min · ~' + FormatUtils.formatNumber(pt.kcal) + ' kcal'}</small>
           </div>
           ${okT 
-            ? '<span class="badge ok" style="padding:4px 10px;border-radius:8px;font-size:12px;white-space:nowrap;flex:none">Feito ✓</span>' 
+            ? '<span class="badge ok" style="padding:4px 10px;border-radius:8px;font-size:12px;white-space:nowrap;flex:none">Feito<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px;margin-left:4px"><path d="M20 6 9 17l-5-5"/></svg></span>' 
             : pt.t === 'des' 
               ? '' 
               : `<button type="button" class="btn pri sm" style="width:auto;flex:none;white-space:nowrap;height:38px;padding:0 16px" data-go="${this.goKey(pt)}">Começar</button>`
@@ -1099,24 +1099,18 @@ export class AppController {
 
   renderMapa() {
     const tMapa = document.querySelector('#tMapa');
-    if (!tMapa || !BODY) return;
+    if (!tMapa) return;
 
-    const B = BODY[this._mapV] || BODY.front;
-    const sel = B.m.find(m => m.id === this._mapSel);
+    const side = this._mapV === 'back' ? 'posterior' : 'anterior';
+    const muscles = MUSCLE_CATALOG.filter(m => m.v === side);
+    const sel = MUSCLE_CATALOG.find(m => m.id === this._mapSel && m.v === side);
+    if (!sel) this._mapSel = '';
 
     const fg = new Set(this._mapF && this._state.fichas && this._state.fichas[this._mapF] ? this._state.fichas[this._mapF].ex.map(e => {
       const x = (this._state.exercicios || []).find(it => it.nome === e.n);
       return x ? x.g : null;
     }).filter(Boolean) : []);
-
-    const W = 361.156, H = 541.867;
-    let pill = '';
-    if (sel) {
-      const tw = sel.pt.length * 7.4 + 22;
-      const x = Math.min(W - tw / 2 - 4, Math.max(tw / 2 + 4, sel.a[0]));
-      const y = sel.a[1] - 30;
-      pill = `<g class="pill"><rect x="${x - tw / 2}" y="${y - 13}" width="${tw}" height="24" rx="12" fill="var(--surface-2, #202824)" stroke="var(--accent, #6FCF97)"/><text x="${x}" y="${y + 4}" fill="#fff" font-size="12" text-anchor="middle" font-weight="600">${FormatUtils.escapeHtml(sel.pt)}</text></g>`;
-    }
+    const marked = muscles.filter(m => fg.has(m.g)).map(m => m.id);
 
     const exs = sel ? (this._state.exercicios || []).filter(x => x.g === sel.g).sort((a, b) => a.nome.localeCompare(b.nome, 'pt')) : [];
 
@@ -1141,44 +1135,28 @@ export class AppController {
       <div class="f" style="margin-top:12px">
         <label for="mS">Músculo</label>
         <select id="mS">
-          <option value="">Selecione ou toque no desenho…</option>
-          ${B.m.map((m, i) => `<option value="${m.id}"${m.id === this._mapSel ? ' selected' : ''}>${i + 1}. ${FormatUtils.escapeHtml(m.pt)}</option>`).join('')}
+          <option value="">Selecione na lista abaixo…</option>
+          ${muscles.map((m, i) => `<option value="${m.id}"${m.id === this._mapSel ? ' selected' : ''}>${i + 1}. ${FormatUtils.escapeHtml(m.n)}</option>`).join('')}
         </select>
       </div>
 
-      <div class="glass pad" style="margin-top:12px;display:flex;flex-direction:column;align-items:center">
-        <div class="body" style="max-width:320px;width:100%">
-          <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa muscular anatômico 2D" style="width:100%;height:auto;cursor:pointer;display:block">
-            <!-- Silhueta Base Humana 2D Estilo Hevy / Strong -->
-            <path d="${BODY_SILHOUETTES[this._mapV] || BODY_SILHOUETTES.front}" fill="#1A221E" stroke="#26352F" stroke-width="1.3" />
-            <!-- Camada de Músculos Anatômicos 2D -->
-            ${B.m.map(m => {
-              const isSel = m.id === this._mapSel;
-              const isFicha = fg.has(m.g);
-              const fill = isSel ? 'var(--accent, #6FCF97)' : isFicha ? 'rgba(230,126,34,0.55)' : '#222C27';
-              const stroke = isSel ? '#FFFFFF' : '#161D19';
-              const strokeW = isSel ? '1.8' : '0.8';
-              const filter = isSel ? 'style="filter:drop-shadow(0 0 8px rgba(111,207,151,0.75))"' : '';
-              return `
-                <path data-m="${m.id}" d="${m.d}" transform="translate(${m.t[0]} ${m.t[1]})" class="${isSel ? 'on' : isFicha ? 'fic' : ''}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}" ${filter} style="cursor:pointer;transition:all 0.2s">
-                  <title>${FormatUtils.escapeHtml(m.pt)}</title>
-                </path>
-              `;
-            }).join('')}
-            ${pill}
-          </svg>
-        </div>
-        ${this._mapF ? `<p class="note" style="text-align:center;margin-top:6px"><span style="color:#E67E22;font-weight:600">Laranja</span>: músculos trabalhados na ficha selecionada</p>` : ''}
+      <div class="glass pad mapfig" style="margin-top:12px">
+        <div class="mapfig-body">${MuscleFigureRenderer.renderBodyView(this._mapV)}</div>
+        ${sel ? `
+          <div class="mapfig-sel">
+            <div class="dhero dsm s-new">${MuscleFigureRenderer.renderMuscleImage(sel, { size: 'detail' })}</div>
+            <div>
+              <b>${FormatUtils.escapeHtml(sel.n)}</b>
+              <small style="display:block;color:var(--soft)">${FormatUtils.escapeHtml(sel.r)}</small>
+              <p style="font-size:12px;line-height:1.4;margin:6px 0 0">${FormatUtils.escapeHtml(sel.d || '')}</p>
+            </div>
+          </div>` : '<p class="note" style="text-align:center;margin:8px 0 0">Toque num músculo da lista para ver a foto e os exercícios.</p>'}
+        ${this._mapF ? `<p class="note" style="text-align:center;margin-top:6px"><span style="color:var(--fire);font-weight:600">Faixa laranja</span>: músculos trabalhados na ficha selecionada</p>` : ''}
       </div>
 
       <div class="sec-h"><b>Músculos · ${this._mapV === 'front' ? 'Frente' : 'Costas'}</b></div>
-      <div class="glass leg" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:8px;padding:12px;margin-bottom:12px">
-        ${B.m.map((m, i) => `
-          <div class="${m.id === this._mapSel ? 'on' : ''}" data-m="${m.id}" style="cursor:pointer;padding:6px;border-radius:8px;background:${m.id === this._mapSel ? 'var(--accent-soft, rgba(111,207,151,0.15))' : 'transparent'};font-size:12px">
-            <i style="font-weight:700;color:var(--accent);margin-right:4px">${i + 1}.</i>
-            <span>${FormatUtils.escapeHtml(m.pt)}</span>
-          </div>
-        `).join('')}
+      <div class="mlegbox" style="margin-bottom:12px">
+        ${MuscleFigureRenderer.renderLegend(MUSCLE_CATALOG, {}, { viewKey: this._mapV, selectedId: this._mapSel, markedIds: marked, attr: 'data-m', showStatus: false })}
       </div>
 
       ${sel ? `
